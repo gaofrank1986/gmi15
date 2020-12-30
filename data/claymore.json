@@ -1,0 +1,28 @@
+{
+    "lm":{
+        "name": "狼的末路",
+        "level": "90",
+        "basic_attack": 608,
+        "break_thru": {
+            "ar": 49.56
+        },
+        "effect":{
+            "ar": [20 ,5]
+        },
+        "bonus": {
+        }
+    },
+    "tkza":{
+        "name": "天空之傲",
+        "level": "90",
+        "basic_attack": 674,
+        "break_thru": {
+            "ef": 36.8
+        },
+        "effect":{
+        },
+        "bonus": {
+            "1":[["a","e","q"],{"d":8},1,"造成的伤害提高8%/10%/12%/14%/16%"]
+        }
+    }
+}

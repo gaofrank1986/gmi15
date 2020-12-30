@@ -1,0 +1,263 @@
+import numpy as np
+import json
+from copy import deepcopy
+import logging
+from basic import Basic_Panel
+import os
+
+class Character(Basic_Panel):
+    def __init__(self,skill_level,c_level,main_logger):
+        assert(isinstance(main_logger,logging.Logger))
+        super().__init__()
+        self.name = ''
+
+        # self.skill = dict()
+        assert(isinstance(skill_level,int) or isinstance(skill_level,list))
+        if isinstance(skill_level,int):
+            self.skill_level = [skill_level]*3
+        else:
+            self.skill_level = skill_level
+            
+        self.constellation = c_level
+
+        '''人物自带初始5暴击，50暴伤'''
+        self.attack[3] = 5
+        self.attack[4] = 50
+
+        self.atk_name = ['a','e','q']
+
+        self.main_logger = main_logger
+        #-------------
+        self.skill_round = {"a":0,"e":0,"q":0}
+
+        self.skill_ratio = {"a":[0,0],"e":[0,0],"q":[0,0]}
+        self.enchant_ratio = 0
+
+        #------------------
+        self.equipment=[]
+        self.activated_buff = ["e","q"]
+
+        self.skill_effect = {"a":{},"e":{},"q":{}}
+
+        self.loaded = False
+        self.switch = dict()
+        self.saved_buff = dict()
+        self.damage = dict()
+        self.formula = ''
+        self.data = None
+        self.wdata = None
+
+    def put_on(self,a):
+        self.health = self.health+a.health
+        self.attack = self.attack+a.attack
+        self.defense = self.defense+a.defense
+
+    def take_off(self,a):
+        self.health = self.health-a.health
+        self.attack = self.attack-a.attack
+        self.defense = self.defense-a.defense
+
+
+
+    def load_from_json(self,path):
+        self.loaded = True
+        atk_name = ['a','e','q']
+
+        for i in range(0,self.constellation+1):
+            self.activated_buff.append("c"+str(i))
+        with open(path, 'r', encoding='UTF-8') as fp:
+            data = json.load(fp)
+            
+        self.data = data
+
+        self.name = data['name']
+        self.weapon_class = data['weapon_class']
+        self.health[0] = data['basic_health']
+        self.defense[0] = data['basic_defense']
+        self.attack[0] = data['basic_attack']
+        self.load_att(data['break_thru'])
+        
+        self.enchant_ratio = data['enchant_ratio']
+
+
+        for i in atk_name:
+            self.skill_round[i] = data['round'][i]        
+
+        '''加载激活的buff'''
+        self._load_buff(data['buffs'],self._check2)
+        
+        if "special" in data.keys():
+            for i in data['special'].keys():
+                if i in self.activated_buff:
+                    tmp = data['special'][i][0]
+                    for j in tmp:
+                        if j == 'd2a':
+                            self.saved_buff['d2a'] = self.saved_buff.get('d2a',0)+tmp[j]
+
+        for i in data['formula'].keys():
+            if i in self.activated_buff:
+                self.formula = data['formula'][i]
+
+        if 'factor' in data.keys():
+            self.switch = data['factor']
+                
+
+    def _validate_data(self,data):
+        pass
+
+    def _parse_formula(self,s):
+        a = s.split("+")
+        ans = []
+        for j in a:
+            if len(j.split('*')) == 1:
+                ans.append((j,'1'))
+            elif len(j.split('*')) == 2:
+                tmp = j.split('*')
+                assert('e' in tmp[1] or 'a' in tmp[1] or 'q' in tmp[1])
+                ans.append((tmp[1],tmp[0]))
+            else:
+              raise ValueError("invalid formula: {}".format(s))
+        return(ans) 
+
+    def _skill_cat(self,s):
+        return(s[0]) 
+    
+    def _check1(self,i):
+        return True
+    def _check2(self,i):
+        return i in self.activated_buff
+    
+    
+    def _load_buff(self,buffs,check):
+        assert(isinstance(buffs,dict))
+        for i in buffs:
+            if check(i):
+                cond = buffs[i][0]
+                effect = buffs[i][1]
+                cover_ratio =buffs[i][2]
+                for j in cond:
+                    assert(j in self.atk_name)
+                    assert(isinstance(effect[k],int),isinstance(effect[k],float),isinstance(effect[k],list))
+                    if isinstance(effect[k],list):
+                        assert(len(effect[k]) == 2)
+                        assert(len(self.equipment)>0)
+                        refine = self.equipment[0][-1]
+                        value = effect[k][0]+(refine-1)*effect[k][1]
+                    else:
+                        value = effect[k]
+                    for k in effect:
+                        if k in ['d','ed','fd','cr','ar']:
+                            self.skill_effect[j][k] =self.skill_effect[j].get(k,0)+value*cover_ratio
+                        if k == 'level':
+                            self.skill_level[self.atk_name.index(j)]+=value
+                        # if k == 'ratio':
+                        #     self.skill_ratio[j][0]+=value
+                        if k == 'damage':
+                            self.damage[j] = self.damage.get(j,0)+value
+    def _total_def(self):
+        return(self.defense[0]*(1+self.defense[1]/100)+self.defense[2])
+
+    #----------------------------------------------------------------------------------
+    #----------------------------------------------------------------------------------
+    #----------------------------------------------------------------------------------
+
+    def load_weapon_from_json(self,path,name,refine = 1):
+        assert(self.loaded)
+        with open(path, 'r', encoding='UTF-8') as fp:
+            data = json.load(fp)
+            self.wdata = data
+        found = False
+        
+        for wp in data:
+            if wp == name:
+                found = True
+                self.equipment.append((data[wp]['name'],refine))
+                self.attack[0] += data[wp]['basic_attack']
+                self.load_att(data[wp]['break_thru'])
+                tmp = dict()
+                for k,v in data[wp]['effect'].items():
+                    tmp[k] = v[0]+v[1]*(refine-1)
+                    
+                self.load_att(tmp)
+                
+                '''加载激活的buff'''
+                self._load_buff(data[wp]['bonus'],self._check1)
+                break
+        assert(found)
+    #----------------------------------------------------------------------------------
+    #----------------------------------------------------------------------------------
+    #----------------------------------------------------------------------------------
+
+
+
+
+
+    def damage_rsl(self):
+        self.main_logger.info("生命面板: {}".format(self.health))
+        self.main_logger.info("防御面板: {}".format(self.defense))
+        self.main_logger.info("攻击面板: {}".format(self.attack[:3]))
+        self.main_logger.info("暴击: {:.2f}  爆伤: {:.2f}".format(self.attack[3],self.attack[4]))
+        self.main_logger.info("属性伤害: {:.2f}  物理增伤: {:.2f}".format(self.attack[5],self.attack[6]))
+        self.main_logger.info("元素精通: {}  元素充能: {}".format(self.attack[7],self.attack[8]))
+        self.main_logger.info("round = {}".format(self.skill_round))        
+        self.main_logger.info("formula = {}".format(self.formula))
+        self.main_logger.info("effect = {}".format(self.skill_effect))
+        self.main_logger.info("特殊 {}".format(self.saved_buff))
+        self.main_logger.info("附伤 {}".format(self.damage))
+        self.main_logger.info("技能第一乘区切换 {}".format(self.switch))
+
+        total = 0
+        for i in self.atk_name:
+            self.main_logger.debug("--------处理 {} {}-------".format(i,self.formula[self.atk_name.index(i)]))
+            ans = [0,0]
+            self.load_att(self.skill_effect[i])
+            area1 = self.attack[0]*(1+self.attack[1]/100)+self.attack[2]
+            area2 = 1 + self.attack[3]/100*self.attack[4]/100
+            if len(self.saved_buff) != 0:
+                if 'd2a' in self.saved_buff.keys():
+                    delta = self.saved_buff['d2a']/100*self._total_def()
+                    area1+= delta
+                    self.main_logger.debug("防御转攻击 增加量 = {:.2f}".format(delta))                                        
+            self.main_logger.debug("buff加载后 area1 = {:.2f},area2 = {:.2f}".format(area1,area2))
+            
+            fm = self._parse_formula(self.formula[self.atk_name.index(i)])
+            for entry in fm:
+                self.main_logger.debug("--------处理 {}-------".format(entry))
+
+                cat = self._skill_cat(entry[0])
+                level = self.skill_level[self.atk_name.index(cat)] - 1# 对index进行调整
+                multi  = float(entry[1])
+                atk_t = self.data['atk_type'][entry[0]]
+                ratio=self.data['ratios'][entry[0]][level]/100
+                
+                base = area1                
+                if entry[0] in self.switch.keys():
+                    base = self._total_def()
+                    self.main_logger.info("切换基础乘区 攻击为防御 area1 = {:.2f}".format(base))
+                
+                assert(atk_t in ['elem','phys'])
+                if atk_t == 'elem':
+                    area3 = (1 + self.attack[5]/100+self.skill_effect[i].get('d',0)/100)
+                    ans[0]+=base*area2*area3*ratio*multi
+                    self.main_logger.debug("area1 = {:.2f},area2 = {:.2f},area3 = {:.2f},ratio = {:.2f},multiple = {:.2f},攻击类型:{}".format(base,area2,area3,ratio,multi,atk_t))
+
+                else:
+                    area3 = (1 + self.attack[5]/100+self.skill_effect[i].get('d',0)/100)
+                    ans[0]+=base*area2*area3*ratio*multi*self.enchant_ratio
+                    self.main_logger.debug("area1 = {:.2f},area2 = {:.2f},area3 = {:.2f},ratio = {:.2f},multiple = {:.2f},攻击类型:{},附魔比例 {}".format(base,area2,area3,ratio,multi,atk_t,self.enchant_ratio))
+
+                    area3 = (1 + self.attack[6]/100+self.skill_effect[i].get('d',0)/100)                    
+                    ans[1]+=base*area2*area3*ratio*multi*(1-self.enchant_ratio)
+                    self.main_logger.debug("area1 = {:.2f},area2 = {:.2f},area3 = {:.2f},ratio = {:.2f},multiple = {:.2f},攻击类型:{},不附魔比列 {}".format(base,area2,area3,ratio,multi,atk_t,1-self.enchant_ratio))
+
+            self.load_att(self.skill_effect[i],"minus")
+            self.main_logger.debug("total damage for {} is 元素: {}, 物理: {}".format(i,int(ans[0]),int(ans[1])))
+            total += (ans[0]+ans[1])*self.skill_round[i]
+            
+
+ 
+
+
+        self.main_logger.info("damage = {}".format(int(total)))
+        self.main_logger.info("###############################################")        
+        return(int(total))

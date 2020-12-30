@@ -1,0 +1,28 @@
+{
+    "tkg":{
+        "name": "天空之翼",
+        "level": "90",
+        "basic_attack": 674,
+        "break_thru": {
+            "cr": 22.1
+        },
+        "effect":{
+            "cd": [20 ,5]
+        },
+        "bonus": {
+        }
+    },
+    "gz":{
+        "name": "弓藏",
+        "level": "90",
+        "basic_attack": 510,
+        "break_thru": {
+            "ar": 41.3
+        },
+        "effect":{
+        },
+        "bonus": {
+            "w1":[["a"],{"d":80},1,"罪罚裁断，视为全程伤害加成 7.5,"]
+        }
+    }
+}
