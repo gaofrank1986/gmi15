@@ -43,7 +43,7 @@
     "formula":{
     "c6":["a1+a2+a3+a4","e","q"]
     },
-    "factor":{
+    "rebase":{
         "e":"def"
     }
 

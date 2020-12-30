@@ -11,7 +11,6 @@ class Character(Basic_Panel):
         super().__init__()
         self.name = ''
 
-        # self.skill = dict()
         assert(isinstance(skill_level,int) or isinstance(skill_level,list))
         if isinstance(skill_level,int):
             self.skill_level = [skill_level]*3
@@ -24,20 +23,22 @@ class Character(Basic_Panel):
         self.attack[3] = 5
         self.attack[4] = 50
 
-        self.atk_name = ['a','e','q']
+        self.atk_name = ('a','e','q')
 
         self.main_logger = main_logger
         #-------------
-        self.skill_round = {"a":0,"e":0,"q":0}
+        self.skill_round = {_:0 for _ in self.atk_name}
 
-        self.skill_ratio = {"a":[0,0],"e":[0,0],"q":[0,0]}
-        self.enchant_ratio = 0
+        self.skill_ratio = {_:[0,0] for _ in self.atk_name}
+        
+        self.enchant_ratio = 0 #物理附魔比例
 
         #------------------
         self.equipment=[]
-        self.activated_buff = ["e","q"]
+        
+        self.activated_buff = ["a","e","q"]
 
-        self.skill_effect = {"a":{},"e":{},"q":{}}
+        self.skill_effect = {_:{} for _ in self.atk_name}
 
         self.loaded = False
         self.switch = dict()
@@ -60,14 +61,17 @@ class Character(Basic_Panel):
 
 
     def load_from_json(self,path):
+        
         self.loaded = True
-        atk_name = ['a','e','q']
 
         for i in range(0,self.constellation+1):
             self.activated_buff.append("c"+str(i))
+            
         with open(path, 'r', encoding='UTF-8') as fp:
             data = json.load(fp)
             
+        self._validate_data(data)
+        
         self.data = data
 
         self.name = data['name']
@@ -80,7 +84,7 @@ class Character(Basic_Panel):
         self.enchant_ratio = data['enchant_ratio']
 
 
-        for i in atk_name:
+        for i in self.atk_name:
             self.skill_round[i] = data['round'][i]        
 
         '''加载激活的buff'''
@@ -88,23 +92,24 @@ class Character(Basic_Panel):
         
         if "special" in data.keys():
             for i in data['special'].keys():
-                if i in self.activated_buff:
+                if self._check2(i):
                     tmp = data['special'][i][0]
                     for j in tmp:
                         if j == 'd2a':
                             self.saved_buff['d2a'] = self.saved_buff.get('d2a',0)+tmp[j]
 
         for i in data['formula'].keys():
-            if i in self.activated_buff:
+            if self._check2(i):
                 self.formula = data['formula'][i]
 
-        if 'factor' in data.keys():
-            self.switch = data['factor']
+        if 'rebase' in data.keys():
+            self.switch = data['rebase']
                 
 
     def _validate_data(self,data):
         pass
-
+    def _validate_wdata(self,data):
+        pass
     def _parse_formula(self,s):
         a = s.split("+")
         ans = []
@@ -155,14 +160,19 @@ class Character(Basic_Panel):
                         #     self.skill_ratio[j][0]+=value
                         if k == 'damage':
                             self.damage[j] = self.damage.get(j,0)+value
+                            
     def _total_def(self):
         return(self.defense[0]*(1+self.defense[1]/100)+self.defense[2])
-
+    def _total_atk(self):
+        return(self.attack[0]*(1+self.attack[1]/100)+self.attack[2])
+    def _total_health(self):
+        return(self.health[0]*(1+self.health[1]/100)+self.health[2])
     #----------------------------------------------------------------------------------
     #----------------------------------------------------------------------------------
     #----------------------------------------------------------------------------------
 
     def load_weapon_from_json(self,path,name,refine = 1):
+        
         assert(self.loaded)
         with open(path, 'r', encoding='UTF-8') as fp:
             data = json.load(fp)
@@ -172,9 +182,13 @@ class Character(Basic_Panel):
         for wp in data:
             if wp == name:
                 found = True
+                self._validate_wdata(data[wp])
+                
                 self.equipment.append((data[wp]['name'],refine))
                 self.attack[0] += data[wp]['basic_attack']
+                
                 self.load_att(data[wp]['break_thru'])
+                
                 tmp = dict()
                 for k,v in data[wp]['effect'].items():
                     tmp[k] = v[0]+v[1]*(refine-1)
@@ -182,7 +196,7 @@ class Character(Basic_Panel):
                 self.load_att(tmp)
                 
                 '''加载激活的buff'''
-                self._load_buff(data[wp]['bonus'],self._check1)
+                self._load_buff(data[wp]['buffs'],self._check1)
                 break
         assert(found)
     #----------------------------------------------------------------------------------
@@ -199,17 +213,17 @@ class Character(Basic_Panel):
         self.main_logger.info("攻击面板: {}".format(self.attack[:3]))
         self.main_logger.info("暴击: {:.2f}  爆伤: {:.2f}".format(self.attack[3],self.attack[4]))
         self.main_logger.info("属性伤害: {:.2f}  物理增伤: {:.2f}".format(self.attack[5],self.attack[6]))
-        self.main_logger.info("元素精通: {}  元素充能: {}".format(self.attack[7],self.attack[8]))
-        self.main_logger.info("round = {}".format(self.skill_round))        
+        self.main_logger.info("元素精通: {:.2f}  元素充能: {:.2f}".format(self.attack[7],self.attack[8]))
+        self.main_logger.info("攻击轮数: {}".format(self.skill_round))        
         self.main_logger.info("formula = {}".format(self.formula))
-        self.main_logger.info("effect = {}".format(self.skill_effect))
-        self.main_logger.info("特殊 {}".format(self.saved_buff))
-        self.main_logger.info("附伤 {}".format(self.damage))
+        self.main_logger.info("Buff:  {}".format(self.skill_effect))
+        self.main_logger.info("特殊:  {}".format(self.saved_buff))
+        self.main_logger.info("附伤:  {}".format(self.damage))
         self.main_logger.info("技能第一乘区切换 {}".format(self.switch))
 
         total = 0
         for i in self.atk_name:
-            self.main_logger.debug("--------处理 {} {}-------".format(i,self.formula[self.atk_name.index(i)]))
+            self.main_logger.debug("==============处理 {} 技能公式:[{}]===============".format(i,self.formula[self.atk_name.index(i)]))
             ans = [0,0]
             self.load_att(self.skill_effect[i])
             area1 = self.attack[0]*(1+self.attack[1]/100)+self.attack[2]
@@ -218,7 +232,11 @@ class Character(Basic_Panel):
                 if 'd2a' in self.saved_buff.keys():
                     delta = self.saved_buff['d2a']/100*self._total_def()
                     area1+= delta
-                    self.main_logger.debug("防御转攻击 增加量 = {:.2f}".format(delta))                                        
+                    self.main_logger.debug("防御转攻击 增加量 = {:.2f}".format(delta))
+                if 'h2a' in self.saved_buff.keys():
+                    delta = self.saved_buff['h2a']/100*self._total_health()
+                    area1+= delta
+                    self.main_logger.debug("生命转攻击 增加量 = {:.2f}".format(delta))                                         
             self.main_logger.debug("buff加载后 area1 = {:.2f},area2 = {:.2f}".format(area1,area2))
             
             fm = self._parse_formula(self.formula[self.atk_name.index(i)])
@@ -245,17 +263,28 @@ class Character(Basic_Panel):
                 else:
                     area3 = (1 + self.attack[5]/100+self.skill_effect[i].get('d',0)/100)
                     ans[0]+=base*area2*area3*ratio*multi*self.enchant_ratio
-                    self.main_logger.debug("area1 = {:.2f},area2 = {:.2f},area3 = {:.2f},ratio = {:.2f},multiple = {:.2f},攻击类型:{},附魔比例 {}".format(base,area2,area3,ratio,multi,atk_t,self.enchant_ratio))
+                    self.main_logger.debug("area1 = {:.2f},area2 = {:.2f},area3 = {:.2f},ratio = {:.2f},multiple = {:.2f},攻击类型:{},附魔,占比 {}".format(base,area2,area3,ratio,multi,atk_t,self.enchant_ratio))
 
                     area3 = (1 + self.attack[6]/100+self.skill_effect[i].get('d',0)/100)                    
                     ans[1]+=base*area2*area3*ratio*multi*(1-self.enchant_ratio)
-                    self.main_logger.debug("area1 = {:.2f},area2 = {:.2f},area3 = {:.2f},ratio = {:.2f},multiple = {:.2f},攻击类型:{},不附魔比列 {}".format(base,area2,area3,ratio,multi,atk_t,1-self.enchant_ratio))
+                    self.main_logger.debug("area1 = {:.2f},area2 = {:.2f},area3 = {:.2f},ratio = {:.2f},multiple = {:.2f},攻击类型:{},不附魔,占比 {}".format(base,area2,area3,ratio,multi,atk_t,1-self.enchant_ratio))
+            
+            '''处理技能附伤'''
+            if i in self.damage.keys():
+                area3 = (1 + self.attack[5]/100+self.skill_effect[i].get('d',0)/100)                    
+                ans[0]+=area1*self.damage[i]/100*area2*area3
+                self.main_logger.debug("技能附加伤害: area1 = {:.2f},area2 = {:.2f},area3 = {:.2f},ratio = {:.2f} 假设为元素伤害，受益2，3乘区加成".format(area1,area2,area3,self.damage[i]/100))                
+            ##################################################
 
             self.load_att(self.skill_effect[i],"minus")
             self.main_logger.debug("total damage for {} is 元素: {}, 物理: {}".format(i,int(ans[0]),int(ans[1])))
             total += (ans[0]+ans[1])*self.skill_round[i]
             
-
+        '''武器附伤'''
+        if 'w' in self.damage.keys():
+            # area3 = (1 + self.attack[5]/100+self.skill_effect[i].get('d',0)/100)                    
+            total+=area1*self.damage[i]/100
+            self.main_logger.debug("武器附加伤害: area1 = {:.2f},ratio = {:.2f} 假设为物理伤害，不受益2，3乘区加成".format(area1,self.damage[i]/100))          
  
 
 

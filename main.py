@@ -28,8 +28,8 @@ if __name__ == "__main__":
 
     skill_level = 9
     constellation = 6
-    weapon ="fz"
-    character = "abedo"
+    weapon ="tkza"
+    character = "noel"
     
 
     
