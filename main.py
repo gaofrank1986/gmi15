@@ -28,14 +28,15 @@ if __name__ == "__main__":
 
     skill_level = 9
     constellation = 6
-    weapon ="tkza"
-    character = "noel"
+    weapon ="lm"
+    refine = 5
+    character = "diluc"
     
 
     
     c = Character(skill_level,constellation,logger)
     c.load_from_json("./data/character/"+character+".json")
-    c.load_weapon_from_json("./data/weapon/"+c.weapon_class+".json",weapon,5)
+    c.load_weapon_from_json("./data/weapon/"+c.weapon_class+".json",weapon,refine)
 
 
     rls = Articraft()
@@ -58,3 +59,7 @@ if __name__ == "__main__":
 
     print(c.name,c.equipment)
     print(table)
+    
+    for handler in logger.handlers:
+        handler.close()
+        logger.removeHandler(handler)

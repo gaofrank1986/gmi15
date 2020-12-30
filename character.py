@@ -160,7 +160,7 @@ class Character(Basic_Panel):
                         # if k == 'ratio':
                         #     self.skill_ratio[j][0]+=value
                         if k == 'damage':
-                            self.damage[j] = self.damage.get(j,0)+value
+                            self.damage[j] = self.damage.get(j,0)+value*cover_ratio
                             
     def _total_def(self):
         return(self.defense[0]*(1+self.defense[1]/100)+self.defense[2])
@@ -168,6 +168,8 @@ class Character(Basic_Panel):
         return(self.attack[0]*(1+self.attack[1]/100)+self.attack[2])
     def _total_health(self):
         return(self.health[0]*(1+self.health[1]/100)+self.health[2])
+    def _crit(self):
+        return(1+self.attack[3]/100*self.attack[4]/100)
     #----------------------------------------------------------------------------------
     #----------------------------------------------------------------------------------
     #----------------------------------------------------------------------------------
@@ -218,7 +220,7 @@ class Character(Basic_Panel):
         self.main_logger.info("攻击轮数: {}".format(self.skill_round))        
         self.main_logger.info("formula = {}".format(self.formula))
         self.main_logger.info("Buff:  {}".format(self.skill_effect))
-        self.main_logger.info("特殊:  {}".format(self.saved_buff))
+        self.main_logger.info("特殊攻击提升:  {}".format(self.saved_buff))
         self.main_logger.info("附伤:  {}".format(self.damage))
         self.main_logger.info("技能第一乘区切换 {}".format(self.switch))
 
@@ -226,6 +228,8 @@ class Character(Basic_Panel):
         for i in self.atk_name:
             self.main_logger.debug("==============处理 {} 技能公式:[{}]===============".format(i,self.formula[self.atk_name.index(i)]))
             ans = [0,0]
+            self.main_logger.debug("buff加载前 area1 = {:.2f},area2 = {:.2f}".format(self._total_atk(),self._crit()))
+
             self.load_att(self.skill_effect[i])
             area1 = self.attack[0]*(1+self.attack[1]/100)+self.attack[2]
             area2 = 1 + self.attack[3]/100*self.attack[4]/100
@@ -280,7 +284,7 @@ class Character(Basic_Panel):
                 '''武器附伤'''
                 if 'w' in self.damage.keys():
                     # area3 = (1 + self.attack[5]/100+self.skill_effect[i].get('d',0)/100)                    
-                    total+=area1*self.damage[i]/100
+                    ans[1]+=area1*self.damage[i]/100
                     self.main_logger.debug("武器附加伤害: area1 = {:.2f},ratio = {:.2f} 假设为物理伤害，不受益2，3乘区加成".format(area1,self.damage[i]/100))    
             ##################################################
 
