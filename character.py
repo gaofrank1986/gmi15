@@ -137,15 +137,16 @@ class Character(Basic_Panel):
                 cover_ratio =buffs[i][2]
                 for j in cond:
                     assert(j in self.atk_name)
-                    assert(isinstance(effect[k],int),isinstance(effect[k],float),isinstance(effect[k],list))
-                    if isinstance(effect[k],list):
-                        assert(len(effect[k]) == 2)
-                        assert(len(self.equipment)>0)
-                        refine = self.equipment[0][-1]
-                        value = effect[k][0]+(refine-1)*effect[k][1]
-                    else:
-                        value = effect[k]
                     for k in effect:
+                        assert(isinstance(effect[k],int) or isinstance(effect[k],float) or isinstance(effect[k],list))
+                        if isinstance(effect[k],list):
+                            assert(len(effect[k]) == 2)
+                            assert(len(self.equipment)>0)
+                            refine = self.equipment[0][-1]
+                            value = effect[k][0]+(refine-1)*effect[k][1]
+                        else:
+                            value = effect[k]
+                            
                         if k in ['d','ed','fd','cr','ar']:
                             self.skill_effect[j][k] =self.skill_effect[j].get(k,0)+value*cover_ratio
                         if k == 'level':

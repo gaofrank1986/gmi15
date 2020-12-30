@@ -14,7 +14,7 @@ if __name__ == "__main__":
 
 
     
-    os.remove("./main.log")
+    os.remove("./tmp/main.log")
     logger = logging.getLogger('Main')
     logger.setLevel(level=logging.DEBUG)
     fh = logging.FileHandler('./tmp/main.log','w+')
@@ -34,15 +34,15 @@ if __name__ == "__main__":
 
     
     c = Character(skill_level,constellation,logger)
-    c.load_from_json("./data/"+character+".json")
-    c.load_weapon_from_json("./data/"+c.weapon_class+".json",weapon,5)
+    c.load_from_json("./data/character/"+character+".json")
+    c.load_weapon_from_json("./data/weapon/"+c.weapon_class+".json",weapon,5)
 
 
     diluc = c
     rls = Articraft()
-    rls.load_json("./tmp/sub.json")
+    rls.load_json("./data/sub.json")
 
-    with open("./tmp/main_run_list.json", 'r', encoding='UTF-8') as fp:
+    with open("./data/main_run_list.json", 'r', encoding='UTF-8') as fp:
         data = json.load(fp)
 
 
