@@ -23,7 +23,7 @@ class Character(Basic_Panel):
         self.attack[3] = 5
         self.attack[4] = 50
 
-        self.atk_name = ('a','e','q')
+        self.atk_name = ('a','e','q','w')
 
         self.main_logger = main_logger
         #-------------
@@ -83,7 +83,7 @@ class Character(Basic_Panel):
         
         self.enchant_ratio = data['enchant_ratio']
 
-
+        data['round']['w'] = 1
         for i in self.atk_name:
             self.skill_round[i] = data['round'][i]        
 
@@ -101,6 +101,7 @@ class Character(Basic_Panel):
         for i in data['formula'].keys():
             if self._check2(i):
                 self.formula = data['formula'][i]
+        self.formula.append('w')
 
         if 'rebase' in data.keys():
             self.switch = data['rebase']
@@ -239,52 +240,55 @@ class Character(Basic_Panel):
                     self.main_logger.debug("生命转攻击 增加量 = {:.2f}".format(delta))                                         
             self.main_logger.debug("buff加载后 area1 = {:.2f},area2 = {:.2f}".format(area1,area2))
             
-            fm = self._parse_formula(self.formula[self.atk_name.index(i)])
-            for entry in fm:
-                self.main_logger.debug("--------处理 {}-------".format(entry))
+            if i != 'w':
+                fm = self._parse_formula(self.formula[self.atk_name.index(i)])
+                for entry in fm:
+                    self.main_logger.debug("--------处理 {}-------".format(entry))
 
-                cat = self._skill_cat(entry[0])
-                level = self.skill_level[self.atk_name.index(cat)] - 1# 对index进行调整
-                multi  = float(entry[1])
-                atk_t = self.data['atk_type'][entry[0]]
-                ratio=self.data['ratios'][entry[0]][level]/100
-                
-                base = area1                
-                if entry[0] in self.switch.keys():
-                    base = self._total_def()
-                    self.main_logger.info("切换基础乘区 攻击为防御 area1 = {:.2f}".format(base))
-                
-                assert(atk_t in ['elem','phys'])
-                if atk_t == 'elem':
-                    area3 = (1 + self.attack[5]/100+self.skill_effect[i].get('d',0)/100)
-                    ans[0]+=base*area2*area3*ratio*multi
-                    self.main_logger.debug("area1 = {:.2f},area2 = {:.2f},area3 = {:.2f},ratio = {:.2f},multiple = {:.2f},攻击类型:{}".format(base,area2,area3,ratio,multi,atk_t))
+                    cat = self._skill_cat(entry[0])
+                    level = self.skill_level[self.atk_name.index(cat)] - 1# 对index进行调整
+                    multi  = float(entry[1])
+                    atk_t = self.data['atk_type'][entry[0]]
+                    ratio=self.data['ratios'][entry[0]][level]/100
+                    
+                    base = area1                
+                    if entry[0] in self.switch.keys():
+                        base = self._total_def()
+                        self.main_logger.info("切换基础乘区 攻击为防御 area1 = {:.2f}".format(base))
+                    
+                    assert(atk_t in ['elem','phys'])
+                    if atk_t == 'elem':
+                        area3 = (1 + self.attack[5]/100+self.skill_effect[i].get('d',0)/100)
+                        ans[0]+=base*area2*area3*ratio*multi
+                        self.main_logger.debug("area1 = {:.2f},area2 = {:.2f},area3 = {:.2f},ratio = {:.2f},multiple = {:.2f},攻击类型:{}".format(base,area2,area3,ratio,multi,atk_t))
 
-                else:
-                    area3 = (1 + self.attack[5]/100+self.skill_effect[i].get('d',0)/100)
-                    ans[0]+=base*area2*area3*ratio*multi*self.enchant_ratio
-                    self.main_logger.debug("area1 = {:.2f},area2 = {:.2f},area3 = {:.2f},ratio = {:.2f},multiple = {:.2f},攻击类型:{},附魔,占比 {}".format(base,area2,area3,ratio,multi,atk_t,self.enchant_ratio))
+                    else:
+                        area3 = (1 + self.attack[5]/100+self.skill_effect[i].get('d',0)/100)
+                        ans[0]+=base*area2*area3*ratio*multi*self.enchant_ratio
+                        self.main_logger.debug("area1 = {:.2f},area2 = {:.2f},area3 = {:.2f},ratio = {:.2f},multiple = {:.2f},攻击类型:{},附魔,占比 {}".format(base,area2,area3,ratio,multi,atk_t,self.enchant_ratio))
 
-                    area3 = (1 + self.attack[6]/100+self.skill_effect[i].get('d',0)/100)                    
-                    ans[1]+=base*area2*area3*ratio*multi*(1-self.enchant_ratio)
-                    self.main_logger.debug("area1 = {:.2f},area2 = {:.2f},area3 = {:.2f},ratio = {:.2f},multiple = {:.2f},攻击类型:{},不附魔,占比 {}".format(base,area2,area3,ratio,multi,atk_t,1-self.enchant_ratio))
+                        area3 = (1 + self.attack[6]/100+self.skill_effect[i].get('d',0)/100)                    
+                        ans[1]+=base*area2*area3*ratio*multi*(1-self.enchant_ratio)
+                        self.main_logger.debug("area1 = {:.2f},area2 = {:.2f},area3 = {:.2f},ratio = {:.2f},multiple = {:.2f},攻击类型:{},不附魔,占比 {}".format(base,area2,area3,ratio,multi,atk_t,1-self.enchant_ratio))
             
-            '''处理技能附伤'''
-            if i in self.damage.keys():
-                area3 = (1 + self.attack[5]/100+self.skill_effect[i].get('d',0)/100)                    
-                ans[0]+=area1*self.damage[i]/100*area2*area3
-                self.main_logger.debug("技能附加伤害: area1 = {:.2f},area2 = {:.2f},area3 = {:.2f},ratio = {:.2f} 假设为元素伤害，受益2，3乘区加成".format(area1,area2,area3,self.damage[i]/100))                
+                '''处理技能附伤'''
+                if i in self.damage.keys():
+                    area3 = (1 + self.attack[5]/100+self.skill_effect[i].get('d',0)/100)                    
+                    ans[0]+=area1*self.damage[i]/100*area2*area3
+                    self.main_logger.debug("技能附加伤害: area1 = {:.2f},area2 = {:.2f},area3 = {:.2f},ratio = {:.2f} 假设为元素伤害，受益2，3乘区加成".format(area1,area2,area3,self.damage[i]/100)) 
+            if i == 'w':               
+                '''武器附伤'''
+                if 'w' in self.damage.keys():
+                    # area3 = (1 + self.attack[5]/100+self.skill_effect[i].get('d',0)/100)                    
+                    total+=area1*self.damage[i]/100
+                    self.main_logger.debug("武器附加伤害: area1 = {:.2f},ratio = {:.2f} 假设为物理伤害，不受益2，3乘区加成".format(area1,self.damage[i]/100))    
             ##################################################
 
             self.load_att(self.skill_effect[i],"minus")
             self.main_logger.debug("total damage for {} is 元素: {}, 物理: {}".format(i,int(ans[0]),int(ans[1])))
             total += (ans[0]+ans[1])*self.skill_round[i]
             
-        '''武器附伤'''
-        if 'w' in self.damage.keys():
-            # area3 = (1 + self.attack[5]/100+self.skill_effect[i].get('d',0)/100)                    
-            total+=area1*self.damage[i]/100
-            self.main_logger.debug("武器附加伤害: area1 = {:.2f},ratio = {:.2f} 假设为物理伤害，不受益2，3乘区加成".format(area1,self.damage[i]/100))          
+      
  
 
 

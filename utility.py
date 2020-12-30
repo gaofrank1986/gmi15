@@ -160,3 +160,41 @@ def extract_name(a):
     
 
 
+
+
+def run_thru(path,c,rls,logger):
+    with open(path, 'r', encoding='UTF-8') as fp:
+        data = json.load(fp)
+    save = dict()
+    diluc = deepcopy(c)
+    for head in data['head']:
+        for glass in data['glass']:
+                for cup in data['cup']:
+
+                    flower = data['flower'][0]
+                    feather = data['feather'][0]
+            
+                    rls.add(head,'head')
+                    rls.add(glass,'glass')        
+                    rls.add(cup,'cup')
+                    rls.add(flower,'flower')
+                    rls.add(feather,'feather')
+
+                    diluc.put_on(rls)
+                    logger.info("理之冠: {}".format(head))
+                    logger.info("时之沙: {}".format(glass))
+                    logger.info("空之杯: {}".format(cup))
+                    logger.info("副词条: {}".format(rls.buf['sub']))
+
+                    tmp = diluc.damage_rsl()
+                    while (tmp in save.keys()):
+                        tmp = tmp-1
+                    save[tmp] = deepcopy(rls.buf)
+
+                    diluc.take_off(rls)
+                    rls.rm(feather,'feather')
+                    rls.rm(flower,'flower')
+                    rls.rm(cup,'cup')
+                    rls.rm(glass,'glass')
+                    rls.rm(head,'head')
+    return(save)
