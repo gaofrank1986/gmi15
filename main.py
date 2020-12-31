@@ -25,41 +25,45 @@ if __name__ == "__main__":
     
     
 
+    try:
+        skill_level = 9
+        constellation = 6
+        weapon ="tkza"
+        refine = 1
+        character = "noel"
+        
 
-    skill_level = 9
-    constellation = 6
-    weapon ="lm"
-    refine = 5
-    character = "diluc"
-    
-
-    
-    c = Character(skill_level,constellation,logger)
-    c.load_from_json("./data/character/"+character+".json")
-    c.load_weapon_from_json("./data/weapon/"+c.weapon_class+".json",weapon,refine)
+        
+        c = Character(skill_level,constellation,logger)
+        c.load_from_json("./data/character/"+character+".json")
+        c.load_weapon_from_json("./data/weapon/"+c.weapon_class+".json",weapon,refine)
 
 
-    rls = Articraft()
-    rls.load_json("./data/sub.json")
+        rls = Articraft()
+        rls.load_json("./data/sub.json")
 
-    save = run_thru("./data/main_run_list.json",c,rls,logger)
-                    
-    test = OrderedDict(sorted(save.items(),reverse=True))
-    N=0
-    limit = 4
-    tmp2 = dict()
-    for i in test:
-        N+=1
-        tmp = test[i]
-        tmp2[N] = [i,extract_name(tmp['head']),extract_name(tmp['glass']),extract_name(tmp['cup'])]
-        if N==4:
-            break
-    table = pd.DataFrame(tmp2)
-    table.index =  ['damage','head','glass','cup']
+        save = run_thru("./data/main_run_list.json",c,rls,logger)
+                        
+        test = OrderedDict(sorted(save.items(),reverse=True))
+        N=0
+        limit = 4
+        # tmp2 = dict()
+        table = pd.DataFrame(tmp2)
 
-    print(c.name,c.equipment)
-    print(table)
-    
+        for i in test:
+            N+=1
+            tmp = test[i]
+            # tmp2[N] = [i,extract_name(tmp['head']),extract_name(tmp['glass']),extract_name(tmp['cup'])]
+            table[str(N)] = [i,extract_name(tmp['head']),extract_name(tmp['glass']),extract_name(tmp['cup'])]
+            if N==4:
+                break
+        table = pd.DataFrame(tmp2)
+        table.index =  ['damage','head','glass','cup']
+
+        print(c.name,c.equipment)
+        print(table)
+    except:
+        pass
     for handler in logger.handlers:
         handler.close()
         logger.removeHandler(handler)
