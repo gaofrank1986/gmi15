@@ -1,12 +1,21 @@
 {
-    "name": "noel",
-    "level": "80",
+    "name": "诺艾尔",
     "weapon_class":"claymore",
-    "basic_health": 10698,
-    "basic_attack": 169,
-    "basic_defense": 708,
-    "break_thru": {
-        "dr": 22.5
+    "80":{
+        "basic_health": 10698,
+        "basic_attack": 169,
+        "basic_defense": 708,
+        "break_thru": {
+            "dr": 22.5
+        }
+    },
+    "90":{
+        "basic_health": 12071	,
+        "basic_attack": 191,
+        "basic_defense": 799,
+        "break_thru": {
+            "dr": 30
+        }
     },
     "round":{
         "a":3,

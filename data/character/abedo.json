@@ -1,12 +1,13 @@
 {
-    "name": "abedo",
-    "level": "90",
+    "name": "阿贝多",
     "weapon_class":"sword",
-    "basic_health": 13226	,
-    "basic_attack": 251,
-    "basic_defense": 876,
-    "break_thru": {
-        "ed": 28.8
+    "90":{
+        "basic_health": 13226	,
+        "basic_attack": 251,
+        "basic_defense": 876,
+        "break_thru": {
+            "ed": 28.8
+        }
     },
     "round":{
                 "a":0,

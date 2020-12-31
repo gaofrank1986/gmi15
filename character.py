@@ -6,7 +6,7 @@ from basic import Basic_Panel
 import os
 
 class Character(Basic_Panel):
-    def __init__(self,skill_level,c_level,main_logger):
+    def __init__(self,skill_level,c_num,main_logger,c_level=90):
         assert(isinstance(main_logger,logging.Logger))
         super().__init__()
         self.name = ''
@@ -17,8 +17,9 @@ class Character(Basic_Panel):
         else:
             self.skill_level = skill_level
             
-        self.constellation = c_level
-
+        self.constellation = c_num
+        self.level = c_level
+        
         '''人物自带初始5暴击，50暴伤'''
         self.attack[3] = 5
         self.attack[4] = 50
@@ -76,10 +77,13 @@ class Character(Basic_Panel):
 
         self.name = data['name']
         self.weapon_class = data['weapon_class']
-        self.health[0] = data['basic_health']
-        self.defense[0] = data['basic_defense']
-        self.attack[0] = data['basic_attack']
-        self.load_att(data['break_thru'])
+
+        assert str(self.level) in data.keys()
+        data1 = data[str(self.level)]
+        self.health[0] = data1['basic_health']
+        self.defense[0] = data1['basic_defense']
+        self.attack[0] = data1['basic_attack']
+        self.load_att(data1['break_thru'])
         
         self.enchant_ratio = data['enchant_ratio']
 
@@ -202,6 +206,18 @@ class Character(Basic_Panel):
                 self._load_buff(data[wp]['buffs'],self._check1)
                 break
         assert(found)
+        
+    def load_weapon_list(self,path):
+        
+        assert(self.loaded)
+        with open(path, 'r', encoding='UTF-8') as fp:
+            data = json.load(fp)
+            self.wdata = data
+        ans = []        
+        for wp in data:                
+            ans.append(data[wp]['name'])
+
+        return(ans)
     #----------------------------------------------------------------------------------
     #----------------------------------------------------------------------------------
     #----------------------------------------------------------------------------------

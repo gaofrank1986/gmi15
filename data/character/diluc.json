@@ -1,12 +1,21 @@
 {
-    "name": "diluc",
-    "level": "80",
+    "name": "迪卢克",
     "weapon_class":"claymore",
-    "basic_health": 11453,
-    "basic_attack": 335,
-    "basic_defense": 692,
-    "break_thru": {
-        "cr": 19.2
+    "80":{
+        "basic_health": 11453,
+        "basic_attack": 295,
+        "basic_defense": 692,
+        "break_thru": {
+            "cr": 14.4
+        }
+    },
+    "90":{
+        "basic_health": 12981,
+        "basic_attack": 335,
+        "basic_defense": 784,
+        "break_thru": {
+            "cr": 19.2
+        }
     },
     "round":{
                 "a":3,

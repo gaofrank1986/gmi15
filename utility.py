@@ -4,7 +4,7 @@ import pickle
 from copy import deepcopy
 from basic import Articraft
 from character import Character
-
+from PyQt5.QtCore import QAbstractTableModel,Qt
 
 def generate_relics2():
 
@@ -159,6 +159,22 @@ def extract_name(a):
     return(ans)
     
 
+class pandasModel(QAbstractTableModel):
+    def __init__(self,data):
+        QAbstractTableModel.__init__(self)
+        self._data = data
+    def rowCount(self,parent=None):
+        return self._data.shape[0]
+    def columnCount(self,parent=None):
+        return self._data.shape[1]
+    def data(self,index,role=Qt.DisplayRole):
+        if index.isValid():
+            if role == Qt.DisplayRole:
+                return (str(self._data.iloc[index.row(),index.column()]))
+    def headerData(self,col,orentation,role):
+        if orentation == Qt.Horizontal and role == Qt.DisplayRole:
+            return self._data.columns[col]    
+        return None        
 
 
 

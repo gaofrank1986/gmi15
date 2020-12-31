@@ -1,12 +1,13 @@
 {
-    "name": "tartaglia",
-    "level": "90",
+    "name": "达达利亚",
     "weapon_class":"bow",
-    "basic_health": 13103,
-    "basic_attack": 301,
-    "basic_defense": 811,
-    "break_thru": {
-        "ed": 28.8
+    "90":{
+        "basic_health": 13103,
+        "basic_attack": 301,
+        "basic_defense": 811,
+        "break_thru": {
+            "ed": 28.8
+        }
     },
     "round":{
                 "a":4,
@@ -32,7 +33,7 @@
 
     },
     "formula":{
-        "c0":["e1","e2+10.435*e3","q"],
-        "c6":["e1","e2+10.435*e3","q"]
+        "c0":["e1","e2+8*e3","q"],
+        "c6":["e1","e2+12*e3","q"]
     }
 }
