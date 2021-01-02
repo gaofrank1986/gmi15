@@ -48,6 +48,7 @@ class Character(Basic_Panel):
         self.formula = ''
         self.data = None
         self.wdata = None
+        self.ed_pos=-1
 
     def put_on(self,a):
         self.health = self.health+a.health
@@ -77,6 +78,8 @@ class Character(Basic_Panel):
 
         self.name = data['name']
         self.weapon_class = data['weapon_class']
+        self.elem_class = data['elem_class']
+        self.ed_pos = self.de_name.index('d'+self.elem_class)
 
         assert str(self.level) in data.keys()
         data1 = data[str(self.level)]
@@ -157,7 +160,7 @@ class Character(Basic_Panel):
                         else:
                             value = effect[k]
                             
-                        if k in ['d','ed','fd','cr','ar']:
+                        if k in ['d','cr','ar','dphys','dfire','dwatr','dwind','delec','dice','drock']:
                             self.skill_effect[j][k] =self.skill_effect[j].get(k,0)+value*cover_ratio
                         if k == 'level':
                             self.skill_level[self.atk_name.index(j)]+=value
@@ -237,7 +240,7 @@ class Character(Basic_Panel):
         self.main_logger.info("防御面板: {}".format(self.defense))
         self.main_logger.info("攻击面板: {}".format(self.attack[:3]))
         self.main_logger.info("暴击: {:.2f}  爆伤: {:.2f}".format(self.attack[3],self.attack[4]))
-        self.main_logger.info("属性伤害: {:.2f}  物理增伤: {:.2f}".format(self.attack[5],self.attack[6]))
+        self.main_logger.info("属性伤害: {:.2f}  物理增伤: {:.2f}".format(self.dmg_eh[self.ed_pos],self.dmg_eh[0]))
         self.main_logger.info("元素精通: {:.2f}  元素充能: {:.2f}".format(self.attack[7],self.attack[8]))
         self.main_logger.info("攻击轮数: {}".format(self.skill_round))        
         self.main_logger.info("formula = {}".format(self.formula))
@@ -287,16 +290,16 @@ class Character(Basic_Panel):
                         
                         assert(atk_t in ['elem','phys','env'])
                         if atk_t == 'elem':
-                            area3 = (1 + self.attack[5]/100+self.skill_effect[i].get('d',0)/100)
+                            area3 = (1 + self.dmg_eh[self.ed_pos]/100+self.skill_effect[i].get('d',0)/100)
                             ans[0]+=base*area2*area3*ratio*multi
                             self.main_logger.debug("area1 = {:.2f},area2 = {:.2f},area3 = {:.2f},伤害类型:{}".format(base,area2,area3,atk_t))
 
                         elif atk_t == 'phys':
-                            area3 = (1 + self.attack[5]/100+self.skill_effect[i].get('d',0)/100)
+                            area3 = (1 + self.dmg_eh[self.ed_pos]/100+self.skill_effect[i].get('d',0)/100)
                             ans[0]+=base*area2*area3*ratio*multi*self.enchant_ratio
                             self.main_logger.debug("area1 = {:.2f},area2 = {:.2f},area3 = {:.2f},伤害类型:{},附魔,占比 {}".format(base,area2,area3,"elem",self.enchant_ratio))
 
-                            area3 = (1 + self.attack[6]/100+self.skill_effect[i].get('d',0)/100)                    
+                            area3 = (1 + self.dmg_eh[0]/100+self.skill_effect[i].get('d',0)/100)                    
                             ans[1]+=base*area2*area3*ratio*multi*(1-self.enchant_ratio)
                             self.main_logger.debug("area1 = {:.2f},area2 = {:.2f},area3 = {:.2f},伤害类型:{},不附魔,占比 {}".format(base,area2,area3,"phys",1-self.enchant_ratio))
                         else:
@@ -312,7 +315,7 @@ class Character(Basic_Panel):
                             self.main_logger.debug("扩散反应  基数 {},次数 = {},精通 = {:.2f},精通增益:{:.2f}".format(em_base,multi,self.attack[7],self._em_formula(self.attack[7])/100))   
                 '''处理技能附伤'''
                 if i in self.damage.keys():
-                    area3 = (1 + self.attack[5]/100+self.skill_effect[i].get('d',0)/100)                    
+                    area3 = (1 + self.dmg_eh[self.ed_pos]/100+self.skill_effect[i].get('d',0)/100)                    
                     ans[0]+=area1*self.damage[i]/100*area2*area3
                     self.main_logger.debug("技能附加伤害: area1 = {:.2f},area2 = {:.2f},area3 = {:.2f},ratio = {:.2f} 假设为元素伤害，受益2，3乘区加成".format(area1,area2,area3,self.damage[i]/100)) 
             if i == 'w':               

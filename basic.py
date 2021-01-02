@@ -13,9 +13,11 @@ class Basic_Panel():
         self.health = np.zeros(3)
         self.attack = np.zeros(9)
         self.defense = np.zeros(3)
+        self.dmg_eh = np.zeros(7)
         self.att_name = ['ba','ar','sa','cr','cd','ed','fd','em','ef']
         self.h_name = ['bh','hr','sh']
         self.d_name = ['bd','dr','sd']
+        self.de_name = ['dphys','dfire','dwatr','dwind','delec','dice','drock']
 
     def load_att(self,info,t = "plus"):
         assert(isinstance(info,dict))
@@ -28,6 +30,8 @@ class Basic_Panel():
                     self.health[self.h_name.index(i)]+=info[i]
                 elif i in self.d_name:
                     self.defense[self.d_name.index(i)]+=info[i]
+                elif i in self.de_name:
+                    self.dmg_eh[self.de_name.index(i)]+=info[i]
                 else:
                     # print(i,"is not loaded to the character")
                     pass
@@ -39,6 +43,8 @@ class Basic_Panel():
                     self.health[self.h_name.index(i)]-=info[i]
                 elif i in self.d_name:
                     self.defense[self.d_name.index(i)]-=info[i]
+                elif i in self.de_name:
+                    self.dmg_eh[self.de_name.index(i)]-=info[i]
                 else:
                     pass
                     # print(i,"is not loaded to the character")

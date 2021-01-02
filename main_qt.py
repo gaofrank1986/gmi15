@@ -7,7 +7,7 @@ from collections import OrderedDict
 from basic import Articraft
 from character import Character
 from utility import extract_name2,run_thru,MyDialog,parse_formula
-
+import traceback
 from PyQt5.QtWidgets import QApplication,QTableView,QMainWindow,QTableWidgetItem,QCheckBox,QDialog
 import sys
 from PyQt5 import QtCore, QtGui, QtWidgets
@@ -203,8 +203,10 @@ class MainWindow(QMainWindow):
 
             self.label.setText("计算成功")
             # self.btn_load_wp.show()
-        except:
+        except Exception as e:
+            print("Error: ", e)
             self.label.setText("计算失败")
+            traceback.print_exc()
 
 
     def read_sub(self):
