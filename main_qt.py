@@ -143,7 +143,7 @@ class MainWindow(QMainWindow):
         self.cb_cnum.addItems(self._data[self.cb_name.currentText()]['c'])
     
     def run(self):
-        logger = logging.getLogger()
+        logger = logging.getLogger('Main')
         self.dlg.clear()
         self.reset_table()
         logging.info("=================日志开始================")
@@ -316,7 +316,7 @@ if __name__ == "__main__":
         sys.exit(app.exec_())
     except:
         print("Exiting")
-        logger = logging.getLogger()
+        logger = logging.getLogger('Main')
         for handler in logger.handlers:
             handler.close()
             logger.removeHandler(handler)

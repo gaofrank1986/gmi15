@@ -242,9 +242,11 @@ class MyDialog(QtWidgets.QDialog, QtWidgets.QPlainTextEdit):
         logTextBox = QTextEditLogger(self)
         # You can format what is printed to text box
         logTextBox.setFormatter(logging.Formatter("%(asctime)s — %(levelname)s — %(message)s",datefmt='%m-%d,%H:%M'))
-        logging.getLogger().addHandler(logTextBox)
+        logging.getLogger('Main').addHandler(logTextBox)
         # You can control the logging level
-        logging.getLogger().setLevel(logging.DEBUG)
+        logging.getLogger('Main').setLevel(logging.DEBUG)
+        logging.getLogger('Main').propagate = False
+
 
 
         layout = QtWidgets.QVBoxLayout()
