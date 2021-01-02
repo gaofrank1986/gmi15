@@ -1,6 +1,7 @@
 {
     "name": "阿贝多",
     "weapon_class":"sword",
+    "elem_class":"rock",
     "90":{
         "basic_health": 13226	,
         "basic_attack": 251,

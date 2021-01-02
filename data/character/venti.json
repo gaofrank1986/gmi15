@@ -1,6 +1,7 @@
 {
     "name": "温蒂",
     "weapon_class":"bow",
+    "elem_class":"wind",
     "90":{
         "basic_health": 13103,
         "basic_attack": 301,

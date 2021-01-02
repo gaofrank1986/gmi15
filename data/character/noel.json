@@ -1,6 +1,7 @@
 {
     "name": "诺艾尔",
     "weapon_class":"claymore",
+    "elem_class":"rock",
     "80":{
         "basic_health": 10698,
         "basic_attack": 169,
