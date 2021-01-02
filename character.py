@@ -54,12 +54,21 @@ class Character(Basic_Panel):
         self.health = self.health+a.health
         self.attack = self.attack+a.attack
         self.defense = self.defense+a.defense
-
+        self.dmg_eh = self.dmg_eh+a.dmg_eh
+        if a.attack[5]>0:
+            self.dmg_eh[self.ed_pos]+=a.attack[5]
+        if a.attack[6]>0:
+            self.dmg_eh[0]+=a.attack[6]
+            
     def take_off(self,a):
         self.health = self.health-a.health
         self.attack = self.attack-a.attack
         self.defense = self.defense-a.defense
-
+        self.dmg_eh = self.dmg_eh-a.dmg_eh
+        if a.attack[5]>0:
+            self.dmg_eh[self.ed_pos]-=a.attack[5]
+        if a.attack[6]>0:
+            self.dmg_eh[0]-=a.attack[6]
 
 
     def load_from_json(self,path):
