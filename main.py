@@ -9,6 +9,7 @@ from basic import Articraft
 from character import Character
 import pandas as pd
 from utility import extract_name,run_thru
+import traceback
 
 if __name__ == "__main__":
 
@@ -27,10 +28,10 @@ if __name__ == "__main__":
 
     try:
         skill_level = 9
-        constellation = 6
-        weapon ="tkza"
-        refine = 1
-        character = "noel"
+        constellation = 0
+        weapon ="jx"
+        refine = 5
+        character = "venti"
         
 
         
@@ -48,7 +49,7 @@ if __name__ == "__main__":
         N=0
         limit = 4
         # tmp2 = dict()
-        table = pd.DataFrame(tmp2)
+        table = pd.DataFrame()
 
         for i in test:
             N+=1
@@ -57,13 +58,14 @@ if __name__ == "__main__":
             table[str(N)] = [i,extract_name(tmp['head']),extract_name(tmp['glass']),extract_name(tmp['cup'])]
             if N==4:
                 break
-        table = pd.DataFrame(tmp2)
+        # table = pd.DataFrame(tmp2)
         table.index =  ['damage','head','glass','cup']
 
         print(c.name,c.equipment)
         print(table)
-    except:
-        pass
+    except Exception as e:
+            print("Error: ", e)
+            traceback.print_exc()
     for handler in logger.handlers:
         handler.close()
         logger.removeHandler(handler)

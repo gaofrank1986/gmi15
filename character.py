@@ -304,6 +304,7 @@ class Character(Basic_Panel):
                             ans[2]+=base*area2*area3*ratio*multi
                             self.main_logger.debug("area1 = {:.2f},area2 = {:.2f},area3 = {:.2f},伤害类型:{}".format(base,area2,area3,atk_t)) 
                     else:
+                        self.main_logger.debug("--------处理 {}-------".format(entry))
                         if entry[0] == 'ks':
                             multi  = float(entry[1])
                             em_base = 721
@@ -323,7 +324,7 @@ class Character(Basic_Panel):
             ##################################################
 
             self.load_att(self.skill_effect[i],"minus")
-            self.main_logger.debug("total damage for {} is 元素: {}, 物理: {}".format(i,int(ans[0]),int(ans[1])))
+            self.main_logger.debug("total damage for {} is 元素: {}, 物理: {},其他:{}".format(i,int(ans[0]),int(ans[1]),int(ans[2]+ans[3])))
             total += (ans[0]+ans[1]+ans[2]+ans[3])*self.skill_round[i]
             
       

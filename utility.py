@@ -1,67 +1,69 @@
-import numpy as np
+# import numpy as np
 import json
-import pickle
 from copy import deepcopy
 from basic import Articraft
 from character import Character
 from PyQt5.QtCore import QAbstractTableModel,Qt
+from PyQt5 import QtWidgets,QtGui
 
-def generate_relics2():
+import logging 
 
-    alist = ['head','glass','cup','flower','feather']
-    blist=[['ar','cr','cd','dr'],['ar','dr'],['ar','ed','fd'],['sh'],['sa']]
+# def generate_relics2():
 
-    basic_main_rate = 31.1#满爆率
+#     alist = ['head','glass','cup','flower','feather']
+#     blist=[['ar','cr','cd','dr'],['ar','dr'],['ar','ed','fd'],['sh'],['sa']]
 
-    prop_list = ['ar','ed','cr','cd','fd','sa','sh','dr']
-    trans_ratio = [1.5,1.5,1,2,1.875,10,153.7,1.875]
-    ratio_main = {prop_list[i]:trans_ratio[i] for i in range(len(prop_list))}
+#     basic_main_rate = 31.1#满爆率
 
-    ans = dict()
-    for i in alist:
-        ans[i] = []
-        for j in blist[alist.index(i)]:
-            tmp = dict()
-            tmp[j] = round(basic_main_rate*ratio_main[j],2)
-            ans[i].append(tmp.copy())
+#     prop_list = ['ar','ed','cr','cd','fd','sa','sh','dr']
+#     trans_ratio = [1.5,1.5,1,2,1.875,10,153.7,1.875]
+#     ratio_main = {prop_list[i]:trans_ratio[i] for i in range(len(prop_list))}
 
-    with open('./tmp/run_list.json', 'w+') as fp:
-        json.dump(ans, fp,indent = 4)
+#     ans = dict()
+#     for i in alist:
+#         ans[i] = []
+#         for j in blist[alist.index(i)]:
+#             tmp = dict()
+#             tmp[j] = round(basic_main_rate*ratio_main[j],2)
+#             ans[i].append(tmp.copy())
 
-    return(ans)
+#     with open('./tmp/run_list.json', 'w+') as fp:
+#         json.dump(ans, fp,indent = 4)
 
-def generate_sub(N,luck):
-    assert(isinstance(N,int))
-    assert(isinstance(luck,int))
+#     return(ans)
 
-    # alist = ['head','glass','cup','flower','feather']
-    # blist=[['cr','cd'],'ar','edr','sh','sa']
+# def generate_sub(N,luck):
+#     assert(isinstance(N,int))
+#     assert(isinstance(luck,int))
 
-    basic_main_rate = 31.1#满爆率
+#     # alist = ['head','glass','cup','flower','feather']
+#     # blist=[['cr','cd'],'ar','edr','sh','sa']
 
-    prop_list = ['ar','edr','cr','cd','phr','sa','sh']
-    trans_ratio = [1.5,1.5,1,2,1.875,10,153.7]
-    ratio_main = {prop_list[i]:trans_ratio[i] for i in range(len(prop_list))}
+#     basic_main_rate = 31.1#满爆率
 
-    ans = dict()
+#     prop_list = ['ar','edr','cr','cd','phr','sa','sh']
+#     trans_ratio = [1.5,1.5,1,2,1.875,10,153.7]
+#     ratio_main = {prop_list[i]:trans_ratio[i] for i in range(len(prop_list))}
+
+#     ans = dict()
             
 
-    ans['sub'] = []
-    total_sub = basic_main_rate*luck
-    precision = N
-    dist = np.linspace(0,1,precision)
-    for i in range(precision):
-        for j in range(precision-i):
-            tmp =dict()
-            tmp['cr'] = total_sub*dist[i]
-            tmp['cd'] = total_sub*ratio_main['cd']*dist[j]
-            tmp['ar'] = total_sub*ratio_main['ar']*dist[precision-i-j-1]
-            ans['sub'].append(tmp)
+#     ans['sub'] = []
+#     total_sub = basic_main_rate*luck
+#     precision = N
+#     dist = np.linspace(0,1,precision)
+#     for i in range(precision):
+#         for j in range(precision-i):
+#             tmp =dict()
+#             tmp['cr'] = total_sub*dist[i]
+#             tmp['cd'] = total_sub*ratio_main['cd']*dist[j]
+#             tmp['ar'] = total_sub*ratio_main['ar']*dist[precision-i-j-1]
+#             ans['sub'].append(tmp)
 
-    with open('./tmp/sub_run_list.json', 'w') as fp:
-        json.dump(ans, fp,indent = 4)
+#     with open('./tmp/sub_run_list.json', 'w') as fp:
+#         json.dump(ans, fp,indent = 4)
 
-    return(ans)
+#     return(ans)
 # def generate_articrafts(N,luck):
 #     assert(isinstance(N,int))
 #     assert(isinstance(luck,int))
@@ -146,35 +148,42 @@ def extract_name(a):
     assert(isinstance(a,dict))
     assert(len(a)==1)
     ans = list(a.keys())[0]
-    # if list(a.keys())[0] == 'cr':
-    #     ans = '暴击'
-    # if list(a.keys())[0] == 'cd':
-    #     ans = '暴伤'
-    # if list(a.keys())[0] == 'dr':
-    #     ans = '防御'
-    # if list(a.keys())[0] == 'ar':
-    #     ans = '攻击'
-    # if list(a.keys())[0] == 'ed':
-    #     ans = '属伤'
     return(ans)
-    
 
-class pandasModel(QAbstractTableModel):
-    def __init__(self,data):
-        QAbstractTableModel.__init__(self)
-        self._data = data
-    def rowCount(self,parent=None):
-        return self._data.shape[0]
-    def columnCount(self,parent=None):
-        return self._data.shape[1]
-    def data(self,index,role=Qt.DisplayRole):
-        if index.isValid():
-            if role == Qt.DisplayRole:
-                return (str(self._data.iloc[index.row(),index.column()]))
-    def headerData(self,col,orentation,role):
-        if orentation == Qt.Horizontal and role == Qt.DisplayRole:
-            return self._data.columns[col]    
-        return None        
+def extract_name2(a):
+    assert(isinstance(a,dict))
+    assert(len(a)==1)
+    ans = list(a.keys())[0]
+    if list(a.keys())[0] == 'cr':
+        ans = '暴击'
+    if list(a.keys())[0] == 'cd':
+        ans = '暴伤'
+    if list(a.keys())[0] == 'dr':
+        ans = '防御'
+    if list(a.keys())[0] == 'ar':
+        ans = '攻击'
+    if list(a.keys())[0] == 'ed':
+        ans = '属伤'
+    if list(a.keys())[0] == 'fd':
+        ans = '物伤'
+    return(ans)   
+
+# class pandasModel(QAbstractTableModel):
+#     def __init__(self,data):
+#         QAbstractTableModel.__init__(self)
+#         self._data = data
+#     def rowCount(self,parent=None):
+#         return self._data.shape[0]
+#     def columnCount(self,parent=None):
+#         return self._data.shape[1]
+#     def data(self,index,role=Qt.DisplayRole):
+#         if index.isValid():
+#             if role == Qt.DisplayRole:
+#                 return (str(self._data.iloc[index.row(),index.column()]))
+#     def headerData(self,col,orentation,role):
+#         # if orentation == Qt.Horizontal and role == Qt.DisplayRole:
+#             return self._data.columns[col]    
+#         # return None        
 
 
 
@@ -214,3 +223,64 @@ def run_thru(path,c,rls,logger):
                     rls.rm(glass,'glass')
                     rls.rm(head,'head')
     return(save)
+
+class QTextEditLogger(logging.Handler):
+    def __init__(self, parent):
+        super().__init__()
+        self.widget = QtWidgets.QPlainTextEdit(parent)
+        self.widget.setReadOnly(True)
+
+    def emit(self, record):
+        msg = self.format(record)
+        self.widget.appendPlainText(msg)
+
+
+class MyDialog(QtWidgets.QDialog, QtWidgets.QPlainTextEdit):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+
+        logTextBox = QTextEditLogger(self)
+        # You can format what is printed to text box
+        logTextBox.setFormatter(logging.Formatter("%(asctime)s — %(levelname)s — %(message)s",datefmt='%m-%d,%H:%M'))
+        logging.getLogger().addHandler(logTextBox)
+        # You can control the logging level
+        logging.getLogger().setLevel(logging.DEBUG)
+
+
+        layout = QtWidgets.QVBoxLayout()
+        # Add the new logging box widget to the layout
+        layout.addWidget(logTextBox.widget)
+        self.setLayout(layout)
+        
+        self.save = logTextBox.widget
+        self.resize(1300, 500)
+        font = QtGui.QFont()
+        font.setFamily("微软雅黑")
+        font.setPointSize(10)
+        self.setFont(font)
+
+
+    def clear(self):
+        self.save.setPlainText("")
+
+# def process_string(s):
+#     s = s.split("%")
+#     ans = []
+#     for i in s:
+#         if len(i)>0:
+#             ans.append(float(i))
+#     return(ans)
+
+def parse_formula(s):
+    a = s.split("+")
+    ans = []
+    for j in a:
+        if len(j.split('*')) == 1:
+            ans.append((j,'1'))
+        elif len(j.split('*')) == 2:
+            tmp = j.split('*')
+            assert('e' in tmp[1] or 'a' in tmp[1] or 'q' in tmp[1] or tmp[1]=='ks')
+            ans.append((tmp[1],tmp[0]))
+        else:
+          raise ValueError("invalid formula: {}".format(s))
+    return(ans) 
