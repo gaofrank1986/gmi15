@@ -1,6 +1,5 @@
 import numpy as np
 import json
-import pickle
 from copy import deepcopy
 import logging
 import os

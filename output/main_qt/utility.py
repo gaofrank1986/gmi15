@@ -236,18 +236,16 @@ class QTextEditLogger(logging.Handler):
 
 
 class MyDialog(QtWidgets.QDialog, QtWidgets.QPlainTextEdit):
-    def __init__(self, parent, name,fmt):
+    def __init__(self, parent=None):
         super().__init__(parent)
 
         logTextBox = QTextEditLogger(self)
         # You can format what is printed to text box
-        # logTextBox.setFormatter(logging.Formatter("%(asctime)s — %(message)s",datefmt='%m-%d,%H:%M'))
-        # logging.getLogger('Main').addHandler(logTextBox)
-        logTextBox.setFormatter(fmt)
-        logging.getLogger(name).addHandler(logTextBox)
+        logTextBox.setFormatter(logging.Formatter("%(asctime)s — %(levelname)s — %(message)s",datefmt='%m-%d,%H:%M'))
+        logging.getLogger('Main').addHandler(logTextBox)
         # You can control the logging level
-        logging.getLogger(name).setLevel(logging.DEBUG)
-        logging.getLogger(name).propagate = False
+        logging.getLogger('Main').setLevel(logging.DEBUG)
+        logging.getLogger('Main').propagate = False
 
 
 
@@ -258,7 +256,10 @@ class MyDialog(QtWidgets.QDialog, QtWidgets.QPlainTextEdit):
         
         self.save = logTextBox.widget
         self.resize(1300, 500)
-
+        font = QtGui.QFont()
+        font.setFamily("微软雅黑")
+        font.setPointSize(10)
+        self.setFont(font)
 
 
     def clear(self):

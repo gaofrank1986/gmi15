@@ -1,4 +1,4 @@
-import numpy as np
+# import numpy as np
 import json
 from copy import deepcopy
 import logging
@@ -26,20 +26,21 @@ class MainWindow(QMainWindow):
         self.btn_run.clicked.connect(self.run) 
         self.btn_load_wp.clicked.connect(self.new_win) 
         self.pb_action.clicked.connect(self.show_action) 
+        self.pb_buff.clicked.connect(self.new_win_buff) 
 
         self.cb_name.currentIndexChanged.connect(self.reset)
         self.cb_wp.currentIndexChanged.connect(self.reset_table)
         self.cb_cnum.currentIndexChanged.connect(self.reset_table)
         self.cb_skill.currentIndexChanged.connect(self.reset_table)
         self.cb_refine.currentIndexChanged.connect(self.reset_table)
-        # self.b_read.clicked.connect(self.read_sub)
-        # self.b_save.clicked.connect(self.save_sub)
-        # self.b_save_main.clicked.connect(self.generate_mainlist)
-        # self.b_read_main.clicked.connect(self.read_mainlist)
+
+
         self.b_read.hide()
         self.b_save.hide()
         self.b_read_main.hide()
         self.b_save_main.hide()
+        
+        self.pb_buff.hide()
         
         self.read_mainlist()
         self.read_sub()
@@ -50,7 +51,7 @@ class MainWindow(QMainWindow):
             data = json.load(fp)
             self._data = data      
         
-        path = "./data/artifact_effects.json"
+        path = "./data/artifacts/artifact_effects.json"
         with open(path, 'r', encoding='UTF-8') as fp:
             data = json.load(fp)
             self._aeffect = data     
@@ -62,45 +63,21 @@ class MainWindow(QMainWindow):
         self.cb_aeffect2.addItems(list(self._aeffect.keys()))
         
         self.load_info()
-        self.dlg = MyDialog(self)
+        font = QtGui.QFont()
+        font.setFamily("微软雅黑")
+        font.setPointSize(10)
+        fmt = logging.Formatter("%(asctime)s — %(message)s",datefmt='%m-%d,%H:%M')
+        self.dlg = MyDialog(self,'Main',fmt)
+        self.dlg.setFont(font)
+        
         self.win_action = QDialog(self)
-        # self.btn_load_wp.hide()
+        font.setFamily("汉仪文黑-85w")
+        font.setPointSize(9)
+        fmt = logging.Formatter("%(message)s")
+        self.win_buff = MyDialog(self,'Buff',fmt)
+        self.win_buff.setFont(font)
   
-    def show_action(self):
-        try:
-            desc = ['普攻','元素战技','元素爆发','重击']
-            prop_name =['a','e','q','h']
-            div1 = "==========\n"
-            loadUi("./data/win_action.ui",self.win_action)
-            character = self._data[self.cb_name.currentText()]['name']
-            cstl = 'c'+str(int(self.cb_cnum.currentText()))
 
-            ans =''
-            with open('./data/character/'+character+'.json', 'r', encoding='UTF-8') as fp:
-                data = json.load(fp)
-            tmp = self.win_action.info_action
-            for i in range(4):
-                if data['formula'][cstl][i]!='':
-                    rnd = data['round'][prop_name[i]]
-                    ans+="{}({}轮)\n{}".format(desc[i],rnd,div1)
-                    formula = data['formula'][cstl][i]
-                    for entry in parse_formula(formula):
-                        if entry[0] == 'ks':
-                            ans += '扩散伤害'
-                            ans += '  x {}'.format(entry[1])
-                        else:
-                            ans += data['ratio_cmt'][entry[0]]
-                            ans += '  x {}'.format(entry[1])
-                        ans+='\n'
-                else:
-                    rnd = data['round'][prop_name[i]]
-                    ans+="{}({}轮)\n{}".format(desc[i],rnd,div1)
-                    ans+='无定义\n'
-                ans+='\n'
-            tmp.setPlainText(ans)
-            self.win_action.exec_()
-        except Exception as e:
-            print("Error: ", e)
         
         
         
@@ -110,45 +87,21 @@ class MainWindow(QMainWindow):
         self.dlg.setWindowTitle("计算日志")
         self.dlg.exec_()
 
-    def reset(self):
-        self.cb_wp.clear()
-        self.cb_cnum.clear()
-        self.label.setText("")
-        self.reset_table()
-        self.load_info()
+    def new_win_buff(self):
+        # logger = logging.getLogger('Buff')
 
-    def reset_table(self):
-        self.label.setText("")
-        for i in range(4):
-            for j in range(4):
-                self.tbl_2.setItem(i, j,QTableWidgetItem(""))
+        self.win_buff.setWindowTitle("增益效果")
+        self.win_buff.exec_()    
 
-
-
-    
-    def load_info(self):
-        self.cb_wp.clear()
-        self.cb_cnum.clear()
-        self.label.setText("")
-
-        wkind = self._data[self.cb_name.currentText()]['w']
-        path = "./data/weapon/"+wkind+".json"
-        with open(path, 'r', encoding='UTF-8') as fp:
-            data = json.load(fp)
-        ans = []        
-        for wp in data: 
-            self._wdata[data[wp]['name']] = wp         
-            ans.append(data[wp]['name'])
-        self.cb_wp.addItems(ans)
-        self.cb_cnum.addItems(self._data[self.cb_name.currentText()]['c'])
     
     def run(self):
         logger = logging.getLogger('Main')
         self.dlg.clear()
+        self.win_buff.clear()
         self.reset_table()
-        logging.info("=================日志开始================")
-        logging.info("精确显示伤害后可复制到其他文本编辑器进行查询")
-        logging.info("========================================")
+        logger.info("=================日志开始================")
+        logger.info("精确显示伤害后可复制到其他文本编辑器进行查询")
+        logger.info("========================================")
 
         try:
             self.save_sub()
@@ -160,8 +113,9 @@ class MainWindow(QMainWindow):
             weapon = self._wdata[self.cb_wp.currentText()]
             refine = int(self.cb_refine.currentText())
 
+            self.label2.setText("")
 
-            self.label.setText("{} {} {} {} {}".format(character,constellation,skill_level,weapon,refine))
+            # self.label.setText("{} {} {} {} {}".format(character,constellation,skill_level,weapon,refine))
             
             c = Character(skill_level,constellation,logger)
             c.load_from_json("./data/character/"+character+".json")
@@ -172,10 +126,41 @@ class MainWindow(QMainWindow):
             else:
                 pass
             rls = Articraft()
-            rls.load_json("./data/sub.json")
+            rls.load_json("./data/artifacts/sub.json")
+            
+            ae1 = self._aeffect[self.cb_aeffect1.currentText()]
+            ae2 = self._aeffect[self.cb_aeffect2.currentText()]
+            try:
+                assert(int(ae1['n'])+int(ae2['n'])<=4)
+                c._load_buff(ae1['buffs'],c._check1)
+                c._load_buff(ae2['buffs'],c._check1)
+            except:
+                self.label2.setText("圣遗物套装信息错误，套装效果未加载")
 
-            save = run_thru("./data/main_list.json",c,rls,logger)
-                            
+
+            logging.getLogger('Buff').info("总效果: {}\n".format(c.skill_effect))
+            
+
+            save = run_thru("./data/artifacts/main_list.json",c,rls,logger)
+
+            logging.getLogger('Buff').info("特殊增益")
+            logging.getLogger('Buff').info("*************************************")
+            logging.getLogger('Buff').info("*************************************")
+
+            if "special" in c.data.keys():
+                for i in c.data['special']:
+                    logging.getLogger('Buff').info(i)
+                    logging.getLogger('Buff').info(c.data['special'][i])
+                    logging.getLogger('Buff').info("")
+
+            if "rebase" in c.data.keys():
+                for i in c.data['rebase']:
+                    logging.getLogger('Buff').info("更换倍率基础 {}".format(i))
+                    logging.getLogger('Buff').info(c.data['rebase'][i])
+                    logging.getLogger('Buff').info("")
+
+
+                 
             test = OrderedDict(sorted(save.items(),reverse=True))
             N=0
             limit = 4
@@ -202,7 +187,8 @@ class MainWindow(QMainWindow):
                     break
 
             self.label.setText("计算成功")
-            # self.btn_load_wp.show()
+            self.pb_buff.show()
+
         except Exception as e:
             print("Error: ", e)
             self.label.setText("计算失败")
@@ -210,7 +196,7 @@ class MainWindow(QMainWindow):
 
 
     def read_sub(self):
-        path = "./data/sub.json"
+        path = "./data/artifacts/sub.json"
         with open(path, 'r', encoding='UTF-8') as fp:
             data = json.load(fp)
             self._sub_data = data["sub"]
@@ -223,7 +209,7 @@ class MainWindow(QMainWindow):
             self.digit_sa.setValue(self._sub_data['sa']) 
 
     def save_sub(self):
-        path = "./data/sub.json"
+        path = "./data/artifacts/sub.json"
 
         # self._sub_data = data["sub"]
         data ={}
@@ -266,15 +252,13 @@ class MainWindow(QMainWindow):
         return(ans)
                             
     def read_mainlist(self):
-        with open('./data/main_list.json', 'r', encoding='UTF-8') as fp:
+        with open('./data/artifacts/main_list.json', 'r', encoding='UTF-8') as fp:
             data = json.load(fp)
 
         self._set_cbox('head',data['head'])
         self._set_cbox('glass',data['glass'])
         self._set_cbox('cup',data['cup'])          
-            
-            
-            
+                        
     def save_mainlist(self):
 
         alist = ['head','glass','cup','flower','feather']
@@ -297,13 +281,80 @@ class MainWindow(QMainWindow):
                 tmp[j] = round(basic_main_rate*ratio_main[j],2)
                 ans[i].append(tmp.copy())
 
-        with open('./data/main_list.json', 'w+') as fp:
+        with open('./data/artifacts/main_list.json', 'w+') as fp:
             json.dump(ans, fp,indent = 4)
             
+    def show_action(self):
+        try:
+            desc = ['普攻','元素战技','元素爆发','重击']
+            prop_name =['a','e','q','h']
+            div1 = "==========\n"
+            loadUi("./data/win_action.ui",self.win_action)
+            character = self._data[self.cb_name.currentText()]['name']
+            cstl = 'c'+str(int(self.cb_cnum.currentText()))
 
+            ans =''
+            with open('./data/character/'+character+'.json', 'r', encoding='UTF-8') as fp:
+                data = json.load(fp)
+            tmp = self.win_action.info_action
+            for i in range(4):
+                if data['formula'][cstl][i]!='':
+                    if i ==0 and self.rb_pop.isChecked():
+                        ans+="{}(速切不计入伤害 {}轮)\n{}".format(desc[i],0,div1)                    
+                    else:
+                        rnd = data['round'][prop_name[i]]
+                        ans+="{}({}轮)\n{}".format(desc[i],rnd,div1)
+                    formula = data['formula'][cstl][i]
+                    for entry in parse_formula(formula):
+                        if entry[0] == 'ks':
+                            ans += '扩散伤害'
+                            ans += '  x {}'.format(entry[1])
+                        else:
+                            ans += data['ratio_cmt'][entry[0]]
+                            ans += '  x {}'.format(entry[1])
+                        ans+='\n'
+                else:
+                    rnd = data['round'][prop_name[i]]
+                    ans+="{}({}轮)\n{}".format(desc[i],rnd,div1)
+                    ans+='无定义\n'
+                ans+='\n'
+            tmp.setPlainText(ans)
+            self.win_action.exec_()
+        except Exception as e:
+            print("Error: ", e)
 
+    def reset(self):
+        self.cb_wp.clear()
+        self.cb_cnum.clear()
+        self.label.setText("")
+        self.reset_table()
+        self.load_info()
 
+    def reset_table(self):
+        self.pb_buff.hide()
+        self.label2.setText("")
+        self.label.setText("")
+        for i in range(4):
+            for j in range(4):
+                self.tbl_2.setItem(i, j,QTableWidgetItem(""))
 
+    def load_info(self):
+        self.cb_wp.clear()
+        self.cb_cnum.clear()
+        self.label.setText("")
+
+        wkind = self._data[self.cb_name.currentText()]['w']
+        path = "./data/weapon/"+wkind+".json"
+        with open(path, 'r', encoding='UTF-8') as fp:
+            data = json.load(fp)
+        ans = []        
+        for wp in data: 
+            self._wdata[data[wp]['name']] = wp         
+            ans.append(data[wp]['name'])
+        self.cb_wp.addItems(ans)
+        self.cb_cnum.addItems(self._data[self.cb_name.currentText()]['c'])
+        
+        
 if __name__ == "__main__":
     
 
@@ -316,8 +367,8 @@ if __name__ == "__main__":
         sys.exit(app.exec_())
     except:
         print("Exiting")
-        logger = logging.getLogger('Main')
-        for handler in logger.handlers:
-            handler.close()
-            logger.removeHandler(handler)
+        # logger = logging.getLogger('Main')
+        # for handler in logger.handlers:
+        #     handler.close()
+        #     logger.removeHandler(handler)
     

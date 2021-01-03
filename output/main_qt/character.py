@@ -49,9 +49,6 @@ class Character(Basic_Panel):
         self.data = None
         self.wdata = None
         self.ed_pos=-1
-        logging.getLogger('Buff').info("普通增益")
-        logging.getLogger('Buff').info("*************************************")
-        logging.getLogger('Buff').info("*************************************")
 
     def put_on(self,a):
         self.health = [self.health[i]+a.health[i] for i in range(len(self.health))]
@@ -108,25 +105,14 @@ class Character(Basic_Panel):
 
         '''加载激活的buff'''
         self._load_buff(data['buffs'],self._check2)
-
-
+        
         if "special" in data.keys():
-            # logging.getLogger(data['special'])
             for i in data['special'].keys():
                 if self._check2(i):
                     tmp = data['special'][i][0]
                     for j in tmp:
                         if j == 'd2a':
-                            if isinstance(tmp[j],str):
-                                # assert in ratio list
-                                assert(tmp[j] in data['ratios'])
-                                pos = self.atk_name.index(tmp[j][0])
-                                level = self.skill_level[pos]
-                                # print(level)
-                                self.saved_buff['d2a'] = self.saved_buff.get('d2a',0)+data['ratios'][tmp[j]][level]
-                                # pass
-                            else:
-                                self.saved_buff['d2a'] = self.saved_buff.get('d2a',0)+tmp[j]
+                            self.saved_buff['d2a'] = self.saved_buff.get('d2a',0)+tmp[j]
 
         for i in data['formula'].keys():
             if self._check2(i):
@@ -166,34 +152,11 @@ class Character(Basic_Panel):
     
     def _load_buff(self,buffs,check):
         assert(isinstance(buffs,dict))
-        logger =  logging.getLogger('Buff')
-
-
         for i in buffs:
             if check(i):
-                logger.info(i)
-                logger.info("============")
-                # logger.info("{}\n".format(buffs[i]))
                 cond = buffs[i][0]
                 effect = buffs[i][1]
-                if 'all' in cond:
-                    cond=['a','e','q','h']
                 cover_ratio =buffs[i][2]
-                
-                logger.info("条件:{}".format(cond))
-                logger.info("效果:{}".format(effect))
-                pre = "覆盖系数"
-                if 'level' in effect:
-                    pre = '无'
-                if 'damage' in  effect:
-                    pre = '附伤次数'
-                logger.info("{}:{}".format(pre,cover_ratio))
-                if i in ['w1','w2']:
-                    logger.info("武器精炼:{}".format(self.equipment[0][-1]))
-                logger.info("{}".format(buffs[i][3]))
-
-                logger.info("")
-
                 for j in cond:
                     assert(j in self.atk_name)
                     for k in effect:
@@ -294,7 +257,6 @@ class Character(Basic_Panel):
         self.main_logger.info("特殊攻击提升:  {}".format(self.saved_buff))
         self.main_logger.info("附伤:  {}".format(self.damage))
         self.main_logger.info("技能第一乘区切换 {}".format(self.switch))
-        self.main_logger.info("技能等级 {}".format(self.skill_level))
 
         total = 0
         for i in self.atk_name:
