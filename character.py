@@ -37,7 +37,7 @@ class Character(Basic_Panel):
         #------------------
         self.equipment=[]
         
-        self.activated_buff = ["a","e","q"]
+        self.activated_buff = ["a","e","q","t1","t2"]
 
         self.skill_effect = {_:{} for _ in self.atk_name}
 
@@ -110,6 +110,10 @@ class Character(Basic_Panel):
         self._load_buff(data['buffs'],self._check2)
 
 
+        for i in data['ratios']:
+            if len(data['ratios'][i]) == 1:
+                data['ratios'][i] = data['ratios'][i]*15
+        # print(data['ratios'])
         if "special" in data.keys():
             # logging.getLogger(data['special'])
             for i in data['special'].keys():
@@ -333,9 +337,14 @@ class Character(Basic_Panel):
                         self.main_logger.debug("技能类别 [{}],技能等级 {},技能倍率 = {:.2f},发动次数 = {},攻击类型:{}".format(cat,level+1,ratio,multi,atk_t))                    
                         base = area1                
                         if entry[0] in self.switch.keys():
-                            base = self._total_def()
-                            self.main_logger.debug("切换基础乘区 攻击为防御 area1 = {:.2f}".format(base))
-                        
+                            if self.switch[entry[0]] == 'def':
+                                base = self._total_def()
+                                self.main_logger.debug("切换基础乘区 攻击为防御 area1 = {:.2f}".format(base))
+                            if self.switch[entry[0]] == 'life':
+                                    base = self._total_health()
+                                    self.main_logger.debug("切换基础乘区 攻击为生命 area1 = {:.2f}".format(base))
+                                
+                                
                         assert(atk_t in ['elem','phys','env'])
                         if atk_t == 'elem':
                             area3 = (1 + self.dmg_eh[self.ed_pos]/100+self.dmg_eh[7]/100+self.skill_effect[i].get('d',0)/100)
