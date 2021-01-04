@@ -164,7 +164,7 @@ def extract_name2(a):
         ans = '攻击'
     if list(a.keys())[0] == 'ed':
         ans = '属伤'
-    if list(a.keys())[0] == 'fd':
+    if list(a.keys())[0] == 'dphys':
         ans = '物伤'
     return(ans)   
 

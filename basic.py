@@ -7,13 +7,13 @@ import json
 class Basic_Panel():
     def __init__(self):
         self.health = [0]*3
-        self.attack = [0]*9
+        self.attack = [0]*7
         self.defense = [0]*3
-        self.dmg_eh = [0]*7
-        self.att_name = ['ba','ar','sa','cr','cd','ed','fd','em','ef']
+        self.dmg_eh = [0]*8
+        self.att_name = ['ba','ar','sa','cr','cd','em','ef']
         self.h_name = ['bh','hr','sh']
         self.d_name = ['bd','dr','sd']
-        self.de_name = ['dphys','dfire','dwatr','dwind','delec','dice','drock']
+        self.de_name = ['dphys','dfire','dwatr','dwind','delec','dice','drock','ed']
 
     def load_att(self,info,t = "plus"):
         assert(isinstance(info,dict))

@@ -205,7 +205,7 @@ class MainWindow(QMainWindow):
             self.digit_dr.setValue(self._sub_data['dr']) 
             self.digit_ar.setValue(self._sub_data['ar']) 
             self.digit_ed.setValue(self._sub_data['ed']) 
-            self.digit_fd.setValue(self._sub_data['fd']) 
+            self.digit_fd.setValue(self._sub_data['dphys']) 
             self.digit_sa.setValue(self._sub_data['sa']) 
 
     def save_sub(self):
@@ -219,7 +219,7 @@ class MainWindow(QMainWindow):
         data['ar'] = self.digit_ar.value()
         data['cd'] = self.digit_cd.value()
         data['ed'] = self.digit_ed.value()
-        data['fd'] = self.digit_fd.value()
+        data['dphys'] = self.digit_fd.value()
         data['sa'] = self.digit_sa.value()
         data['em'] = 0
         save = {}
@@ -241,7 +241,7 @@ class MainWindow(QMainWindow):
                 checkbox.setChecked(True)
 
     def _read_cbox(self,pos):
-        tmp = ['cr','cd','ar','dr','em','ed','fd']
+        tmp = ['cr','cd','ar','dr','em','ed','dphys']
         ans = []
       
         for i in tmp:
@@ -269,7 +269,7 @@ class MainWindow(QMainWindow):
                                                
         basic_main_rate = 31.1#满爆率
 
-        prop_list = ['ar','ed','cr','cd','fd','sa','sh','dr','em']
+        prop_list = ['ar','ed','cr','cd','dphys','sa','sh','dr','em']
         trans_ratio = [1.5,1.5,1,2,1.875,10,153.7,1.875,6.0128]
         ratio_main = {prop_list[i]:trans_ratio[i] for i in range(len(prop_list))}
 
@@ -286,8 +286,8 @@ class MainWindow(QMainWindow):
             
     def show_action(self):
         try:
-            desc = ['普攻','元素战技','元素爆发','重击']
-            prop_name =['a','e','q','h']
+            desc = ['普攻','元素战技','元素爆发']
+            prop_name =['a','e','q']
             div1 = "==========\n"
             loadUi("./data/win_action.ui",self.win_action)
             character = self._data[self.cb_name.currentText()]['name']
@@ -297,7 +297,7 @@ class MainWindow(QMainWindow):
             with open('./data/character/'+character+'.json', 'r', encoding='UTF-8') as fp:
                 data = json.load(fp)
             tmp = self.win_action.info_action
-            for i in range(4):
+            for i in range(len(prop_name)):
                 if data['formula'][cstl][i]!='':
                     if i ==0 and self.rb_pop.isChecked():
                         ans+="{}(速切不计入伤害 {}轮)\n{}".format(desc[i],0,div1)                    
@@ -322,6 +322,7 @@ class MainWindow(QMainWindow):
             self.win_action.exec_()
         except Exception as e:
             print("Error: ", e)
+            traceback.print_exc()
 
     def reset(self):
         self.cb_wp.clear()

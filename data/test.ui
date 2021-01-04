@@ -42,7 +42,7 @@
      <enum>Qt::TabFocus</enum>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="tab">
      <attribute name="title">
@@ -538,7 +538,7 @@
         <string>属伤</string>
        </property>
       </widget>
-      <widget class="QCheckBox" name="cbox_c_fd">
+      <widget class="QCheckBox" name="cbox_c_dphys">
        <property name="geometry">
         <rect>
          <x>20</x>
@@ -1005,8 +1005,8 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>1281</width>
-         <height>279</height>
+         <width>98</width>
+         <height>28</height>
         </rect>
        </property>
        <attribute name="label">

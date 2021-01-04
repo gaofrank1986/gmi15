@@ -13,9 +13,9 @@ class Character(Basic_Panel):
 
         assert(isinstance(skill_level,int) or isinstance(skill_level,list))
         if isinstance(skill_level,int):
-            self.skill_level = [skill_level]*4
+            self.skill_level = [skill_level]*3
         else:
-            self.skill_level = skill_level+skill_level[0]
+            self.skill_level = skill_level
             
         self.constellation = c_num
         self.level = c_level
@@ -24,7 +24,7 @@ class Character(Basic_Panel):
         self.attack[3] = 5
         self.attack[4] = 50
 
-        self.atk_name = ('a','e','q','h','w')
+        self.atk_name = ('a','e','q','w')
 
         self.main_logger = main_logger
         #-------------
@@ -37,7 +37,7 @@ class Character(Basic_Panel):
         #------------------
         self.equipment=[]
         
-        self.activated_buff = ["a","e","q","h"]
+        self.activated_buff = ["a","e","q"]
 
         self.skill_effect = {_:{} for _ in self.atk_name}
 
@@ -58,20 +58,20 @@ class Character(Basic_Panel):
         self.attack = [self.attack[i]+a.attack[i] for i in range(len(self.attack))]
         self.defense = [self.defense[i]+a.defense[i] for i in range(len(self.defense))]
         self.dmg_eh = [self.dmg_eh[i]+a.dmg_eh[i] for i in range(len(self.dmg_eh))]
-        if a.attack[5]>0:
-            self.dmg_eh[self.ed_pos]+=a.attack[5]
-        if a.attack[6]>0:
-            self.dmg_eh[0]+=a.attack[6]
+        # if a.attack[5]>0:
+        #     self.dmg_eh[self.ed_pos]+=a.attack[5]
+        # if a.attack[6]>0:
+        #     self.dmg_eh[0]+=a.attack[6]
             
     def take_off(self,a):
         self.health = [self.health[i]-a.health[i] for i in range(len(self.health))]
         self.attack = [self.attack[i]-a.attack[i] for i in range(len(self.attack))]
         self.defense = [self.defense[i]-a.defense[i] for i in range(len(self.defense))]
         self.dmg_eh = [self.dmg_eh[i]-a.dmg_eh[i] for i in range(len(self.dmg_eh))]
-        if a.attack[5]>0:
-            self.dmg_eh[self.ed_pos]-=a.attack[5]
-        if a.attack[6]>0:
-            self.dmg_eh[0]-=a.attack[6]
+        # if a.attack[5]>0:
+        #     self.dmg_eh[self.ed_pos]-=a.attack[5]
+        # if a.attack[6]>0:
+        #     self.dmg_eh[0]-=a.attack[6]
 
 
     def load_from_json(self,path):
@@ -177,7 +177,7 @@ class Character(Basic_Panel):
                 cond = buffs[i][0]
                 effect = buffs[i][1]
                 if 'all' in cond:
-                    cond=['a','e','q','h']
+                    cond=['a','e','q']
                 cover_ratio =buffs[i][2]
                 
                 logger.info("条件:{}".format(cond))
@@ -206,7 +206,7 @@ class Character(Basic_Panel):
                         else:
                             value = effect[k]
                             
-                        if k in ['d','cr','ar','dphys','dfire','dwatr','dwind','delec','dice','drock']:
+                        if k in self.de_name or k in self.de_name or k in self.att_name or k in self.h_name or k in ['d']:
                             self.skill_effect[j][k] =self.skill_effect[j].get(k,0)+value*cover_ratio
                         if k == 'level':
                             self.skill_level[self.atk_name.index(j)]+=value
@@ -251,11 +251,11 @@ class Character(Basic_Panel):
                 
                 self.load_att(data[wp]['break_thru'])
                 
-                tmp = dict()
-                for k,v in data[wp]['effect'].items():
-                    tmp[k] = v[0]+v[1]*(refine-1)
+                # tmp = dict()
+                # for k,v in data[wp]['effect'].items():
+                #     tmp[k] = v[0]+v[1]*(refine-1)
                     
-                self.load_att(tmp)
+                # self.load_att(tmp)
                 
                 '''加载激活的buff'''
                 self._load_buff(data[wp]['buffs'],self._check1)
@@ -286,8 +286,8 @@ class Character(Basic_Panel):
         self.main_logger.info("防御面板: {}".format(self.defense))
         self.main_logger.info("攻击面板: {}".format(self.attack[:3]))
         self.main_logger.info("暴击: {:.2f}  爆伤: {:.2f}".format(self.attack[3],self.attack[4]))
-        self.main_logger.info("属性伤害: {:.2f}  物理增伤: {:.2f}".format(self.dmg_eh[self.ed_pos],self.dmg_eh[0]))
-        self.main_logger.info("元素精通: {:.2f}  元素充能: {:.2f}".format(self.attack[7],self.attack[8]))
+        self.main_logger.info("属性伤害: {:.2f}  物理增伤: {:.2f}".format(self.dmg_eh[self.ed_pos]+self.dmg_eh[7],self.dmg_eh[0]))
+        self.main_logger.info("元素精通: {:.2f}  元素充能: {:.2f}".format(self.attack[5],self.attack[6]))
         self.main_logger.info("攻击轮数: {}".format(self.skill_round))        
         self.main_logger.info("formula = {}".format(self.formula))
         self.main_logger.info("Buff:  {}".format(self.skill_effect))
@@ -295,6 +295,7 @@ class Character(Basic_Panel):
         self.main_logger.info("附伤:  {}".format(self.damage))
         self.main_logger.info("技能第一乘区切换 {}".format(self.switch))
         self.main_logger.info("技能等级 {}".format(self.skill_level))
+        self.main_logger.info("增伤 {}".format(self.dmg_eh))
 
         total = 0
         for i in self.atk_name:
@@ -337,12 +338,12 @@ class Character(Basic_Panel):
                         
                         assert(atk_t in ['elem','phys','env'])
                         if atk_t == 'elem':
-                            area3 = (1 + self.dmg_eh[self.ed_pos]/100+self.skill_effect[i].get('d',0)/100)
+                            area3 = (1 + self.dmg_eh[self.ed_pos]/100+self.dmg_eh[7]/100+self.skill_effect[i].get('d',0)/100)
                             ans[0]+=base*area2*area3*ratio*multi
                             self.main_logger.debug("area1 = {:.2f},area2 = {:.2f},area3 = {:.2f},伤害类型:{}".format(base,area2,area3,atk_t))
 
                         elif atk_t == 'phys':
-                            area3 = (1 + self.dmg_eh[self.ed_pos]/100+self.skill_effect[i].get('d',0)/100)
+                            area3 = (1 + self.dmg_eh[self.ed_pos]/100+self.dmg_eh[7]/100+self.skill_effect[i].get('d',0)/100)
                             ans[0]+=base*area2*area3*ratio*multi*self.enchant_ratio
                             self.main_logger.debug("area1 = {:.2f},area2 = {:.2f},area3 = {:.2f},伤害类型:{},附魔,占比 {}".format(base,area2,area3,"elem",self.enchant_ratio))
 
@@ -358,17 +359,16 @@ class Character(Basic_Panel):
                         if entry[0] == 'ks':
                             multi  = float(entry[1])
                             em_base = 721
-                            ans[3] = em_base*multi*(1+self._em_formula(self.attack[7])/100)  
-                            self.main_logger.debug("扩散反应  基数 {},次数 = {},精通 = {:.2f},精通增益:{:.2f}".format(em_base,multi,self.attack[7],self._em_formula(self.attack[7])/100))   
+                            ans[3] = em_base*multi*(1+self._em_formula(self.attack[5])/100)  
+                            self.main_logger.debug("扩散反应  基数 {},次数 = {},精通 = {:.2f},精通增益:{:.2f}".format(em_base,multi,self.attack[5],self._em_formula(self.attack[5])/100))   
                 '''处理技能附伤'''
                 if i in self.damage.keys():
-                    area3 = (1 + self.dmg_eh[self.ed_pos]/100+self.skill_effect[i].get('d',0)/100)                    
+                    area3 = (1 + self.dmg_eh[self.ed_pos]/100+self.dmg_eh[7]/100+self.skill_effect[i].get('d',0)/100)                    
                     ans[0]+=area1*self.damage[i]/100*area2*area3
                     self.main_logger.debug("技能附加伤害: area1 = {:.2f},area2 = {:.2f},area3 = {:.2f},ratio = {:.2f} 假设为元素伤害，受益2，3乘区加成".format(area1,area2,area3,self.damage[i]/100)) 
             if i == 'w':               
                 '''武器附伤'''
                 if 'w' in self.damage.keys():
-                    # area3 = (1 + self.attack[5]/100+self.skill_effect[i].get('d',0)/100)                    
                     ans[1]+=area1*self.damage[i]/100
                     self.main_logger.debug("武器附加伤害: area1 = {:.2f},ratio = {:.2f} 假设为物理伤害，不受益2，3乘区加成".format(area1,self.damage[i]/100))    
             ##################################################

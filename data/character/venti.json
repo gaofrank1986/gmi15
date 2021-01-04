@@ -3,11 +3,11 @@
     "weapon_class":"bow",
     "elem_class":"wind",
     "90":{
-        "basic_health": 13103,
-        "basic_attack": 301,
-        "basic_defense": 811,
+        "basic_health": 10531,
+        "basic_attack": 263,
+        "basic_defense": 669,
         "break_thru": {
-            "ed": 28.8
+            "ef": 32
         }
     },
     "ratios":{
@@ -198,11 +198,10 @@
     "round":{
         "a":4,
         "e":3,
-        "q":1,
-        "h":0
+        "q":1
         },
     "enchant_ratio":0,
     "formula":{
-        "c0":["a1+a2+a3+a4+a5+a6","e1","20*q1+20*q2+7*ks",""]
+        "c0":["a1+a2+a3+a4+a5+a6","e1","20*q1+20*q2+7*ks"]
     }
 }

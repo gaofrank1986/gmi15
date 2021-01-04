@@ -35,7 +35,13 @@
         ],
         "name": "venti",
         "w": "bow"
-    }
-    
+    },
+    "凝光": {
+        "c": [
+            "6"
+        ],
+        "name": "ningguang",
+        "w": "catalyst"
+    }    
     
 }

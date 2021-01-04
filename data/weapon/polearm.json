@@ -1,0 +1,15 @@
+{
+    "lmsj":{
+        "name": "黎明神剑",
+        "level": "90",
+        "basic_attack": 401,
+        "break_thru": {
+            "cd": 46.9
+        },
+        "effect":{
+            "cr": [14 ,3.5]
+        },
+        "buffs": {
+        }
+    }
+}
