@@ -166,6 +166,8 @@ def extract_name2(a):
         ans = '属伤'
     if list(a.keys())[0] == 'dphys':
         ans = '物伤'
+    if list(a.keys())[0] == 'hr':
+        ans = '生命'
     return(ans)   
 
 # class pandasModel(QAbstractTableModel):

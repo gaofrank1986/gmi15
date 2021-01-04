@@ -42,7 +42,7 @@
      <enum>Qt::TabFocus</enum>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="tab">
      <attribute name="title">
@@ -460,6 +460,19 @@
         <string>精通</string>
        </property>
       </widget>
+      <widget class="QCheckBox" name="cbox_h_hr">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>200</y>
+         <width>91</width>
+         <height>19</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>生命</string>
+       </property>
+      </widget>
      </widget>
      <widget class="QGroupBox" name="groupBox_2">
       <property name="geometry">
@@ -510,6 +523,19 @@
        </property>
        <property name="text">
         <string>精通</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="cbox_g_hr">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>130</y>
+         <width>91</width>
+         <height>19</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>生命</string>
        </property>
       </widget>
      </widget>
@@ -575,6 +601,19 @@
        </property>
        <property name="text">
         <string>精通</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="cbox_c_hr">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>160</y>
+         <width>91</width>
+         <height>19</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>生命</string>
        </property>
       </widget>
      </widget>
@@ -1005,8 +1044,8 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>98</width>
-         <height>28</height>
+         <width>1281</width>
+         <height>279</height>
         </rect>
        </property>
        <attribute name="label">
