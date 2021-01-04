@@ -241,7 +241,7 @@ class MainWindow(QMainWindow):
                 checkbox.setChecked(True)
 
     def _read_cbox(self,pos):
-        tmp = ['cr','cd','ar','dr','em','ed','dphys']
+        tmp = ['cr','cd','ar','dr','em','ed','dphys','hr']
         ans = []
       
         for i in tmp:
@@ -269,8 +269,8 @@ class MainWindow(QMainWindow):
                                                
         basic_main_rate = 31.1#满爆率
 
-        prop_list = ['ar','ed','cr','cd','dphys','sa','sh','dr','em']
-        trans_ratio = [1.5,1.5,1,2,1.875,10,153.7,1.875,6.0128]
+        prop_list = ['ar','ed','cr','cd','dphys','sa','sh','dr','em','hr','cure']
+        trans_ratio = [1.5,1.5,1,2,1.875,10,153.7,1.875,6.0128,1.5,1.1428]
         ratio_main = {prop_list[i]:trans_ratio[i] for i in range(len(prop_list))}
 
         ans = dict()
