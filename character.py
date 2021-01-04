@@ -206,7 +206,7 @@ class Character(Basic_Panel):
                         else:
                             value = effect[k]
                             
-                        if k in self.de_name or k in self.de_name or k in self.att_name or k in self.h_name or k in ['d']:
+                        if k in self.d_name or k in self.de_name or k in self.att_name or k in self.h_name or k in ['d']:
                             self.skill_effect[j][k] =self.skill_effect[j].get(k,0)+value*cover_ratio
                         if k == 'level':
                             self.skill_level[self.atk_name.index(j)]+=value
