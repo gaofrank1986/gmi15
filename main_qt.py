@@ -8,7 +8,7 @@ from basic import Articraft
 from character import Character
 from utility import extract_name2,run_thru,MyDialog,parse_formula
 import traceback
-from PyQt5.QtWidgets import QApplication,QTableView,QMainWindow,QTableWidgetItem,QCheckBox,QDialog
+from PyQt5.QtWidgets import QApplication,QTableView,QMainWindow,QTableWidgetItem,QCheckBox,QDialog,QLineEdit,QLabel
 import sys
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.uic import loadUi
@@ -27,6 +27,7 @@ class MainWindow(QMainWindow):
         self.btn_load_wp.clicked.connect(self.new_win) 
         self.pb_action.clicked.connect(self.show_action) 
         self.pb_buff.clicked.connect(self.new_win_buff) 
+        self.pb_change.clicked.connect(self.change_action) 
 
         self.cb_name.currentIndexChanged.connect(self.reset)
         self.cb_wp.currentIndexChanged.connect(self.reset_table)
@@ -71,6 +72,16 @@ class MainWindow(QMainWindow):
         self.dlg.setFont(font)
         
         self.win_action = QDialog(self)
+        loadUi("./data/win_action.ui",self.win_action)
+
+        self.win_change = QDialog(self)
+        loadUi("./data/change_action.ui",self.win_change)
+        self.win_change.le_a.editingFinished.connect(lambda: self.checkline('a'))
+        self.win_change.le_e.editingFinished.connect(lambda: self.checkline('e'))
+        self.win_change.le_q.editingFinished.connect(lambda: self.checkline('q'))
+        # self.win_change.le_a.textEdited.connect(self.set_status)
+        # self.win_change.le_a.cursorPositionChanged.connect(self.set_status)
+
         font.setFamily("汉仪文黑-85w")
         font.setPointSize(9)
         fmt = logging.Formatter("%(message)s")
@@ -289,7 +300,6 @@ class MainWindow(QMainWindow):
             desc = ['普攻','元素战技','元素爆发']
             prop_name =['a','e','q']
             div1 = "==========\n"
-            loadUi("./data/win_action.ui",self.win_action)
             character = self._data[self.cb_name.currentText()]['name']
             cstl = 'c'+str(int(self.cb_cnum.currentText()))
 
@@ -324,6 +334,49 @@ class MainWindow(QMainWindow):
             print("Error: ", e)
             traceback.print_exc()
 
+    def change_action(self):
+        try:
+            
+            character = self._data[self.cb_name.currentText()]['name']
+            cstl = 'c'+str(int(self.cb_cnum.currentText()))
+
+            with open('./data/character/'+character+'.json', 'r', encoding='UTF-8') as fp:
+                data = json.load(fp)
+            self._cdata = data
+            self.win_change.lb_name.setText(data['name'])
+            self.win_change.lb_c.setText(cstl)
+            while (self.win_change.tb_skill.rowCount() > 0):
+                self.win_change.tb_skill.removeRow(0)
+            N = 0
+            for i in data['ratios']:
+                item =  QTableWidgetItem(i)
+                self.win_change.tb_skill.insertRow(N)
+                self.win_change.tb_skill.setItem(N,0,item)
+                item = QTableWidgetItem(data['atk_type'][i])
+                self.win_change.tb_skill.setItem(N,1,item)
+                item = QTableWidgetItem(data['ratio_cmt'][i])
+                self.win_change.tb_skill.setItem(N,2,item)
+
+                N+=1
+            header = self.win_change.tb_skill.horizontalHeader()       
+            header.setSectionResizeMode(0, QtWidgets.QHeaderView.ResizeToContents)
+            header.setSectionResizeMode(1, QtWidgets.QHeaderView.ResizeToContents)
+            header.setSectionResizeMode(2, QtWidgets.QHeaderView.Stretch)
+            
+            self.win_change.le_a.setText(data['formula'][cstl][0])
+            self.win_change.le_e.setText(data['formula'][cstl][1])
+            self.win_change.le_q.setText(data['formula'][cstl][2])
+            
+            self.win_change.sb_rnd_a.setValue(data['round']['a'])
+            self.win_change.sb_rnd_e.setValue(data['round']['e'])
+            self.win_change.sb_rnd_q.setValue(data['round']['q'])
+            self.win_change.dsb_enchant.setValue(data['enchant_ratio'])
+
+            self.win_change.exec_()
+        except Exception as e:
+            print("Error: ", e)
+            traceback.print_exc()
+            
     def reset(self):
         self.cb_wp.clear()
         self.cb_cnum.clear()
@@ -354,6 +407,27 @@ class MainWindow(QMainWindow):
             ans.append(data[wp]['name'])
         self.cb_wp.addItems(ans)
         self.cb_cnum.addItems(self._data[self.cb_name.currentText()]['c'])
+
+    def checkline(self,s):
+        # print(self.win_change.le_a.text())
+        assert(s in['a','e','q'])
+        fm = self.win_change.findChild(QLineEdit,"le_"+s).text()
+        status = self.win_change.findChild(QLabel,"lb_status_"+s)
+        if fm!='':
+            try:
+                tmp = fm.split('+')
+                for i in tmp:
+                    #count *
+                    assert(i.count('*')<2)
+                    tmp2 = i.split('*')
+                    assert(tmp2[-1] in self._cdata['ratios'] or tmp2[-1] in ['ks'])
+                status.setText('正确')
+            except:
+                status.setText('错误')
+        else:
+            status.setText('正确')
+    # def set_status(self):
+    #     print("hello")
 
 # stylesheet = """
 #     MainWindow {

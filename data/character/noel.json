@@ -60,7 +60,7 @@
             "e":1,
             "q":1
             },
-        "enchant_ratio":1,
+    "enchant_ratio":1,
     "formula":{
     "c6":["a1+a2+a3+a4","e1+e2","q"]
     },
