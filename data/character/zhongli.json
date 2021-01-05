@@ -222,8 +222,8 @@
         "a5": "phys",
         "a6": "phys",
         "e1": "elem",
-        "e2": "elem",
-        "e3_base": "elem",
+        "e2": "shield",
+        "e3_base": "shield",
         "e3": "elem",
         "q1": "elem",
         "q2": "elem"
@@ -235,15 +235,18 @@
     },
     "round":{
         "a":4,
-        "e":9,
-        "q":1,
-        "h":0
+        "e":1,
+        "q":1
         },
     "enchant_ratio":0,
     "formula":{
-        "c0":["a1+a2+a3+a4+a5+a6","2*e1","q1+q2"]
+        "c0":["a1+a2+a3+a4+a5+a6","9*e1","q1+q2"]
     },
     "rebase":{
-        "q2":"life"
+        "q2":"life",
+        "e3":"life"
+    },
+    "base":{
+        "e3":"e3_base"
     }
 }

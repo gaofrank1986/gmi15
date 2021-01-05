@@ -354,13 +354,20 @@ class MainWindow(QMainWindow):
             ans.append(data[wp]['name'])
         self.cb_wp.addItems(ans)
         self.cb_cnum.addItems(self._data[self.cb_name.currentText()]['c'])
-        
+
+# stylesheet = """
+#     MainWindow {
+#         background-image: url("./data/bg.png"); 
+#         background-repeat: no-repeat; 
+#     }
+# """        
         
 if __name__ == "__main__":
     
 
     
     app = QtWidgets.QApplication(sys.argv)
+    # app.setStyleSheet(stylesheet)
     win = MainWindow()
 
     win.show()

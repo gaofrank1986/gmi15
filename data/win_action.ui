@@ -13,6 +13,7 @@
   <property name="font">
    <font>
     <family>汉仪文黑-85W</family>
+    <pointsize>10</pointsize>
    </font>
   </property>
   <property name="windowTitle">
@@ -21,15 +22,16 @@
   <widget class="QPlainTextEdit" name="info_action">
    <property name="geometry">
     <rect>
-     <x>20</x>
-     <y>40</y>
-     <width>581</width>
-     <height>331</height>
+     <x>10</x>
+     <y>20</y>
+     <width>631</width>
+     <height>381</height>
     </rect>
    </property>
    <property name="font">
     <font>
      <family>汉仪文黑-85W</family>
+     <pointsize>10</pointsize>
     </font>
    </property>
    <property name="readOnly">
@@ -37,19 +39,6 @@
    </property>
    <property name="plainText">
     <string>dzsd</string>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="pushButton">
-   <property name="geometry">
-    <rect>
-     <x>410</x>
-     <y>390</y>
-     <width>93</width>
-     <height>28</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>test</string>
    </property>
   </widget>
  </widget>

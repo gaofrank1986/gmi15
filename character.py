@@ -210,7 +210,7 @@ class Character(Basic_Panel):
                         else:
                             value = effect[k]
                             
-                        if k in self.d_name or k in self.de_name or k in self.att_name or k in self.h_name or k in ['d']:
+                        if k in self.d_name or k in self.de_name or k in self.att_name or k in self.h_name or k in ['d','ratio']:
                             self.skill_effect[j][k] =self.skill_effect[j].get(k,0)+value*cover_ratio
                         if k == 'level':
                             self.skill_level[self.atk_name.index(j)]+=value
@@ -334,6 +334,9 @@ class Character(Basic_Panel):
                         multi  = float(entry[1])
                         atk_t = self.data['atk_type'][entry[0]]
                         ratio=self.data['ratios'][entry[0]][level]/100
+                        if 'ratio' in self.skill_effect[i]:
+                            ratio = ratio*(1+self.skill_effect[i]['ratio']/100)
+                            self.main_logger.debug("祭礼剑系列 技能{} 倍率增加{}%,增加量为期望概率值".format(i,self.skill_effect[i]['ratio']))
                         self.main_logger.debug("技能类别 [{}],技能等级 {},技能倍率 = {:.2f},发动次数 = {},攻击类型:{}".format(cat,level+1,ratio,multi,atk_t))                    
                         base = area1                
                         if entry[0] in self.switch.keys():

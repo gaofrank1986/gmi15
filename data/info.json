@@ -7,11 +7,11 @@
         "name": "diluc",
         "w": "claymore"
     },
-    "诺艾尔": {
+    "====水=====": {
         "c": [
-            "6"
+            "0"
         ],
-        "name": "noel",
+        "name": "empty",
         "w": "claymore"
     },
     "达达利亚": {
@@ -22,12 +22,19 @@
         "name": "tartaglia",
         "w": "bow"
     },
-    "阿贝多": {
+    "行秋": {
+        "c": [
+            "6"
+        ],
+        "name": "xingqiu",
+        "w": "sword"
+    },
+    "====风=====": {
         "c": [
             "0"
         ],
-        "name": "abedo",
-        "w": "sword"
+        "name": "empty",
+        "w": "claymore"
     },
     "温蒂": {
         "c": [
@@ -35,6 +42,13 @@
         ],
         "name": "venti",
         "w": "bow"
+    },
+    "====岩=====": {
+        "c": [
+            "0"
+        ],
+        "name": "empty",
+        "w": "claymore"
     },
     "凝光": {
         "c": [
@@ -49,5 +63,19 @@
         ],
         "name": "zhongli",
         "w": "polearm"
-    }     
+    },
+    "阿贝多": {
+        "c": [
+            "0"
+        ],
+        "name": "abedo",
+        "w": "sword"
+    },
+    "诺艾尔": {
+        "c": [
+            "6"
+        ],
+        "name": "noel",
+        "w": "claymore"
+    }   
 }
