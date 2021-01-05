@@ -210,14 +210,14 @@ class Character(Basic_Panel):
                         else:
                             value = effect[k]
                             
-                        if k in self.d_name or k in self.de_name or k in self.att_name or k in self.h_name or k in ['d','ratio']:
+                        if k in self.d_name or k in self.de_name or k in self.att_name or k in self.h_name or k in ['d','ratio','damage']:
                             self.skill_effect[j][k] =self.skill_effect[j].get(k,0)+value*cover_ratio
                         if k == 'level':
                             self.skill_level[self.atk_name.index(j)]+=value
                         # if k == 'ratio':
                         #     self.skill_ratio[j][0]+=value
-                        if k == 'damage':
-                            self.damage[j] = self.damage.get(j,0)+value*cover_ratio
+                        # if k == 'damage':
+                        #     self.damage[j] = self.damage.get(j,0)+value*cover_ratio
                             
     def _total_def(self):
         return(self.defense[0]*(1+self.defense[1]/100)+self.defense[2])
@@ -380,9 +380,9 @@ class Character(Basic_Panel):
                     self.main_logger.debug("技能附加伤害: area1 = {:.2f},area2 = {:.2f},area3 = {:.2f},ratio = {:.2f} 假设为元素伤害，受益2，3乘区加成".format(area1,area2,area3,self.damage[i]/100)) 
             if i == 'w':               
                 '''武器附伤'''
-                if 'w' in self.damage.keys():
-                    ans[1]+=area1*self.damage[i]/100
-                    self.main_logger.debug("武器附加伤害: area1 = {:.2f},ratio = {:.2f} 假设为物理伤害，不受益2，3乘区加成".format(area1,self.damage[i]/100))    
+                if 'damage' in self.skill_effect[i]:
+                    ans[1]+=area1*self.skill_effect[i]['damage']/100
+                    self.main_logger.debug("武器附加伤害: area1 = {:.2f},ratio = {:.2f} 假设为物理伤害，不受益2，3乘区加成".format(area1,self.skill_effect[i]['damage']/100))    
             ##################################################
 
             self.load_att(self.skill_effect[i],"minus")
