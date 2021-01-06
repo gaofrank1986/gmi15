@@ -1,8 +1,8 @@
 # import numpy as np
 import json
 from copy import deepcopy
-from basic import Articraft
-from character import Character
+# from basic import Articraft
+# from character import Character
 from PyQt5.QtCore import QAbstractTableModel,Qt
 from PyQt5 import QtWidgets,QtGui
 

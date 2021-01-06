@@ -45,7 +45,8 @@
     "a4": "phys",      
     "e1" : "elem",
     "e2" : "elem",
-    "q" : "elem"
+    "q" : "elem",
+    "q2" : "elem"
     },
     "buffs": {
     "c3": [["e"],{"level":3},0,"e等级加3"],

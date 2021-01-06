@@ -45,6 +45,27 @@ class Basic_Panel():
                     pass
                     # print(i,"is not loaded to the character")
 
+    def get_properties(self):
+        tmp = dict()
+        for i in range(len(self.h_name)):
+            tmp[self.h_name[i]] = self.health[i]
+        for i in range(len(self.att_name)):
+            tmp[self.att_name[i]] = self.attack[i]
+        for i in range(len(self.d_name)):
+            tmp[self.d_name[i]] = self.defense[i]
+        for i in range(len(self.de_name)):
+            tmp[self.de_name[i]] = self.dmg_eh[i]
+        return(tmp)
+
+        
+    def put_on(self,a):
+        assert(issubclass(a.__class__,Basic_Panel))
+        self.load_att(a.get_properties())
+
+            
+    def take_off(self,a):
+        assert(issubclass(a.__class__,Basic_Panel))
+        self.load_att(a.get_properties(),t = "minus")
 
 class Articraft(Basic_Panel):
     def __init__(self,star_level=5):

@@ -79,8 +79,7 @@ class MainWindow(QMainWindow):
         self.win_change.le_a.editingFinished.connect(lambda: self.checkline('a'))
         self.win_change.le_e.editingFinished.connect(lambda: self.checkline('e'))
         self.win_change.le_q.editingFinished.connect(lambda: self.checkline('q'))
-        # self.win_change.le_a.textEdited.connect(self.set_status)
-        # self.win_change.le_a.cursorPositionChanged.connect(self.set_status)
+
 
         font.setFamily("汉仪文黑-85w")
         font.setPointSize(9)
@@ -99,8 +98,6 @@ class MainWindow(QMainWindow):
         self.dlg.exec_()
 
     def new_win_buff(self):
-        # logger = logging.getLogger('Buff')
-
         self.win_buff.setWindowTitle("增益效果")
         self.win_buff.exec_()    
 
@@ -128,7 +125,7 @@ class MainWindow(QMainWindow):
 
             # self.label.setText("{} {} {} {} {}".format(character,constellation,skill_level,weapon,refine))
             
-            c = Character(skill_level,constellation,logger)
+            c = Character(skill_level,constellation)
             c.load_from_json("./data/character/"+character+".json")
             c.load_weapon_from_json("./data/weapon/"+c.weapon_class+".json",weapon,refine)
 
@@ -158,14 +155,14 @@ class MainWindow(QMainWindow):
             logging.getLogger('Buff').info("*************************************")
             logging.getLogger('Buff').info("*************************************")
 
-            if "special" in c.data.keys():
-                for i in c.data['special']:
+            if "special" in c._data.keys():
+                for i in c._data['special']:
                     logging.getLogger('Buff').info(i)
                     logging.getLogger('Buff').info(c.data['special'][i])
                     logging.getLogger('Buff').info("")
 
-            if "rebase" in c.data.keys():
-                for i in c.data['rebase']:
+            if "rebase" in c._data.keys():
+                for i in c._data['rebase']:
                     logging.getLogger('Buff').info("更换倍率基础 {}".format(i))
                     logging.getLogger('Buff').info(c.data['rebase'][i])
                     logging.getLogger('Buff').info("")
@@ -242,7 +239,6 @@ class MainWindow(QMainWindow):
     def _set_cbox(self,pos,data):
         #setObjectName()/findChild()
         assert(pos in ['head','glass','cup'])
-        # tmp = data[pos]
         ans = []
         for i in data:
             ans+=list(i.keys())        
@@ -409,7 +405,6 @@ class MainWindow(QMainWindow):
         self.cb_cnum.addItems(self._data[self.cb_name.currentText()]['c'])
 
     def checkline(self,s):
-        # print(self.win_change.le_a.text())
         assert(s in['a','e','q'])
         fm = self.win_change.findChild(QLineEdit,"le_"+s).text()
         status = self.win_change.findChild(QLabel,"lb_status_"+s)
@@ -417,7 +412,6 @@ class MainWindow(QMainWindow):
             try:
                 tmp = fm.split('+')
                 for i in tmp:
-                    #count *
                     assert(i.count('*')<2)
                     tmp2 = i.split('*')
                     assert(tmp2[-1] in self._cdata['ratios'] or tmp2[-1] in ['ks'])
@@ -426,22 +420,13 @@ class MainWindow(QMainWindow):
                 status.setText('错误')
         else:
             status.setText('正确')
-    # def set_status(self):
-    #     print("hello")
 
-# stylesheet = """
-#     MainWindow {
-#         background-image: url("./data/bg.png"); 
-#         background-repeat: no-repeat; 
-#     }
-# """        
         
 if __name__ == "__main__":
     
 
     
     app = QtWidgets.QApplication(sys.argv)
-    # app.setStyleSheet(stylesheet)
     win = MainWindow()
 
     win.show()
@@ -449,8 +434,5 @@ if __name__ == "__main__":
         sys.exit(app.exec_())
     except:
         print("Exiting")
-        # logger = logging.getLogger('Main')
-        # for handler in logger.handlers:
-        #     handler.close()
-        #     logger.removeHandler(handler)
+
     
