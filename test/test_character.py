@@ -5,17 +5,16 @@ sys.path.append(".")
 
 from character import Character
 from basic import Articraft
-import logging
 
-logger = logging.getLogger('test')
+
 
 @pytest.fixture
 def c0():
-    return(Character(1,1,logger))
+    return(Character(1,1))
 
 @pytest.fixture
 def c1():
-    c1  = Character(1,1,logger)
+    c1  = Character(1,1)
     c1.health =[1,2,3]
     c1.attack =[4,5,6,7,8,9,10]
     c1.defense =[11,12,13]
@@ -24,13 +23,13 @@ def c1():
 
 @pytest.fixture
 def c2():
-    c2  = Character(6,6,logger)
+    c2  = Character(6,6)
     c2.load_from_json("./data/test/diluc.json")
     return(c2)
 
 @pytest.fixture
 def c3():
-    c3  = Character(6,6,logger)
+    c3  = Character(6,6)
     c3.load_from_json("./data/test/diluc.json")
     c3.load_weapon_from_json("./data/test/claymore.json","lm",1)
     return(c3)
