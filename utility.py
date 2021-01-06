@@ -1,9 +1,6 @@
-# import numpy as np
 import json
 from copy import deepcopy
-# from basic import Articraft
-# from character import Character
-from PyQt5.QtCore import QAbstractTableModel,Qt
+# from PyQt5.QtCore import QAbstractTableModel,Qt
 from PyQt5 import QtWidgets,QtGui
 
 import logging 
@@ -168,6 +165,19 @@ def extract_name2(a):
         ans = '物伤'
     if list(a.keys())[0] == 'hr':
         ans = '生命'
+    return(ans)
+
+def extract_name3(a):
+    if a == 'phys':
+        ans = '物理伤害'
+    if a == 'elem':
+        ans = '属性元素'
+    if a == 'env':
+        ans = '环境元素'
+    if a == 'shield':
+        ans = '技能护盾'
+    if a == 'heal':
+        ans = '技能治疗'
     return(ans)   
 
 # class pandasModel(QAbstractTableModel):

@@ -1,13 +1,13 @@
 {
     "name": "",
-    "weapon_class":"",
-    "elem_class":"",
+    "weapon_class":"claymore",
+    "elem_class":"watr",
     "90":{
-        "basic_health": 13226	,
-        "basic_attack": 251,
-        "basic_defense": 876,
+        "basic_health": 0	,
+        "basic_attack": 0,
+        "basic_defense": 0,
         "break_thru": {
-            "ed": 28.8
+            "ed": 0
         }
     },
     "round":{
@@ -20,7 +20,7 @@
         "a1": [0]
     },
     "ratio_cmt":{
-        "a1": "普攻一段",
+        "a1": "普攻一段"
     },
     "atk_type":{
         "a1": "phys"

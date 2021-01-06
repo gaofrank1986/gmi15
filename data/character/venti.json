@@ -1,8 +1,8 @@
 {
     "name": "温蒂",
-    "weapon_class":"bow",
-    "elem_class":"wind",
-    "90":{
+    "weapon_class": "bow",
+    "elem_class": "wind",
+    "90": {
         "basic_health": 10531,
         "basic_attack": 263,
         "basic_defense": 669,
@@ -10,7 +10,7 @@
             "ef": 32
         }
     },
-    "ratios":{
+    "ratios": {
         "a1": [
             40.76,
             44.08,
@@ -165,43 +165,61 @@
             44.65
         ]
     },
-    "ratio_cmt":{
+    "ratio_cmt": {
         "a1": "普攻一段",
         "a2": "普攻二段",
         "a3": "普攻三段",
-        "a4" :"普攻四段",
+        "a4": "普攻四段",
         "a5": "普攻五段",
         "a6": "普攻六段",
         "e1": "高天之歌短按",
         "q1": "风神之诗 持续伤害",
         "q2": "风神之诗 元素转化"
-
     },
-    "atk_type":{
+    "atk_type": {
         "a1": "phys",
         "a2": "phys",
         "a3": "phys",
-        "a4" :"phys",
+        "a4": "phys",
         "a5": "phys",
         "a6": "phys",
         "e1": "elem",
         "q1": "elem",
         "q2": "env"
-
     },
-
     "buffs": {
-        "c3": [["e"],{"level":3},0,"e技能级别加3"],
-        "c5": [["q"],{"level":3},0,"q技能等级加3"]
-
+        "c3": [
+            [
+                "e"
+            ],
+            {
+                "level": 3
+            },
+            0,
+            "e技能级别加3"
+        ],
+        "c5": [
+            [
+                "q"
+            ],
+            {
+                "level": 3
+            },
+            0,
+            "q技能等级加3"
+        ]
     },
-    "round":{
-        "a":4,
-        "e":3,
-        "q":1
-        },
-    "enchant_ratio":0,
-    "formula":{
-        "c0":["a1+a2+a3+a4+a5+a6","e1","20*q1+20*q2+7*ks"]
+    "round": {
+        "a": 4,
+        "e": 3,
+        "q": 1
+    },
+    "enchant_ratio": 0.0,
+    "formula": {
+        "c0": [
+            "a1+a2+a3+a4+a5+a6",
+            "e1",
+            "20*q1+20*q2+7*ks"
+        ]
     }
 }

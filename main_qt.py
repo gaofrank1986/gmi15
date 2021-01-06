@@ -6,9 +6,9 @@ import os
 from collections import OrderedDict
 from basic import Articraft
 from character import Character
-from utility import extract_name2,run_thru,MyDialog,parse_formula
+from utility import extract_name2,run_thru,MyDialog,parse_formula,extract_name3
 import traceback
-from PyQt5.QtWidgets import QApplication,QTableView,QMainWindow,QTableWidgetItem,QCheckBox,QDialog,QLineEdit,QLabel
+from PyQt5.QtWidgets import QApplication,QTableView,QMainWindow,QTableWidgetItem,QCheckBox,QDialog,QLineEdit,QLabel,QSpinBox
 import sys
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.uic import loadUi
@@ -79,7 +79,7 @@ class MainWindow(QMainWindow):
         self.win_change.le_a.editingFinished.connect(lambda: self.checkline('a'))
         self.win_change.le_e.editingFinished.connect(lambda: self.checkline('e'))
         self.win_change.le_q.editingFinished.connect(lambda: self.checkline('q'))
-
+        self.win_change.pb_save.clicked.connect(self.save_action)
 
         font.setFamily("汉仪文黑-85w")
         font.setPointSize(9)
@@ -346,18 +346,20 @@ class MainWindow(QMainWindow):
             N = 0
             for i in data['ratios']:
                 item =  QTableWidgetItem(i)
+                item.setFlags(QtCore.Qt.ItemIsEnabled)
                 self.win_change.tb_skill.insertRow(N)
                 self.win_change.tb_skill.setItem(N,0,item)
-                item = QTableWidgetItem(data['atk_type'][i])
-                self.win_change.tb_skill.setItem(N,1,item)
-                item = QTableWidgetItem(data['ratio_cmt'][i])
+                text = extract_name3(data['atk_type'][i])
+                item = QTableWidgetItem(text)
                 self.win_change.tb_skill.setItem(N,2,item)
+                item = QTableWidgetItem(data['ratio_cmt'][i])
+                self.win_change.tb_skill.setItem(N,1,item)
 
                 N+=1
             header = self.win_change.tb_skill.horizontalHeader()       
             header.setSectionResizeMode(0, QtWidgets.QHeaderView.ResizeToContents)
-            header.setSectionResizeMode(1, QtWidgets.QHeaderView.ResizeToContents)
-            header.setSectionResizeMode(2, QtWidgets.QHeaderView.Stretch)
+            header.setSectionResizeMode(2, QtWidgets.QHeaderView.ResizeToContents)
+            header.setSectionResizeMode(1, QtWidgets.QHeaderView.Stretch)
             
             self.win_change.le_a.setText(data['formula'][cstl][0])
             self.win_change.le_e.setText(data['formula'][cstl][1])
@@ -369,6 +371,27 @@ class MainWindow(QMainWindow):
             self.win_change.dsb_enchant.setValue(data['enchant_ratio'])
 
             self.win_change.exec_()
+        except Exception as e:
+            print("Error: ", e)
+            traceback.print_exc()
+
+    def save_action(self):
+        try:
+            character = self._data[self.cb_name.currentText()]['name']
+            cstl = 'c'+str(int(self.cb_cnum.currentText()))        
+            rnd = dict()
+            fm = []
+            for i in ['a','e','q']:
+                rnd[i]= self.win_change.findChild(QSpinBox,"sb_rnd_"+i).value()
+                assert self.win_change.findChild(QLabel,"lb_status_"+i).text() == '正确'
+                fm.append(self.win_change.findChild(QLineEdit,"le_"+i).text())
+            self._cdata['enchant_ratio'] = self.win_change.dsb_enchant.value()
+            self._cdata['round'] = rnd
+            self._cdata['formula'][cstl] = fm
+            with open('./data/character/'+character+'.json', 'w', encoding='utf-8') as fp:
+            # with codecs.open('./data/character/'+character+'.json', 'w', encoding="utf-8") as fp:
+                json.dump(self._cdata, fp,indent = 4,ensure_ascii=False)
+
         except Exception as e:
             print("Error: ", e)
             traceback.print_exc()
