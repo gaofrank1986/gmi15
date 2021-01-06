@@ -158,13 +158,13 @@ class MainWindow(QMainWindow):
             if "special" in c._data.keys():
                 for i in c._data['special']:
                     logging.getLogger('Buff').info(i)
-                    logging.getLogger('Buff').info(c.data['special'][i])
+                    logging.getLogger('Buff').info(c._data['special'][i])
                     logging.getLogger('Buff').info("")
 
             if "rebase" in c._data.keys():
                 for i in c._data['rebase']:
                     logging.getLogger('Buff').info("更换倍率基础 {}".format(i))
-                    logging.getLogger('Buff').info(c.data['rebase'][i])
+                    logging.getLogger('Buff').info(c._data['rebase'][i])
                     logging.getLogger('Buff').info("")
 
 
@@ -215,6 +215,7 @@ class MainWindow(QMainWindow):
             self.digit_ed.setValue(self._sub_data['ed']) 
             self.digit_fd.setValue(self._sub_data['dphys']) 
             self.digit_sa.setValue(self._sub_data['sa']) 
+            self.digit_alld.setValue(self._sub_data['d']) 
 
     def save_sub(self):
         path = "./data/artifacts/sub.json"
@@ -229,6 +230,7 @@ class MainWindow(QMainWindow):
         data['ed'] = self.digit_ed.value()
         data['dphys'] = self.digit_fd.value()
         data['sa'] = self.digit_sa.value()
+        data['d'] = self.digit_alld.value()
         data['em'] = 0
         save = {}
         save['sub'] = data
