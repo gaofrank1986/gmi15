@@ -94,20 +94,20 @@ class Character(Basic_Panel):
         for i in data['ratios']:
             if len(data['ratios'][i]) == 1:
                 data['ratios'][i] = data['ratios'][i]*15
-        if "special" in data.keys():
-            for i in data['special'].keys():
-                if self._check2(i):
-                    tmp = data['special'][i][0]
-                    for j in tmp:
-                        if j == 'd2a':
-                            if isinstance(tmp[j],str):
-                                # assert in ratio list
-                                assert(tmp[j] in data['ratios'])
-                                pos = self.atk_name.index(tmp[j][0])
-                                level = self.skill_level[pos]
-                                self.sp_buff['d2a'] = self.sp_buff.get('d2a',0)+data['ratios'][tmp[j]][level]
-                            else:
-                                self.sp_buff['d2a'] = self.sp_buff.get('d2a',0)+tmp[j]
+        # if "special" in data.keys():
+        #     for i in data['special'].keys():
+        #         if self._check2(i):
+        #             tmp = data['special'][i][0]
+        #             for j in tmp:
+        #                 if j in ['d2a','h2a']:
+        #                     if isinstance(tmp[j],str):
+        #                         # assert in ratio list
+        #                         assert(tmp[j] in data['ratios'])
+        #                         pos = self.atk_name.index(tmp[j][0])
+        #                         level = self.skill_level[pos]
+        #                         self.sp_buff[j] = self.sp_buff.get(j,0)+data['ratios'][tmp[j]][level]
+        #                     else:
+        #                         self.sp_buff[j] = self.sp_buff.get(j,0)+tmp[j]
 
 
         assert('c'+str(self.constellation) in data['formula'])
@@ -150,7 +150,7 @@ class Character(Basic_Panel):
                     logger.info("条件:{}".format(cond))
                     logger.info("效果:{}".format(effect))
                     pre = "覆盖系数"
-                    if 'level' in effect:
+                    if 'level' in effect :
                         pre = '无'
                     if 'damage' in  effect:
                         pre = '附伤次数'
@@ -161,21 +161,40 @@ class Character(Basic_Panel):
                     logger.info("")
 
                 for j in cond:
-                    assert(j in self.atk_name)
-                    for k in effect:
-                        assert(isinstance(effect[k],int) or isinstance(effect[k],float) or isinstance(effect[k],list))
-                        if isinstance(effect[k],list):
-                            assert(len(effect[k]) == 2)
-                            assert(len(self.equipment)>0)
-                            refine = self.equipment[0][-1]
-                            value = effect[k][0]+(refine-1)*effect[k][1]
-                        else:
-                            value = effect[k]
-                            
-                        if k in self.d_name or k in self.de_name or k in self.att_name or k in self.h_name or k in ['d','ratio','damage']:
-                            self.skill_effect[j][k] =self.skill_effect[j].get(k,0)+value*cover_ratio
-                        if k == 'level':
-                            self.skill_level[self.atk_name.index(j)]+=value
+                    # assert(j in self.atk_name or j in ["shld","heal","spec"])
+                    if j in self.atk_name or j in ["shld","heal"]:
+                        for k in effect:
+                            assert(isinstance(effect[k],int) or isinstance(effect[k],float) or isinstance(effect[k],list))
+                            if isinstance(effect[k],list):
+                                assert(len(effect[k]) == 2)
+                                assert(len(self.equipment)>0)
+                                refine = self.equipment[0][-1]
+                                value = effect[k][0]+(refine-1)*effect[k][1]
+                            else:
+                                value = effect[k]
+                                
+                            if k in self.d_name or k in self.de_name or k in self.att_name or k in self.h_name or k in ['d','ratio','damage']:
+                                self.skill_effect[j][k] =self.skill_effect[j].get(k,0)+value*cover_ratio
+                            if k == 'level':
+                                self.skill_level[self.atk_name.index(j)]+=value
+                    if j in ["spec"]:
+                        for k in effect:
+                            if k in ['h2a','d2a']:
+                                if isinstance(effect[k],list):
+                                    assert(len(effect[k]) == 2)
+                                    assert(len(self.equipment)>0)
+                                    refine = self.equipment[0][-1]
+                                    value = effect[k][0]+(refine-1)*effect[k][1]
+                                else:
+                                    value = effect[k]
+        
+                                if isinstance(value,str):
+                                    assert(value in self._data['ratios'])
+                                    pos = self.atk_name.index(value[0])
+                                    level = self.skill_level[pos]
+                                    self.sp_buff[k] = self.sp_buff.get(k,0)+self._data['ratios'][value][level]*cover_ratio
+                                else:
+                                    self.sp_buff[k] = self.sp_buff.get(k,0)+value*cover_ratio
 
                             
     def _total_def(self):

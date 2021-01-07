@@ -147,6 +147,7 @@ class MainWindow(QMainWindow):
 
 
             logging.getLogger('Buff').info("总效果: {}\n".format(c.skill_effect))
+            logging.getLogger('Buff').info("特殊: {}\n".format(c.sp_buff))
             
 
             save = run_thru("./data/artifacts/main_list.json",c,rls,logger)
@@ -155,11 +156,7 @@ class MainWindow(QMainWindow):
             logging.getLogger('Buff').info("*************************************")
             logging.getLogger('Buff').info("*************************************")
 
-            if "special" in c._data.keys():
-                for i in c._data['special']:
-                    logging.getLogger('Buff').info(i)
-                    logging.getLogger('Buff').info(c._data['special'][i])
-                    logging.getLogger('Buff').info("")
+
 
             if "rebase" in c._data.keys():
                 for i in c._data['rebase']:
