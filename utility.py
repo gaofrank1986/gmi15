@@ -165,6 +165,8 @@ def extract_name2(a):
         ans = '物伤'
     if list(a.keys())[0] == 'hr':
         ans = '生命'
+    if list(a.keys())[0] == 'ef':
+        ans = '充能'
     return(ans)
 
 def extract_name3(a):

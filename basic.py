@@ -9,11 +9,11 @@ class Basic_Panel():
         self.health = [0]*3
         self.attack = [0]*7
         self.defense = [0]*3
-        self.dmg_eh = [0]*9
+        self.dmg_eh = [0]*11
         self.att_name = ['ba','ar','sa','cr','cd','em','ef']
         self.h_name = ['bh','hr','sh']
         self.d_name = ['bd','dr','sd']
-        self.de_name = ['dphys','dfire','dwatr','dwind','delec','dice','drock','ed','d']
+        self.de_name = ['dphys','dfire','dwatr','dwind','delec','dice','drock','ed','d','dheal','dshld']
 
     def load_att(self,info,t = "plus"):
         assert(isinstance(info,dict))

@@ -605,6 +605,19 @@
         <string>生命</string>
        </property>
       </widget>
+      <widget class="QCheckBox" name="cbox_g_ef">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>160</y>
+         <width>91</width>
+         <height>19</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>充能</string>
+       </property>
+      </widget>
      </widget>
      <widget class="QGroupBox" name="groupBox_3">
       <property name="geometry">
@@ -1224,8 +1237,8 @@ A：原神这个游戏，因为刷怪地点不一样，还有场景技能，导�
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>1281</width>
-         <height>379</height>
+         <width>98</width>
+         <height>28</height>
         </rect>
        </property>
        <attribute name="label">
