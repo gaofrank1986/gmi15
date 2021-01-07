@@ -7,7 +7,7 @@
         "basic_attack": 106,
         "basic_defense": 876,
         "break_thru": {
-            "cd": 88.4
+            "cd": 38.4
         }
     },
     "ratios": {
@@ -222,7 +222,6 @@
         "ah": "phys",
         "e1": "elem",
         "e2": "elem",
-        "e3": "elem",
         "q1": "elem",
         "q2": "elem"
     },

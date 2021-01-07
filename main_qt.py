@@ -152,12 +152,6 @@ class MainWindow(QMainWindow):
 
             save = run_thru("./data/artifacts/main_list.json",c,rls,logger)
 
-            logging.getLogger('Buff').info("特殊增益")
-            logging.getLogger('Buff').info("*************************************")
-            logging.getLogger('Buff').info("*************************************")
-
-
-
             if "rebase" in c._data.keys():
                 for i in c._data['rebase']:
                     logging.getLogger('Buff').info("更换倍率基础 {}".format(i))

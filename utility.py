@@ -180,6 +180,8 @@ def extract_name3(a):
         ans = '技能护盾'
     if a == 'heal':
         ans = '技能治疗'
+    if a == 'buff':
+        ans = '增益'
     return(ans)   
 
 # class pandasModel(QAbstractTableModel):

@@ -161,10 +161,10 @@ class Character(Basic_Panel):
                     logger.info("")
 
                 for j in cond:
-                    # assert(j in self.atk_name or j in ["shld","heal","spec"])
-                    if j in self.atk_name or j in ["shld","heal"]:
+                    assert(j in self.atk_name or j in ["shld","heal","spec"])
+                    if j in self.atk_name or j in ["shld","heal","spec"]:
                         for k in effect:
-                            assert(isinstance(effect[k],int) or isinstance(effect[k],float) or isinstance(effect[k],list))
+                            assert(isinstance(effect[k],int) or isinstance(effect[k],float) or isinstance(effect[k],list) or isinstance(effect[k],str))
                             if isinstance(effect[k],list):
                                 assert(len(effect[k]) == 2)
                                 assert(len(self.equipment)>0)
@@ -173,28 +173,21 @@ class Character(Basic_Panel):
                             else:
                                 value = effect[k]
                                 
+                            if isinstance(value,str):
+                                assert(value in self._data['ratios'])
+                                pos = self.atk_name.index(value[0])
+                                level = self.skill_level[pos]        
+                                value = self._data['ratios'][value][level-1]    
+                                                       
                             if k in self.d_name or k in self.de_name or k in self.att_name or k in self.h_name or k in ['d','ratio','damage']:
                                 self.skill_effect[j][k] =self.skill_effect[j].get(k,0)+value*cover_ratio
                             if k == 'level':
                                 self.skill_level[self.atk_name.index(j)]+=value
-                    if j in ["spec"]:
-                        for k in effect:
                             if k in ['h2a','d2a']:
-                                if isinstance(effect[k],list):
-                                    assert(len(effect[k]) == 2)
-                                    assert(len(self.equipment)>0)
-                                    refine = self.equipment[0][-1]
-                                    value = effect[k][0]+(refine-1)*effect[k][1]
-                                else:
-                                    value = effect[k]
-        
-                                if isinstance(value,str):
-                                    assert(value in self._data['ratios'])
-                                    pos = self.atk_name.index(value[0])
-                                    level = self.skill_level[pos]
-                                    self.sp_buff[k] = self.sp_buff.get(k,0)+self._data['ratios'][value][level]*cover_ratio
-                                else:
-                                    self.sp_buff[k] = self.sp_buff.get(k,0)+value*cover_ratio
+                                # print(value,cover_ratio)
+                                self.sp_buff[k] = self.sp_buff.get(k,0)+value*cover_ratio
+                            
+
 
                             
     def _total_def(self):
