@@ -249,7 +249,7 @@ class Character(Basic_Panel):
             logger.info("技能等级 {}".format(self.skill_level))
             logger.info("增伤 {}".format(self.dmg_eh))
 
-        total = 0
+        result = dict()
         for i in self.atk_name:
             logger.debug("==============处理 {} 技能公式:[{}]===============".format(i,self.formula[i]))
             ans = [0,0,0,0]
@@ -345,12 +345,14 @@ class Character(Basic_Panel):
 
             self.load_att(self.skill_effect[i],"minus")
             logger.debug("total damage for {} is 属性元素: {}, 物理: {},其他:{}".format(i,int(ans[0]),int(ans[1]),int(ans[2]+ans[3])))
-            total += (ans[0]+ans[1]+ans[2]+ans[3])*self.skill_round[i]
+            result['elem'] = result.get('elem',0)+ans[0]*self.skill_round[i]
+            result['phys'] = result.get('phys',0)+ans[1]*self.skill_round[i]
+            result['othr'] = result.get('othr',0)+(ans[2]+ans[3])*self.skill_round[i]
+            result['shld'] = 0
+            result['heal'] = 0
             
-      
- 
 
-
-        logger.info("damage = {}".format(int(total)))
+        result['sum'] = int(result.get('elem',0)+result.get('phys',0)+ result.get('othr',0))
+        logger.info("damage = {}".format(int(result['sum'])))
         logger.info("###############################################")        
-        return(int(total))
+        return(result)

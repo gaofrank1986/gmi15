@@ -227,7 +227,7 @@ def run_thru(path,c,rls,logger):
                     logger.info("空之杯: {}".format(cup))
                     logger.info("副词条: {}".format(rls.buf['sub']))
 
-                    tmp = diluc.damage_rsl()
+                    tmp = diluc.damage_rsl()['sum']
                     while (tmp in save.keys()):
                         tmp = tmp-1
                     save[tmp] = deepcopy(rls.buf)
