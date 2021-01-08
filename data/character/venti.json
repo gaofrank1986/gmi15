@@ -214,13 +214,8 @@
         "e": 3,
         "q": 1
     },
-    "enchant_ratio": 0.0,
-    "formula": {
-        "c0": [
-            "a1+a2+a3+a4+a5+a6",
-            "e1",
-            "20*q1+20*q2+7*ks"
-        ]
+    "enchant_ratio": {
+        "c0": 0.0
     },
     "action_def": {
         "c0": {

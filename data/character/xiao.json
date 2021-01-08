@@ -301,14 +301,10 @@
         "e": 1,
         "q": 0
     },
-    "enchant_ratio": 1.0,
-    "formula": {
-        "c0": [
-            "ap1",
-            "e1",
-            ""
-        ]
+    "enchant_ratio": {
+        "c0": 0.0
     },
+
     "action_def": {
         "c0": {
             "a": "ap1",

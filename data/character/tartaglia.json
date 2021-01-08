@@ -15,7 +15,6 @@
         "e": 1,
         "q": 1
     },
-    "enchant_ratio": 1.0,
     "ratios": {
         "a_flash": [
             37.2,
@@ -310,17 +309,9 @@
             "q技能等级加3"
         ]
     },
-    "formula": {
-        "c0": [
-            "e1+e2+e3+e4+e5+e6",
-            "e0+8*e_slash",
-            "q_range+q_blast"
-        ],
-        "c6": [
-            "e1+e2+e3+e4+e5+e6",
-            "e0+12*e_slash",
-            "q_range+q_melee+2*q_blast"
-        ]
+    "enchant_ratio": {
+        "c0": 1.0,
+        "c6": 1.0
     },
     "action_def": {
         "c0": {

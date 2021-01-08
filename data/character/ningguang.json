@@ -148,14 +148,10 @@
         "e": 3,
         "q": 1
     },
-    "enchant_ratio": 0.0,
-    "formula": {
-        "c6": [
-            "3*a1+3*a2+ah",
-            "e1",
-            "7*q1"
-        ]
+    "enchant_ratio": {
+        "c6": 0.0
     },
+
     "action_def": {
         "c6": {
             "a": "3*a1+3*a2+ah",

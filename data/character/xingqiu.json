@@ -215,14 +215,10 @@
         "e": 1,
         "q": 1
     },
-    "enchant_ratio": 0.0,
-    "formula": {
-        "c6": [
-            "a1+a2+a3+a4+a5",
-            "e1",
-            "53*q1"
-        ]
+    "enchant_ratio": {
+        "c6": 0.0
     },
+
     "reference": {
         "1": "https://www.gamersky.com/handbook/202012/1349921.shtml"
     },

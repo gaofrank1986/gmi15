@@ -297,13 +297,13 @@ class MainWindow(QMainWindow):
                 data = json.load(fp)
             tmp = self.win_action.info_action
             for i in range(len(prop_name)):
-                if data['formula'][cstl][i]!='':
+                if data['action_def'][cstl][i]!='':
                     if i ==0 and self.rb_pop.isChecked():
                         ans+="{}(速切不计入伤害 {}轮)\n{}".format(desc[i],0,div1)                    
                     else:
                         rnd = data['round'][prop_name[i]]
                         ans+="{}({}轮)\n{}".format(desc[i],rnd,div1)
-                    formula = data['formula'][cstl][i]
+                    formula = data['action_def'][cstl][i]
                     for entry in parse_formula(formula):
                         if entry[0] == 'ks':
                             ans += '扩散伤害'
@@ -354,14 +354,14 @@ class MainWindow(QMainWindow):
             header.setSectionResizeMode(2, QtWidgets.QHeaderView.ResizeToContents)
             header.setSectionResizeMode(1, QtWidgets.QHeaderView.Stretch)
             
-            self.win_change.le_a.setText(data['formula'][cstl][0])
-            self.win_change.le_e.setText(data['formula'][cstl][1])
-            self.win_change.le_q.setText(data['formula'][cstl][2])
+            self.win_change.le_a.setText(data['action_def'][cstl]['a'])
+            self.win_change.le_e.setText(data['action_def'][cstl]['e'])
+            self.win_change.le_q.setText(data['action_def'][cstl]['q'])
             
             self.win_change.sb_rnd_a.setValue(data['round']['a'])
             self.win_change.sb_rnd_e.setValue(data['round']['e'])
             self.win_change.sb_rnd_q.setValue(data['round']['q'])
-            self.win_change.dsb_enchant.setValue(data['enchant_ratio'])
+            self.win_change.dsb_enchant.setValue(data['enchant_ratio'][cstl])
 
             self.win_change.exec_()
         except Exception as e:
@@ -373,24 +373,23 @@ class MainWindow(QMainWindow):
             character = self._data[self.cb_name.currentText()]['name']
             cstl = 'c'+str(int(self.cb_cnum.currentText()))        
             rnd = dict()
-            fm = []
+            # fm = []
             for i in ['a','e','q']:
                 rnd[i]= self.win_change.findChild(QSpinBox,"sb_rnd_"+i).value()
                 assert self.win_change.findChild(QLabel,"lb_status_"+i).text() == '正确'
-                fm.append(self.win_change.findChild(QLineEdit,"le_"+i).text())
-            self._cdata['enchant_ratio'] = self.win_change.dsb_enchant.value()
+                # fm.append(self.win_change.findChild(QLineEdit,"le_"+i).text())
+                self._cdata['action_def'][cstl][i] = self.win_change.findChild(QLineEdit,"le_"+i).text()
+
+            self._cdata['enchant_ratio'][cstl] = self.win_change.dsb_enchant.value()
             self._cdata['round'] = rnd
-            self._cdata['formula'][cstl] = fm
-            if 'action_def' not in self._cdata:
-                self._cdata['action_def'] = dict()
-            self._cdata['action_def'][cstl]= dict()
-            self._cdata['action_def'][cstl]['a'] = fm[0]
-            self._cdata['action_def'][cstl]['e'] = fm[1]
-            self._cdata['action_def'][cstl]['q'] = fm[2]
-            self._cdata['action_def'][cstl]['shld'] = ''
-            self._cdata['action_def'][cstl]['heal'] = ''
+
+            # self._cdata['action_def'][cstl]= dict()
+            # self._cdata['action_def'][cstl]['a'] = fm[0]
+            # self._cdata['action_def'][cstl]['e'] = fm[1]
+            # self._cdata['action_def'][cstl]['q'] = fm[2]
+            # self._cdata['action_def'][cstl]['shld'] = ''
+            # self._cdata['action_def'][cstl]['heal'] = ''
             with open('./data/character/'+character+'.json', 'w', encoding='utf-8') as fp:
-            # with codecs.open('./data/character/'+character+'.json', 'w', encoding="utf-8") as fp:
                 json.dump(self._cdata, fp,indent = 4,ensure_ascii=False)
 
         except Exception as e:
@@ -451,6 +450,7 @@ if __name__ == "__main__":
 
     
     app = QtWidgets.QApplication(sys.argv)
+    app.setStyle("fusion")
     win = MainWindow()
 
     win.show()

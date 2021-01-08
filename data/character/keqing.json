@@ -281,14 +281,10 @@
         "e": 2,
         "q": 1
     },
-    "enchant_ratio": 0.0,
-    "formula": {
-        "c0": [
-            "ah",
-            "e1+e2+e3",
-            "q1+q2+q3"
-        ]
+    "enchant_ratio": {
+        "c0": 0.0
     },
+
     "action_def": {
         "c0": {
             "a": "ah",

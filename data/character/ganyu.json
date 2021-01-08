@@ -271,13 +271,8 @@
         "e": 2,
         "q": 1
     },
-    "enchant_ratio": 0.0,
-    "formula": {
-        "c0": [
-            "ah1+ah2+ah3",
-            "e1",
-            "5*q1"
-        ]
+    "enchant_ratio": {
+        "c0": 0.0
     },
     "action_def": {
         "c0": {

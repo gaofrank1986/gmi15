@@ -165,18 +165,9 @@
         "e": 2,
         "q": 1
     },
-    "enchant_ratio": 1.0,
-    "formula": {
-        "c0": [
-            "a1",
-            "e",
-            "q"
-        ],
-        "c6": [
-            "a2",
-            "e",
-            "q"
-        ]
+    "enchant_ratio": {
+        "c0": 1.0,
+        "c6": 1.0
     },
     "action_def": {
         "c0": {
