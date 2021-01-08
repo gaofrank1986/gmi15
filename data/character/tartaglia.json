@@ -1,8 +1,8 @@
 {
     "name": "达达利亚",
-    "weapon_class":"bow",
-    "elem_class":"watr",
-    "90":{
+    "weapon_class": "bow",
+    "elem_class": "watr",
+    "90": {
         "basic_health": 13103,
         "basic_attack": 301,
         "basic_defense": 811,
@@ -10,13 +10,13 @@
             "ed": 28.8
         }
     },
-    "round":{
-                "a":4,
-                "e":1,
-                "q":1
-                },
-    "enchant_ratio":1,
-    "ratios":{
+    "round": {
+        "a": 4,
+        "e": 1,
+        "q": 1
+    },
+    "enchant_ratio": 1.0,
+    "ratios": {
         "a_flash": [
             37.2,
             39.99,
@@ -256,7 +256,7 @@
             285.0
         ]
     },
-    "ratio_cmt":{
+    "ratio_cmt": {
         "a_flash": "断流·闪",
         "a_burst": "断流·破",
         "e0": "魔王武装·狂澜 状态爆发伤害",
@@ -272,7 +272,7 @@
         "q_range": "极恶技·尽灭闪 远程",
         "q_blast": "断流·爆"
     },
-    "atk_type":{
+    "atk_type": {
         "a_flash": "elem",
         "a_burst": "elem",
         "e0": "elem",
@@ -287,14 +287,55 @@
         "q_melee": "elem",
         "q_range": "elem",
         "q_blast": "elem"
-    },    
-    "buffs": {
-        "c3": [["e"],{"level":3},0,"e技能级别加3"],
-        "c5": [["q"],{"level":3},0,"q技能等级加3"]
-
     },
-    "formula":{
-        "c0":["e1+e2+e3+e4+e5+e6","e0+8*e_slash","q_range+q_blast"],
-        "c6":["e1+e2+e3+e4+e5+e6","e0+12*e_slash","q_range+q_melee+2*q_blast"]
+    "buffs": {
+        "c3": [
+            [
+                "e"
+            ],
+            {
+                "level": 3
+            },
+            0,
+            "e技能级别加3"
+        ],
+        "c5": [
+            [
+                "q"
+            ],
+            {
+                "level": 3
+            },
+            0,
+            "q技能等级加3"
+        ]
+    },
+    "formula": {
+        "c0": [
+            "e1+e2+e3+e4+e5+e6",
+            "e0+8*e_slash",
+            "q_range+q_blast"
+        ],
+        "c6": [
+            "e1+e2+e3+e4+e5+e6",
+            "e0+12*e_slash",
+            "q_range+q_melee+2*q_blast"
+        ]
+    },
+    "action_def": {
+        "c0": {
+            "a": "e1+e2+e3+e4+e5+e6",
+            "e": "e0+8*e_slash",
+            "q": "q_range+q_blast",
+            "shld": "",
+            "heal": ""
+        },
+        "c6": {
+            "a": "e1+e2+e3+e4+e5+e6",
+            "e": "e0+12*e_slash",
+            "q": "q_range+q_melee+2*q_blast",
+            "shld": "",
+            "heal": ""
+        }
     }
 }

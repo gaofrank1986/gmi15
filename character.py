@@ -25,7 +25,6 @@ class Character(Basic_Panel):
 
         self.atk_name = ('a','e','q','w')
 
-        # self.main_logger = main_logger
         #-------------
         self.skill_round = {_:0 for _ in self.atk_name}
 
@@ -94,25 +93,14 @@ class Character(Basic_Panel):
         for i in data['ratios']:
             if len(data['ratios'][i]) == 1:
                 data['ratios'][i] = data['ratios'][i]*15
-        # if "special" in data.keys():
-        #     for i in data['special'].keys():
-        #         if self._check2(i):
-        #             tmp = data['special'][i][0]
-        #             for j in tmp:
-        #                 if j in ['d2a','h2a']:
-        #                     if isinstance(tmp[j],str):
-        #                         # assert in ratio list
-        #                         assert(tmp[j] in data['ratios'])
-        #                         pos = self.atk_name.index(tmp[j][0])
-        #                         level = self.skill_level[pos]
-        #                         self.sp_buff[j] = self.sp_buff.get(j,0)+data['ratios'][tmp[j]][level]
-        #                     else:
-        #                         self.sp_buff[j] = self.sp_buff.get(j,0)+tmp[j]
 
 
-        assert('c'+str(self.constellation) in data['formula'])
-        self.formula = data['formula']['c'+str(self.constellation)]
-        self.formula.append('w')
+        assert('c'+str(self.constellation) in data['action_def'])
+        # self.formula = data['formula']['c'+str(self.constellation)]
+        # self.formula.append('w')
+        # if 'action_def' in data:
+        self.formula = data['action_def']['c'+str(self.constellation)]
+        self.formula['w'] = 'w'
 
         if 'rebase' in data.keys():
             self.switch = data['rebase']
@@ -266,7 +254,7 @@ class Character(Basic_Panel):
 
         total = 0
         for i in self.atk_name:
-            logger.debug("==============处理 {} 技能公式:[{}]===============".format(i,self.formula[self.atk_name.index(i)]))
+            logger.debug("==============处理 {} 技能公式:[{}]===============".format(i,self.formula[i]))
             ans = [0,0,0,0]
             logger.debug("buff加载前 area1 = {:.2f},area2 = {:.2f}".format(self._total_atk(),self._crit()))
 
@@ -284,8 +272,11 @@ class Character(Basic_Panel):
                     logger.debug("生命转攻击 增加量 = {:.2f}".format(delta))                                         
             logger.debug("buff加载后 area1 = {:.2f},area2 = {:.2f}".format(area1,area2))
             
-            if i != 'w':
-                fm = parse_formula(self.formula[self.atk_name.index(i)])
+            if i in ['a','e','q']:
+                # if isinstance(self.formula,list):
+                #     fm = parse_formula(self.formula[self.atk_name.index(i)])
+                # if isinstance(self.formula,dict):
+                fm = parse_formula(self.formula[i])
                 for entry in fm:
                     if len(entry[0]) == 0:
                         continue
@@ -338,12 +329,15 @@ class Character(Basic_Panel):
                             multi  = float(entry[1])
                             em_base = 721
                             ans[3] = em_base*multi*(1+self._em_formula(self.attack[5])/100)  
-                            logger.debug("扩散反应  基数 {},次数 = {},精通 = {:.2f},精通增益:{:.2f}".format(em_base,multi,self.attack[5],self._em_formula(self.attack[5])/100))   
+                            logger.debug("扩散反应  基数 {},次数 = {},精通 = {:.2f},精通增益:{:.2f}".format(em_base,multi,self.attack[5],self._em_formula(self.attack[5])/100))
+        
                 # '''处理技能附伤'''
                 # if 'damage' in self.skill_effect[i]:
                 #     area3 = (1 + self.dmg_eh[self.ed_pos]/100+self.dmg_eh[7]/100+self.dmg_eh[8]/100)                    
                 #     ans[0]+=area1*self.skill_effect[i]['damage']/100*area2*area3
                 #     logger.debug("技能附加伤害: area1 = {:.2f},area2 = {:.2f},area3 = {:.2f},ratio = {:.2f} 假设为元素伤害，受益2，3乘区加成".format(area1,area2,area3,self.skill_effect[i]['damage']/100)) 
+            if i in ['shld','heal']:
+                pass
             if i == 'w':               
                 '''武器附伤'''
                 if 'damage' in self.skill_effect[i]:

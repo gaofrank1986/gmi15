@@ -1,33 +1,47 @@
 {
     "name": "",
-    "weapon_class":"claymore",
-    "elem_class":"watr",
-    "90":{
-        "basic_health": 0	,
+    "weapon_class": "claymore",
+    "elem_class": "watr",
+    "90": {
+        "basic_health": 0,
         "basic_attack": 0,
         "basic_defense": 0,
         "break_thru": {
             "ed": 0
         }
     },
-    "round":{
-                "a":0,
-                "e":0,
-                "q":0
-                },
-    "enchant_ratio":0,
-     "ratios":{
-        "a1": [0]
+    "round": {
+        "a": 0,
+        "e": 0,
+        "q": 0
     },
-    "ratio_cmt":{
+    "enchant_ratio": 0.0,
+    "ratios": {
+        "a1": [
+            0
+        ]
+    },
+    "ratio_cmt": {
         "a1": "普攻一段"
     },
-    "atk_type":{
+    "atk_type": {
         "a1": "phys"
     },
-    "buffs": {
+    "buffs": {},
+    "formula": {
+        "c0": [
+            "a1",
+            "",
+            ""
+        ]
     },
-    "formula":{
-        "c0":["a1","",""]
+    "action_def": {
+        "c0": {
+            "a": "a1",
+            "e": "",
+            "q": "",
+            "shld": "",
+            "heal": ""
+        }
     }
 }

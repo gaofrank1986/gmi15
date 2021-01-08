@@ -80,7 +80,7 @@ def test_take_off(c0,c1):
     
 def test_load_from_json(c2):
     assert c2.name == '迪卢克'
-    assert c2.formula == ["a2","e","q","w"]
+    assert c2.formula == {"a":"a2","e":"e","q":"q","w":"w","shld":"","heal":""}
     
 def test_load_buff_1(c0):
     c0._load_buff({"c1": [["all"],{"d":15},0.5,"对生命值高于50％的敌人，迪卢克造成的伤害提高15％"]},c0._check1)

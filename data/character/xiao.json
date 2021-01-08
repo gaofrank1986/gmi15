@@ -1,5 +1,5 @@
 {
-    "name": "xiao",
+    "name": "魈",
     "weapon_class": "polearm",
     "elem_class": "wind",
     "90": {
@@ -298,7 +298,7 @@
     },
     "round": {
         "a": 8,
-        "e": 2,
+        "e": 1,
         "q": 0
     },
     "enchant_ratio": 1.0,
@@ -308,5 +308,14 @@
             "e1",
             ""
         ]
+    },
+    "action_def": {
+        "c0": {
+            "a": "ap1",
+            "e": "e1",
+            "q": "",
+            "shld": "",
+            "heal": ""
+        }
     }
 }

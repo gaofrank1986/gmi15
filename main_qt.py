@@ -381,6 +381,14 @@ class MainWindow(QMainWindow):
             self._cdata['enchant_ratio'] = self.win_change.dsb_enchant.value()
             self._cdata['round'] = rnd
             self._cdata['formula'][cstl] = fm
+            if 'action_def' not in self._cdata:
+                self._cdata['action_def'] = dict()
+            self._cdata['action_def'][cstl]= dict()
+            self._cdata['action_def'][cstl]['a'] = fm[0]
+            self._cdata['action_def'][cstl]['e'] = fm[1]
+            self._cdata['action_def'][cstl]['q'] = fm[2]
+            self._cdata['action_def'][cstl]['shld'] = ''
+            self._cdata['action_def'][cstl]['heal'] = ''
             with open('./data/character/'+character+'.json', 'w', encoding='utf-8') as fp:
             # with codecs.open('./data/character/'+character+'.json', 'w', encoding="utf-8") as fp:
                 json.dump(self._cdata, fp,indent = 4,ensure_ascii=False)
