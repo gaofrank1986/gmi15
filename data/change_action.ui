@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>720</width>
-    <height>680</height>
+    <height>780</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -19,7 +19,7 @@
   <property name="maximumSize">
    <size>
     <width>720</width>
-    <height>680</height>
+    <height>780</height>
    </size>
   </property>
   <property name="font">
@@ -36,7 +36,7 @@
      <x>0</x>
      <y>0</y>
      <width>721</width>
-     <height>681</height>
+     <height>771</height>
     </rect>
    </property>
    <property name="currentIndex">
@@ -79,7 +79,7 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>360</y>
+       <y>450</y>
        <width>671</width>
        <height>281</height>
       </rect>
@@ -132,7 +132,7 @@
        <x>10</x>
        <y>80</y>
        <width>671</width>
-       <height>261</height>
+       <height>361</height>
       </rect>
      </property>
      <property name="title">
@@ -287,6 +287,78 @@
       </property>
       <property name="text">
        <string>攻击轮数</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_6">
+      <property name="geometry">
+       <rect>
+        <x>100</x>
+        <y>250</y>
+        <width>111</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>护盾</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="le_shld">
+      <property name="geometry">
+       <rect>
+        <x>160</x>
+        <y>250</y>
+        <width>301</width>
+        <height>31</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLabel" name="lb_status_shld">
+      <property name="geometry">
+       <rect>
+        <x>480</x>
+        <y>260</y>
+        <width>72</width>
+        <height>15</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>正确</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="le_heal">
+      <property name="geometry">
+       <rect>
+        <x>160</x>
+        <y>310</y>
+        <width>301</width>
+        <height>31</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_7">
+      <property name="geometry">
+       <rect>
+        <x>100</x>
+        <y>310</y>
+        <width>111</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>治疗</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="lb_status_heal">
+      <property name="geometry">
+       <rect>
+        <x>480</x>
+        <y>320</y>
+        <width>72</width>
+        <height>15</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>正确</string>
       </property>
      </widget>
     </widget>

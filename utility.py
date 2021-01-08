@@ -167,6 +167,8 @@ def extract_name2(a):
         ans = '生命'
     if list(a.keys())[0] == 'ef':
         ans = '充能'
+    if list(a.keys())[0] == 'em':
+        ans = '精通'
     return(ans)
 
 def extract_name3(a):
@@ -176,12 +178,14 @@ def extract_name3(a):
         ans = '属性元素'
     if a == 'env':
         ans = '环境元素'
-    if a == 'shield':
+    if a == 'shld':
         ans = '技能护盾'
     if a == 'heal':
         ans = '技能治疗'
     if a == 'buff':
         ans = '增益'
+    if a == 'base':
+        ans = '技能基数'
     return(ans)   
 
 # class pandasModel(QAbstractTableModel):
@@ -203,7 +207,8 @@ def extract_name3(a):
 
 
 
-def run_thru(path,c,rls,logger):
+def run_thru(path,c,rls,ksort=1):
+    logger = logging.getLogger('Main')
     with open(path, 'r', encoding='UTF-8') as fp:
         data = json.load(fp)
     save = dict()
@@ -227,10 +232,18 @@ def run_thru(path,c,rls,logger):
                     logger.info("空之杯: {}".format(cup))
                     logger.info("副词条: {}".format(rls.buf['sub']))
 
-                    tmp = diluc.damage_rsl()['sum']
+                    ans = deepcopy(diluc.damage_rsl())
+                    if ksort == 1:
+                        tmp = ans['sum']
+                    if ksort == 3:
+                        tmp = ans['maxhp']
+                    if ksort == 4:
+                        tmp = ans['heal']
+                    if ksort == 2:
+                        tmp = ans['shld']
                     while (tmp in save.keys()):
                         tmp = tmp-1
-                    save[tmp] = deepcopy(rls.buf)
+                    save[tmp] = [ans,deepcopy(rls.buf)]
 
                     diluc.take_off(rls)
                     rls.rm(feather,'feather')
@@ -301,3 +314,7 @@ def parse_formula(s):
         else:
           raise ValueError("invalid formula: {}".format(s))
     return(ans) 
+
+def trans(i):
+    assert(isinstance(i,int) or isinstance(i,float))
+    return str(round(i/10000,1))+'万'

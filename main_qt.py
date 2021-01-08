@@ -6,9 +6,10 @@ import os
 from collections import OrderedDict
 from basic import Articraft
 from character import Character
-from utility import extract_name2,run_thru,MyDialog,parse_formula,extract_name3
+from utility import extract_name2,run_thru,MyDialog,parse_formula,extract_name3,trans
 import traceback
 from PyQt5.QtWidgets import QApplication,QTableView,QMainWindow,QTableWidgetItem,QCheckBox,QDialog,QLineEdit,QLabel,QSpinBox
+# from PyQt5.QtWidgets.QTableWidgetItem import verticalHeaderItem
 import sys
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.uic import loadUi
@@ -34,7 +35,7 @@ class MainWindow(QMainWindow):
         self.cb_cnum.currentIndexChanged.connect(self.reset_table)
         self.cb_skill.currentIndexChanged.connect(self.reset_table)
         self.cb_refine.currentIndexChanged.connect(self.reset_table)
-
+        self.cb_sort.currentIndexChanged.connect(self.change_ksort)
 
         self.b_read.hide()
         self.b_save.hide()
@@ -79,6 +80,8 @@ class MainWindow(QMainWindow):
         self.win_change.le_a.editingFinished.connect(lambda: self.checkline('a'))
         self.win_change.le_e.editingFinished.connect(lambda: self.checkline('e'))
         self.win_change.le_q.editingFinished.connect(lambda: self.checkline('q'))
+        self.win_change.le_shld.editingFinished.connect(lambda: self.checkline('shld'))
+        self.win_change.le_heal.editingFinished.connect(lambda: self.checkline('heal'))
         self.win_change.pb_save.clicked.connect(self.save_action)
 
         font.setFamily("汉仪文黑-85w")
@@ -87,8 +90,13 @@ class MainWindow(QMainWindow):
         self.win_buff = MyDialog(self,'Buff',fmt)
         self.win_buff.setFont(font)
   
-
-        
+        header = self.tbl_2.horizontalHeader()       
+        # header.setSectionResizeMode(0, QtWidgets.QHeaderView.ResizeToContents)
+        # header.setSectionResizeMode(2, QtWidgets.QHeaderView.ResizeToContents)
+        header.setSectionResizeMode(3, QtWidgets.QHeaderView.Stretch)
+        self._ksort = 1
+        self.reset()
+        # self.rb_display.hide()
         
         
     #======================================
@@ -123,7 +131,6 @@ class MainWindow(QMainWindow):
 
             self.label2.setText("")
 
-            # self.label.setText("{} {} {} {} {}".format(character,constellation,skill_level,weapon,refine))
             
             c = Character(skill_level,constellation)
             c.load_from_json("./data/character/"+character+".json")
@@ -147,10 +154,10 @@ class MainWindow(QMainWindow):
 
 
             logging.getLogger('Buff').info("总效果: {}\n".format(c.skill_effect))
-            logging.getLogger('Buff').info("特殊: {}\n".format(c.sp_buff))
+            logging.getLogger('Buff').info("特殊攻击加成: {}\n".format(c.sp_buff))
             
 
-            save = run_thru("./data/artifacts/main_list.json",c,rls,logger)
+            save = run_thru("./data/artifacts/main_list.json",c,rls,self._ksort)
 
             if "rebase" in c._data.keys():
                 for i in c._data['rebase']:
@@ -159,27 +166,25 @@ class MainWindow(QMainWindow):
                     logging.getLogger('Buff').info("")
 
 
-                 
+            # self.tbl_2.insertRow(4)
             test = OrderedDict(sorted(save.items(),reverse=True))
             N=0
             limit = 4
             for i in test:
-                tmp = test[i]
+                tmp = test[i][1]
+                tmp0 = test[i][0]
+                print(tmp0)
+
                 if self.rb_display.isChecked():
-                    item =  QTableWidgetItem(str(i))
+                    content = [i,extract_name2(tmp['head']),extract_name2(tmp['glass']),extract_name2(tmp['cup']),tmp0['shld'],tmp0['heal'],tmp0['maxhp'],tmp0['sum']]
                 else:
-                    item =  QTableWidgetItem(str(round(i/10000,1))+'万')
-                item.setTextAlignment(Qt.AlignRight|Qt.AlignVCenter)
-                self.tbl_2.setItem(0, N,item)
-                item =  QTableWidgetItem(extract_name2(tmp['head']))
-                item.setTextAlignment(Qt.AlignRight|Qt.AlignVCenter)
-                self.tbl_2.setItem(1, N,item)
-                item =  QTableWidgetItem(extract_name2(tmp['glass']))
-                item.setTextAlignment(Qt.AlignRight|Qt.AlignVCenter)
-                self.tbl_2.setItem(2, N,item)
-                item =  QTableWidgetItem(extract_name2(tmp['cup']))
-                item.setTextAlignment(Qt.AlignRight|Qt.AlignVCenter)
-                self.tbl_2.setItem(3, N,item)
+                    content = [trans(i),extract_name2(tmp['head']),extract_name2(tmp['glass']),extract_name2(tmp['cup']),tmp0['shld'],tmp0['heal'],trans(tmp0['maxhp']),trans(tmp0['sum'])]
+                
+                for i in range(len(content)):
+                    item =  QTableWidgetItem(str(content[i]))
+                    item.setTextAlignment(Qt.AlignRight|Qt.AlignVCenter)
+                    self.tbl_2.setItem(i, N,item)
+
                 N+=1
 
                 if N==limit:
@@ -286,8 +291,8 @@ class MainWindow(QMainWindow):
             
     def show_action(self):
         try:
-            desc = ['普攻','元素战技','元素爆发']
-            prop_name =['a','e','q']
+            desc = ['普攻','元素战技','元素爆发','护盾技能','治疗技能']
+            prop_name =['a','e','q','shld','heal']
             div1 = "==========\n"
             character = self._data[self.cb_name.currentText()]['name']
             cstl = 'c'+str(int(self.cb_cnum.currentText()))
@@ -297,13 +302,16 @@ class MainWindow(QMainWindow):
                 data = json.load(fp)
             tmp = self.win_action.info_action
             for i in range(len(prop_name)):
-                if data['action_def'][cstl][i]!='':
+                if data['action_def'][cstl][prop_name[i]]!='':
                     if i ==0 and self.rb_pop.isChecked():
                         ans+="{}(速切不计入伤害 {}轮)\n{}".format(desc[i],0,div1)                    
                     else:
-                        rnd = data['round'][prop_name[i]]
+                        if i <3:
+                            rnd = data['round'][prop_name[i]]
+                        else:
+                            rnd = 1
                         ans+="{}({}轮)\n{}".format(desc[i],rnd,div1)
-                    formula = data['action_def'][cstl][i]
+                    formula = data['action_def'][cstl][prop_name[i]]
                     for entry in parse_formula(formula):
                         if entry[0] == 'ks':
                             ans += '扩散伤害'
@@ -313,8 +321,7 @@ class MainWindow(QMainWindow):
                             ans += '  x {}'.format(entry[1])
                         ans+='\n'
                 else:
-                    rnd = data['round'][prop_name[i]]
-                    ans+="{}({}轮)\n{}".format(desc[i],rnd,div1)
+                    ans+="{}\n{}".format(desc[i],div1)
                     ans+='无定义\n'
                 ans+='\n'
             tmp.setPlainText(ans)
@@ -353,14 +360,18 @@ class MainWindow(QMainWindow):
             header.setSectionResizeMode(0, QtWidgets.QHeaderView.ResizeToContents)
             header.setSectionResizeMode(2, QtWidgets.QHeaderView.ResizeToContents)
             header.setSectionResizeMode(1, QtWidgets.QHeaderView.Stretch)
-            
-            self.win_change.le_a.setText(data['action_def'][cstl]['a'])
-            self.win_change.le_e.setText(data['action_def'][cstl]['e'])
-            self.win_change.le_q.setText(data['action_def'][cstl]['q'])
-            
-            self.win_change.sb_rnd_a.setValue(data['round']['a'])
-            self.win_change.sb_rnd_e.setValue(data['round']['e'])
-            self.win_change.sb_rnd_q.setValue(data['round']['q'])
+
+            for i in ['a','e','q','shld','heal']:           
+                # self.win_change.le_a.setText(data['action_def'][cstl]['a'])
+                # self.win_change.le_e.setText(data['action_def'][cstl]['e'])
+                # self.win_change.le_q.setText(data['action_def'][cstl]['q'])
+                self.win_change.findChild(QLineEdit,"le_"+i).setText((data['action_def'][cstl][i]))
+                                                                     
+            for i in ['a','e','q']:           
+                self.win_change.findChild(QSpinBox,"sb_rnd_"+i).setValue(data['round'][i])                                                            
+            # self.win_change.sb_rnd_a.setValue(data['round']['a'])
+            # self.win_change.sb_rnd_e.setValue(data['round']['e'])
+            # self.win_change.sb_rnd_q.setValue(data['round']['q'])
             self.win_change.dsb_enchant.setValue(data['enchant_ratio'][cstl])
 
             self.win_change.exec_()
@@ -373,20 +384,16 @@ class MainWindow(QMainWindow):
             character = self._data[self.cb_name.currentText()]['name']
             cstl = 'c'+str(int(self.cb_cnum.currentText()))        
             rnd = dict()
-            # fm = []
-            for i in ['a','e','q']:
-                rnd[i]= self.win_change.findChild(QSpinBox,"sb_rnd_"+i).value()
+            for i in ['a','e','q','shld','heal']:
                 assert self.win_change.findChild(QLabel,"lb_status_"+i).text() == '正确'
-                # fm.append(self.win_change.findChild(QLineEdit,"le_"+i).text())
                 self._cdata['action_def'][cstl][i] = self.win_change.findChild(QLineEdit,"le_"+i).text()
-
+                
+            for i in ['a','e','q']:
+                    rnd[i]= self.win_change.findChild(QSpinBox,"sb_rnd_"+i).value()
             self._cdata['enchant_ratio'][cstl] = self.win_change.dsb_enchant.value()
             self._cdata['round'] = rnd
 
-            # self._cdata['action_def'][cstl]= dict()
-            # self._cdata['action_def'][cstl]['a'] = fm[0]
-            # self._cdata['action_def'][cstl]['e'] = fm[1]
-            # self._cdata['action_def'][cstl]['q'] = fm[2]
+
             # self._cdata['action_def'][cstl]['shld'] = ''
             # self._cdata['action_def'][cstl]['heal'] = ''
             with open('./data/character/'+character+'.json', 'w', encoding='utf-8') as fp:
@@ -404,13 +411,16 @@ class MainWindow(QMainWindow):
         self.load_info()
 
     def reset_table(self):
+        bbb ={'伤害':7,'护盾':4,'生命':6,'治疗':5}
         self.pb_buff.hide()
         self.label2.setText("")
         self.label.setText("")
-        for i in range(4):
+        for i in range(8):
             for j in range(4):
                 self.tbl_2.setItem(i, j,QTableWidgetItem(""))
-
+            self.tbl_2.setRowHidden(i,False)
+        text = self.cb_sort.currentText()
+        self.tbl_2.setRowHidden(bbb[text],True)            
     def load_info(self):
         self.cb_wp.clear()
         self.cb_cnum.clear()
@@ -428,7 +438,7 @@ class MainWindow(QMainWindow):
         self.cb_cnum.addItems(self._data[self.cb_name.currentText()]['c'])
 
     def checkline(self,s):
-        assert(s in['a','e','q'])
+        assert(s in['a','e','q','heal','shld'])
         fm = self.win_change.findChild(QLineEdit,"le_"+s).text()
         status = self.win_change.findChild(QLabel,"lb_status_"+s)
         if fm!='':
@@ -438,13 +448,30 @@ class MainWindow(QMainWindow):
                     assert(i.count('*')<2)
                     tmp2 = i.split('*')
                     assert(tmp2[-1] in self._cdata['ratios'] or tmp2[-1] in ['ks'])
+                    if not(tmp2[-1] in ['ks']):
+                        atk_t = self._cdata['atk_type'][tmp2[-1]]
+                        # print(atk_t,s)
+                        if s in  ['a','e','q']:
+                            assert atk_t in ['elem','phys','env']
+                        if s in  ['shld','heal']:
+                            assert atk_t in ['shld','base','heal']
+
                 status.setText('正确')
             except:
                 status.setText('错误')
         else:
             status.setText('正确')
-
+    
+    def change_ksort(self):
+        aaa ={'伤害':1,'护盾':2,'生命':3,'治疗':4}
+        # print(self.cb_sort.currentText())
+        text = self.cb_sort.currentText()
+        assert(text in aaa)
+        self.tbl_2.setVerticalHeaderItem(0,QTableWidgetItem(text))
+        self._ksort = aaa[text]
+        self.reset_table()
         
+
 if __name__ == "__main__":
     
 

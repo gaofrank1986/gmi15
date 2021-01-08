@@ -127,7 +127,9 @@ class Character(Basic_Panel):
                 cond = buffs[i][0]
                 effect = buffs[i][1]
                 if 'all' in cond:
-                    cond=['a','e','q']
+                    cond=self.atk_name
+                if 'atk' in cond:
+                    cond=['a','e','q','w']
                 cover_ratio =buffs[i][2]
                 if True:
                     logger.info(i)
@@ -252,7 +254,7 @@ class Character(Basic_Panel):
         result = dict()
         for i in self.atk_name:
             logger.debug("==============处理 {} 技能公式:[{}]===============".format(i,self.formula[i]))
-            ans = [0,0,0,0]
+            ans = [0,0,0,0,0,0]
             logger.debug("buff加载前 area1 = {:.2f},area2 = {:.2f}".format(self._total_atk(),self._crit()))
 
             self.load_att(self.skill_effect[i])
@@ -317,8 +319,21 @@ class Character(Basic_Panel):
                             logger.debug("area1 = {:.2f},area2 = {:.2f},area3 = {:.2f},伤害类型:{}".format(base,area2,area3,"环境元素")) 
                         else:
                             pass
-                    elif i in ['shld','heal']:
-                        assert(atk_t in ['shld','heal','base'])
+                    elif i in ['shld']:
+                        # print(atk_t)
+                        assert(atk_t in ['shld','base'])
+                        logger.debug("护盾强效{}%".format(self.dmg_eh[10]))
+                        if atk_t == 'shld':
+                            ans[4] += base*ratio*multi*(1+self.dmg_eh[10]/100)
+                        if atk_t == 'base':
+                            ans[4] += ratio*multi*(1+self.dmg_eh[10]/100)
+                    elif i in ['heal']:
+                        assert(atk_t in ['heal','base'])
+                        logger.debug("治疗效果增加{}%".format(self.dmg_eh[9]/100))
+                        if atk_t == 'heal':
+                            ans[5] += base*ratio*multi*(1+self.dmg_eh[9]/100)
+                        if atk_t == 'base':
+                            ans[5] += ratio*100*multi*(1+self.dmg_eh[9]/100)
                     else:
                         raise ValueError       
 
@@ -342,14 +357,17 @@ class Character(Basic_Panel):
                 #     logger.debug("技能附加伤害: area1 = {:.2f},area2 = {:.2f},area3 = {:.2f},ratio = {:.2f} 假设为元素伤害，受益2，3乘区加成".format(area1,area2,area3,self.skill_effect[i]['damage']/100)) 
 
             ##################################################
+            result['maxhp'] = int(self._total_health())
 
             self.load_att(self.skill_effect[i],"minus")
             logger.debug("total damage for {} is 属性元素: {}, 物理: {},其他:{}".format(i,int(ans[0]),int(ans[1]),int(ans[2]+ans[3])))
+            logger.debug("total shield for {} is {},total heal {}".format(i,int(ans[4]),int(ans[5])))
+            ans = [int(_) for _ in ans]
             result['elem'] = result.get('elem',0)+ans[0]*self.skill_round[i]
             result['phys'] = result.get('phys',0)+ans[1]*self.skill_round[i]
             result['othr'] = result.get('othr',0)+(ans[2]+ans[3])*self.skill_round[i]
-            result['shld'] = 0
-            result['heal'] = 0
+            result['shld'] = result.get('shld',0)+ans[4]
+            result['heal'] = result.get('heal',0)+ans[5]
             
 
         result['sum'] = int(result.get('elem',0)+result.get('phys',0)+ result.get('othr',0))

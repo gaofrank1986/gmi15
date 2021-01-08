@@ -7,19 +7,25 @@
     <x>0</x>
     <y>0</y>
     <width>1270</width>
-    <height>504</height>
+    <height>505</height>
    </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
   </property>
   <property name="minimumSize">
    <size>
-    <width>1270</width>
-    <height>504</height>
+    <width>0</width>
+    <height>0</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
-    <width>1270</width>
-    <height>504</height>
+    <width>99999</width>
+    <height>99999</height>
    </size>
   </property>
   <property name="font">
@@ -38,7 +44,7 @@
    <enum>Qt::DefaultContextMenu</enum>
   </property>
   <property name="windowTitle">
-   <string>原神15s速切模型</string>
+   <string/>
   </property>
   <property name="layoutDirection">
    <enum>Qt::LeftToRight</enum>
@@ -74,9 +80,15 @@
        <rect>
         <x>540</x>
         <y>160</y>
-        <width>621</width>
-        <height>211</height>
+        <width>635</width>
+        <height>190</height>
        </rect>
+      </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
       </property>
       <property name="focusPolicy">
        <enum>Qt::NoFocus</enum>
@@ -120,6 +132,26 @@
       <row>
        <property name="text">
         <string>空之杯</string>
+       </property>
+      </row>
+      <row>
+       <property name="text">
+        <string>护盾量</string>
+       </property>
+      </row>
+      <row>
+       <property name="text">
+        <string>治疗量</string>
+       </property>
+      </row>
+      <row>
+       <property name="text">
+        <string>生命量</string>
+       </property>
+      </row>
+      <row>
+       <property name="text">
+        <string>伤害值</string>
        </property>
       </row>
       <column>
@@ -312,7 +344,7 @@
       <property name="geometry">
        <rect>
         <x>1010</x>
-        <y>110</y>
+        <y>100</y>
         <width>151</width>
         <height>41</height>
        </rect>
@@ -337,14 +369,14 @@
      <widget class="QCheckBox" name="rb_display">
       <property name="geometry">
        <rect>
-        <x>540</x>
-        <y>130</y>
+        <x>720</x>
+        <y>108</y>
         <width>141</width>
-        <height>19</height>
+        <height>31</height>
        </rect>
       </property>
       <property name="text">
-       <string>伤害精确显示</string>
+       <string>精确数字</string>
       </property>
      </widget>
      <widget class="QPushButton" name="pb_action">
@@ -425,6 +457,49 @@
        <string>修改技能</string>
       </property>
      </widget>
+     <widget class="QComboBox" name="cb_sort">
+      <property name="geometry">
+       <rect>
+        <x>590</x>
+        <y>110</y>
+        <width>71</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <item>
+       <property name="text">
+        <string>伤害</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>护盾</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>生命</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>治疗</string>
+       </property>
+      </item>
+     </widget>
+     <widget class="QLabel" name="label_19">
+      <property name="geometry">
+       <rect>
+        <x>540</x>
+        <y>110</y>
+        <width>71</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>排序</string>
+      </property>
+     </widget>
      <zorder>graphicsView</zorder>
      <zorder>tbl_2</zorder>
      <zorder>label</zorder>
@@ -445,6 +520,8 @@
      <zorder>label2</zorder>
      <zorder>pb_buff</zorder>
      <zorder>pb_change</zorder>
+     <zorder>cb_sort</zorder>
+     <zorder>label_19</zorder>
     </widget>
     <widget class="QWidget" name="tab_4">
      <attribute name="title">
@@ -1194,8 +1271,8 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>98</width>
-         <height>28</height>
+         <width>100</width>
+         <height>30</height>
         </rect>
        </property>
        <attribute name="label">
@@ -1237,8 +1314,8 @@ A：原神这个游戏，因为刷怪地点不一样，还有场景技能，导�
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>98</width>
-         <height>28</height>
+         <width>1281</width>
+         <height>379</height>
         </rect>
        </property>
        <attribute name="label">
