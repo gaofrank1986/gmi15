@@ -327,7 +327,7 @@ class Character(Basic_Panel):
                             ans[4] += ratio*multi*(1+self.dmg_eh[10]/100)
                     elif i in ['heal']:
                         assert(atk_t in ['heal','base'])
-                        logger.debug("治疗效果增加{}%".format(self.dmg_eh[9]/100))
+                        logger.debug("治疗效果增加{}%".format(self.dmg_eh[9]))
                         if atk_t == 'heal':
                             ans[5] += base*ratio*multi*(1+self.dmg_eh[9]/100)
                         if atk_t == 'base':

@@ -319,4 +319,6 @@ def parse_formula(s):
 
 def trans(i):
     assert(isinstance(i,int) or isinstance(i,float))
+    if i<10000:
+        return i
     return str(round(i/10000,1))+'万'
