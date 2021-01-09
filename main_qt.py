@@ -157,7 +157,7 @@ class MainWindow(QMainWindow):
             logging.getLogger('Buff').info("特殊攻击加成: {}\n".format(c.sp_buff))
             
 
-            save = run_thru("./data/artifacts/main_list.json",c,rls,self._ksort)
+            save = run_thru("./data/artifacts/main_list.json",c,rls,self.pbar,self._ksort)
 
             if "rebase" in c._data.keys():
                 for i in c._data['rebase']:
@@ -178,7 +178,7 @@ class MainWindow(QMainWindow):
                 if self.rb_display.isChecked():
                     content = [i,extract_name2(tmp['head']),extract_name2(tmp['glass']),extract_name2(tmp['cup']),tmp0['shld'],tmp0['heal'],tmp0['maxhp'],tmp0['sum']]
                 else:
-                    content = [trans(i),extract_name2(tmp['head']),extract_name2(tmp['glass']),extract_name2(tmp['cup']),tmp0['shld'],tmp0['heal'],trans(tmp0['maxhp']),trans(tmp0['sum'])]
+                    content = [trans(i),extract_name2(tmp['head']),extract_name2(tmp['glass']),extract_name2(tmp['cup']),trans(tmp0['shld']),trans(tmp0['heal']),trans(tmp0['maxhp']),trans(tmp0['sum'])]
                 
                 for i in range(len(content)):
                     item =  QTableWidgetItem(str(content[i]))
@@ -375,6 +375,8 @@ class MainWindow(QMainWindow):
             for i in ['a','e','q']:           
                 self.win_change.findChild(QSpinBox,"sb_rnd_"+i).setValue(data[cstl]['round'][i])                                                            
             self.win_change.dsb_enchant.setValue(data[cstl]['enchant_ratio'])
+            if 'cmts' in data[cstl]:
+                self.win_change.pte_cmts.setPlainText(data[cstl]['cmts'])
 
             self.win_change.exec_()
         except Exception as e:
@@ -396,6 +398,7 @@ class MainWindow(QMainWindow):
                     rnd[i]= self.win_change.findChild(QSpinBox,"sb_rnd_"+i).value()
             self._cdata[cstl]['enchant_ratio'] = self.win_change.dsb_enchant.value()
             self._cdata[cstl]['round'] = rnd
+            self._cdata[cstl]['cmts']= self.win_change.pte_cmts.toPlainText()
 
             tmp =['c0','c1','c2','c3','c4','c5','c6']
             tmp2 = {_:'' for _ in ('a','e','q','shld','heal')}
@@ -405,7 +408,7 @@ class MainWindow(QMainWindow):
                 self._cdata[i]['enchant_ratio'] = self._cdata[i].get('enchant_ratio',0)
                 self._cdata[i]['action_def']= self._cdata[i].get('action_def',tmp2)
                 self._cdata[i]['round']= self._cdata[i].get('round',{'a':0,'e':0,'q':0})
-            
+
             for i in ['round','enchant_ratio','action_def']:
                 if i in self._cdata:
                     self._cdata.pop(i)
@@ -434,7 +437,8 @@ class MainWindow(QMainWindow):
                 self.tbl_2.setItem(i, j,QTableWidgetItem(""))
             self.tbl_2.setRowHidden(i,False)
         text = self.cb_sort.currentText()
-        self.tbl_2.setRowHidden(bbb[text],True)            
+        self.tbl_2.setRowHidden(bbb[text],True)
+        self.pbar.setValue(0)         
     def load_info(self):
         self.cb_wp.clear()
         self.cb_cnum.clear()

@@ -389,6 +389,24 @@
      </property>
     </widget>
    </widget>
+   <widget class="QWidget" name="tab_3">
+    <attribute name="title">
+     <string>注释</string>
+    </attribute>
+    <widget class="QPlainTextEdit" name="pte_cmts">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>30</y>
+       <width>671</width>
+       <height>661</height>
+      </rect>
+     </property>
+     <property name="plainText">
+      <string>自定义注释，技能定义保存时同时保存</string>
+     </property>
+    </widget>
+   </widget>
    <widget class="QWidget" name="tab_2">
     <attribute name="title">
      <string>说明</string>
@@ -404,7 +422,35 @@
      </property>
      <property name="plainText">
       <string>说明
-========</string>
+========
+
+物理攻击附魔比例
+---------------
+物理攻击按比例转成元素攻击，享受本属性伤害加成
+其余部分物理攻击，物理伤害加成
+
+技能定义
+-------------
+定义对应项分技能，全部判定正确可以存储到人物数据文件
+
+规则
+-------
+1. 可以为 空白 或者 合理的定义
+2. 分技能由 + 号连接，如： e1+e2+e3
+3. 分技能可带系数，系数可带小数点，系数必须在前, 如 e1+2*e2+3.5*e3
+4.普攻/元素战技/爆发 对应分技能必须为 技能查询中类型为 物理伤害、属性元素、环境元素的技能
+5.护盾及治疗   对应分技能必须为 技能查询中类型为 技能护盾、治疗、基数的技能
+6. e,q,a技能可以出现在 普攻/战技/爆发的任何定义中。 区别是技能等级由首字母定义，伤害加成由位置决定。如公子普攻定义（e1+e2),技能等级随e走，加成享受普攻加成
+7.查询表增益类技能不能用于定义
+8. 可定义扩散反应，如温蒂大招吃20个属性伤害加7个扩散反应，定义为20*q1+7*ks
+
+技能查询
+-------
+显示分技能名字，注释及类型，不支持修改
+
+注释
+-----
+显示自定义注释，技能定义保存时同时保存</string>
      </property>
     </widget>
    </widget>

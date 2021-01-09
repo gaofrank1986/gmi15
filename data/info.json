@@ -36,6 +36,13 @@
         "name": "tartaglia",
         "w": "bow"
     },
+    "莫娜": {
+        "c": [
+            "0"
+        ],
+        "name": "mona",
+        "w": "catalyst"
+    },
     "行秋": {
         "c": [
             "6"

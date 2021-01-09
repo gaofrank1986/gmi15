@@ -209,50 +209,55 @@ def extract_name3(a):
 
 
 
-def run_thru(path,c,rls,ksort=1):
+def run_thru(path,c,rls,pbar,ksort=1):
     logger = logging.getLogger('Main')
     with open(path, 'r', encoding='UTF-8') as fp:
         data = json.load(fp)
     save = dict()
     diluc = deepcopy(c)
-    for head in data['head']:
+    total = 1
+    acc = 1
+    total = len( data['head'])*len( data['glass'])*len( data['cup'])
+    for head in data['head']: 
         for glass in data['glass']:
-                for cup in data['cup']:
+            for cup in data['cup']:
+                # print(acc,total)
+                pbar.setValue(float(acc/total)*100)
+                flower = data['flower'][0]
+                feather = data['feather'][0]
+        
+                rls.add(head,'head')
+                rls.add(glass,'glass')        
+                rls.add(cup,'cup')
+                rls.add(flower,'flower')
+                rls.add(feather,'feather')
 
-                    flower = data['flower'][0]
-                    feather = data['feather'][0]
-            
-                    rls.add(head,'head')
-                    rls.add(glass,'glass')        
-                    rls.add(cup,'cup')
-                    rls.add(flower,'flower')
-                    rls.add(feather,'feather')
+                diluc.put_on(rls)
+                logger.info("理之冠: {}".format(head))
+                logger.info("时之沙: {}".format(glass))
+                logger.info("空之杯: {}".format(cup))
+                logger.info("副词条: {}".format(rls.buf['sub']))
 
-                    diluc.put_on(rls)
-                    logger.info("理之冠: {}".format(head))
-                    logger.info("时之沙: {}".format(glass))
-                    logger.info("空之杯: {}".format(cup))
-                    logger.info("副词条: {}".format(rls.buf['sub']))
+                ans = deepcopy(diluc.damage_rsl())
+                if ksort == 1:
+                    tmp = ans['sum']
+                if ksort == 3:
+                    tmp = ans['maxhp']
+                if ksort == 4:
+                    tmp = ans['heal']
+                if ksort == 2:
+                    tmp = ans['shld']
+                while (tmp in save.keys()):
+                    tmp = tmp-1
+                save[tmp] = [ans,deepcopy(rls.buf)]
 
-                    ans = deepcopy(diluc.damage_rsl())
-                    if ksort == 1:
-                        tmp = ans['sum']
-                    if ksort == 3:
-                        tmp = ans['maxhp']
-                    if ksort == 4:
-                        tmp = ans['heal']
-                    if ksort == 2:
-                        tmp = ans['shld']
-                    while (tmp in save.keys()):
-                        tmp = tmp-1
-                    save[tmp] = [ans,deepcopy(rls.buf)]
-
-                    diluc.take_off(rls)
-                    rls.rm(feather,'feather')
-                    rls.rm(flower,'flower')
-                    rls.rm(cup,'cup')
-                    rls.rm(glass,'glass')
-                    rls.rm(head,'head')
+                diluc.take_off(rls)
+                rls.rm(feather,'feather')
+                rls.rm(flower,'flower')
+                rls.rm(cup,'cup')
+                rls.rm(glass,'glass')
+                rls.rm(head,'head')
+                acc+=1
     return(save)
 
 class QTextEditLogger(logging.Handler):

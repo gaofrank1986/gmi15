@@ -168,7 +168,7 @@ class Character(Basic_Panel):
                                 self.skill_effect[j][k] =self.skill_effect[j].get(k,0)+value*cover_ratio
                             if k == 'level':
                                 self.skill_level[self.atk_name.index(j)]+=value
-                            if k in ['h2a','d2a']:
+                            if k in ['h2a','d2a','ef2ed']:
                                 # print(value,cover_ratio)
                                 self.sp_buff[k] = self.sp_buff.get(k,0)+value*cover_ratio
                             
@@ -266,7 +266,11 @@ class Character(Basic_Panel):
                 if 'h2a' in self.sp_buff.keys():
                     delta = self.sp_buff['h2a']/100*self._total_health()
                     area1+= delta
-                    logger.debug("生命转攻击 增加量 = {:.2f}".format(delta))                                         
+                    logger.debug("生命转攻击 增加量 = {:.2f}".format(delta))
+                if 'ef2ed' in self.sp_buff.keys():
+                    delta = self.sp_buff['ef2ed']/100*self.attack[6]
+                    self.load_att({'ed':delta})
+                    logger.debug("充能转增伤 增加量 = {:.2f}".format(delta))                                         
             logger.debug("buff加载后 area1 = {:.2f},area2 = {:.2f}".format(area1,area2))
             
 

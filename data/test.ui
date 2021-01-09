@@ -18,14 +18,14 @@
   </property>
   <property name="minimumSize">
    <size>
-    <width>0</width>
-    <height>0</height>
+    <width>1270</width>
+    <height>505</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
-    <width>99999</width>
-    <height>99999</height>
+    <width>1270</width>
+    <height>505</height>
    </size>
   </property>
   <property name="font">
@@ -44,7 +44,7 @@
    <enum>Qt::DefaultContextMenu</enum>
   </property>
   <property name="windowTitle">
-   <string/>
+   <string>原神计算器</string>
   </property>
   <property name="layoutDirection">
    <enum>Qt::LeftToRight</enum>
@@ -363,7 +363,7 @@
        </rect>
       </property>
       <property name="text">
-       <string>速切</string>
+       <string>不计普攻</string>
       </property>
      </widget>
      <widget class="QCheckBox" name="rb_display">
@@ -500,6 +500,19 @@
        <string>排序</string>
       </property>
      </widget>
+     <widget class="QProgressBar" name="pbar">
+      <property name="geometry">
+       <rect>
+        <x>310</x>
+        <y>370</y>
+        <width>118</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="value">
+       <number>24</number>
+      </property>
+     </widget>
      <zorder>graphicsView</zorder>
      <zorder>tbl_2</zorder>
      <zorder>label</zorder>
@@ -522,6 +535,7 @@
      <zorder>pb_change</zorder>
      <zorder>cb_sort</zorder>
      <zorder>label_19</zorder>
+     <zorder>pbar</zorder>
     </widget>
     <widget class="QWidget" name="tab_4">
      <attribute name="title">
@@ -1349,8 +1363,8 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>98</width>
-         <height>28</height>
+         <width>1281</width>
+         <height>379</height>
         </rect>
        </property>
        <attribute name="label">
@@ -1392,8 +1406,8 @@ A：原神这个游戏，因为刷怪地点不一样，还有场景技能，导�
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>98</width>
-         <height>28</height>
+         <width>1281</width>
+         <height>379</height>
         </rect>
        </property>
        <attribute name="label">
@@ -1418,20 +1432,31 @@ A：原神这个游戏，因为刷怪地点不一样，还有场景技能，导�
 -----------
 目前伤害只考虑伤害公式的前三个乘区以及技能倍率和技能次数的影响
 元素反应以及敌人的各项属性均不计入（温蒂的扩散反应纳入计算）
-阿贝多--目前是否速切都不计普攻
 
 
-重要影响参数（需定义数据文件, 不建议随便尝试）
+重要影响参数（必看，假设决定结果）
 -----------
 1. 人物的普攻，元素战技，元素爆发和重击的攻击轮数
 2. 普攻/元素战技/元素爆发/重击的 具体组成
-3.人物/武器特效的覆盖系数（因程序没有时间轴，特效效果用覆盖系数进行简化，相当于倍率）
+3.人物/武器特效的定义及覆盖系数（因程序没有时间轴，特效效果用覆盖系数进行简化，相当于倍率）
 
-速切
+不计普攻
 -----------
 勾中时，普攻伤害不计入结果
 
-日志
+技能参数
+-----------
+显示当前人物命座下技能的定义
+
+修改技能
+-----------
+修改当前人物命座下技能的定义
+
+增益参数
+----------
+计算完成后显示，显示所有增益加成（武器、人物、圣遗物），可读性略差
+
+计算日志
 ----------
 可追踪具体每个技能分项的计算参数和人物信息，便于检查跟踪，计算时自动重置
 
@@ -1441,9 +1466,12 @@ A：原神这个游戏，因为刷怪地点不一样，还有场景技能，导�
 通过穷举完成，可通过勾选增加/减少选项
 计算时候会自动存档
 ======================
-圣遗物副词条
+其他增益
 ------------
-也可输入其他人物带来的增益，比如班尼特可以调整固定攻击增益，圣遗物效果可调整属伤加成
+副词条，圣遗物套装效果，其他增益
+
+班尼特加攻击可以直接在副词条区域修改
+
 计算时候会自动存档
 </string>
         </property>
@@ -1452,16 +1480,6 @@ A：原神这个游戏，因为刷怪地点不一样，还有场景技能，导�
      </widget>
     </widget>
    </widget>
-  </widget>
-  <widget class="QMenuBar" name="menubar">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>1270</width>
-     <height>27</height>
-    </rect>
-   </property>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
