@@ -212,6 +212,10 @@ class MainWindow(QMainWindow):
             self.digit_fd.setValue(self._sub_data['dphys']) 
             self.digit_sa.setValue(self._sub_data['sa']) 
             self.digit_alld.setValue(self._sub_data['d']) 
+            self.digit_sd.setValue(self._sub_data['sd']) 
+            self.digit_hr.setValue(self._sub_data['hr']) 
+            self.digit_em.setValue(self._sub_data['em']) 
+            self.digit_sh.setValue(self._sub_data['sh']) 
 
     def save_sub(self):
         path = "./data/artifacts/sub.json"
@@ -227,7 +231,10 @@ class MainWindow(QMainWindow):
         data['dphys'] = self.digit_fd.value()
         data['sa'] = self.digit_sa.value()
         data['d'] = self.digit_alld.value()
-        data['em'] = 0
+        data['sd'] = self.digit_sd.value()
+        data['sh'] = self.digit_sh.value()
+        data['hr'] = self.digit_hr.value()
+        data['em'] = self.digit_em.value()
         save = {}
         save['sub'] = data
         with open(path, 'w', encoding='UTF-8') as fp:
@@ -246,7 +253,7 @@ class MainWindow(QMainWindow):
                 checkbox.setChecked(True)
 
     def _read_cbox(self,pos):
-        tmp = ['cr','cd','ar','dr','em','ed','dphys','hr','ef']
+        tmp = ['cr','cd','ar','dr','em','ed','dphys','hr','ef','dheal']
         ans = []
       
         for i in tmp:
@@ -274,8 +281,8 @@ class MainWindow(QMainWindow):
                                                
         basic_main_rate = 31.1#满爆率
 
-        prop_list = ['ar','ed','cr','cd','dphys','sa','sh','dr','em','hr','cure','ef']
-        trans_ratio = [1.5,1.5,1,2,1.875,10,153.7,1.875,6.0128,1.5,1.1428,1,1]
+        prop_list = ['ar','ed','cr','cd','dphys','sa','sh','dr','em','hr','dheal','ef']
+        trans_ratio = [1.5,1.5,1,2,1.875,10,153.7,1.875,6.0128,1.5,1.1428,1.1543,1.6656]
         ratio_main = {prop_list[i]:trans_ratio[i] for i in range(len(prop_list))}
 
         ans = dict()
@@ -302,16 +309,16 @@ class MainWindow(QMainWindow):
                 data = json.load(fp)
             tmp = self.win_action.info_action
             for i in range(len(prop_name)):
-                if data['action_def'][cstl][prop_name[i]]!='':
+                if data[cstl]['action_def'][prop_name[i]]!='':
                     if i ==0 and self.rb_pop.isChecked():
                         ans+="{}(速切不计入伤害 {}轮)\n{}".format(desc[i],0,div1)                    
                     else:
                         if i <3:
-                            rnd = data['round'][prop_name[i]]
+                            rnd = data[cstl]['round'][prop_name[i]]
                         else:
                             rnd = 1
                         ans+="{}({}轮)\n{}".format(desc[i],rnd,div1)
-                    formula = data['action_def'][cstl][prop_name[i]]
+                    formula = data[cstl]['action_def'][prop_name[i]]
                     for entry in parse_formula(formula):
                         if entry[0] == 'ks':
                             ans += '扩散伤害'
@@ -362,17 +369,12 @@ class MainWindow(QMainWindow):
             header.setSectionResizeMode(1, QtWidgets.QHeaderView.Stretch)
 
             for i in ['a','e','q','shld','heal']:           
-                # self.win_change.le_a.setText(data['action_def'][cstl]['a'])
-                # self.win_change.le_e.setText(data['action_def'][cstl]['e'])
-                # self.win_change.le_q.setText(data['action_def'][cstl]['q'])
-                self.win_change.findChild(QLineEdit,"le_"+i).setText((data['action_def'][cstl][i]))
+
+                self.win_change.findChild(QLineEdit,"le_"+i).setText((data[cstl]['action_def'][i]))
                                                                      
             for i in ['a','e','q']:           
-                self.win_change.findChild(QSpinBox,"sb_rnd_"+i).setValue(data['round'][i])                                                            
-            # self.win_change.sb_rnd_a.setValue(data['round']['a'])
-            # self.win_change.sb_rnd_e.setValue(data['round']['e'])
-            # self.win_change.sb_rnd_q.setValue(data['round']['q'])
-            self.win_change.dsb_enchant.setValue(data['enchant_ratio'][cstl])
+                self.win_change.findChild(QSpinBox,"sb_rnd_"+i).setValue(data[cstl]['round'][i])                                                            
+            self.win_change.dsb_enchant.setValue(data[cstl]['enchant_ratio'])
 
             self.win_change.exec_()
         except Exception as e:
@@ -384,18 +386,30 @@ class MainWindow(QMainWindow):
             character = self._data[self.cb_name.currentText()]['name']
             cstl = 'c'+str(int(self.cb_cnum.currentText()))        
             rnd = dict()
+            self._cdata[cstl] = {}
+            self._cdata[cstl]['action_def'] = {}
             for i in ['a','e','q','shld','heal']:
                 assert self.win_change.findChild(QLabel,"lb_status_"+i).text() == '正确'
-                self._cdata['action_def'][cstl][i] = self.win_change.findChild(QLineEdit,"le_"+i).text()
+                self._cdata[cstl]['action_def'][i] = self.win_change.findChild(QLineEdit,"le_"+i).text()
                 
             for i in ['a','e','q']:
                     rnd[i]= self.win_change.findChild(QSpinBox,"sb_rnd_"+i).value()
-            self._cdata['enchant_ratio'][cstl] = self.win_change.dsb_enchant.value()
-            self._cdata['round'] = rnd
+            self._cdata[cstl]['enchant_ratio'] = self.win_change.dsb_enchant.value()
+            self._cdata[cstl]['round'] = rnd
 
+            tmp =['c0','c1','c2','c3','c4','c5','c6']
+            tmp2 = {_:'' for _ in ('a','e','q','shld','heal')}
+            for i in tmp:
+                if not i in self._cdata:
+                    self._cdata[i] = {}
+                self._cdata[i]['enchant_ratio'] = self._cdata[i].get('enchant_ratio',0)
+                self._cdata[i]['action_def']= self._cdata[i].get('action_def',tmp2)
+                self._cdata[i]['round']= self._cdata[i].get('round',{'a':0,'e':0,'q':0})
+            
+            for i in ['round','enchant_ratio','action_def']:
+                if i in self._cdata:
+                    self._cdata.pop(i)
 
-            # self._cdata['action_def'][cstl]['shld'] = ''
-            # self._cdata['action_def'][cstl]['heal'] = ''
             with open('./data/character/'+character+'.json', 'w', encoding='utf-8') as fp:
                 json.dump(self._cdata, fp,indent = 4,ensure_ascii=False)
 

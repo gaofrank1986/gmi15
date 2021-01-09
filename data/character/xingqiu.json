@@ -210,25 +210,112 @@
             "虚实工笔 行秋获得20％水元素伤害加成"
         ]
     },
-    "round": {
-        "a": 4,
-        "e": 1,
-        "q": 1
-    },
-    "enchant_ratio": {
-        "c6": 0.0
-    },
-
     "reference": {
         "1": "https://www.gamersky.com/handbook/202012/1349921.shtml"
     },
-    "action_def": {
-        "c6": {
+    "c6": {
+        "action_def": {
             "a": "a1+a2+a3+a4+a5",
             "e": "e1",
             "q": "53*q1",
             "shld": "",
             "heal": ""
+        },
+        "enchant_ratio": 0.0,
+        "round": {
+            "a": 4,
+            "e": 1,
+            "q": 1
+        }
+    },
+    "c0": {
+        "enchant_ratio": 0,
+        "action_def": {
+            "a": "",
+            "e": "",
+            "q": "",
+            "shld": "",
+            "heal": ""
+        },
+        "round": {
+            "a": 0,
+            "e": 0,
+            "q": 0
+        }
+    },
+    "c1": {
+        "enchant_ratio": 0,
+        "action_def": {
+            "a": "",
+            "e": "",
+            "q": "",
+            "shld": "",
+            "heal": ""
+        },
+        "round": {
+            "a": 0,
+            "e": 0,
+            "q": 0
+        }
+    },
+    "c2": {
+        "enchant_ratio": 0,
+        "action_def": {
+            "a": "",
+            "e": "",
+            "q": "",
+            "shld": "",
+            "heal": ""
+        },
+        "round": {
+            "a": 0,
+            "e": 0,
+            "q": 0
+        }
+    },
+    "c3": {
+        "enchant_ratio": 0,
+        "action_def": {
+            "a": "",
+            "e": "",
+            "q": "",
+            "shld": "",
+            "heal": ""
+        },
+        "round": {
+            "a": 0,
+            "e": 0,
+            "q": 0
+        }
+    },
+    "c4": {
+        "enchant_ratio": 0,
+        "action_def": {
+            "a": "",
+            "e": "",
+            "q": "",
+            "shld": "",
+            "heal": ""
+        },
+        "round": {
+            "a": 0,
+            "e": 0,
+            "q": 0
+        }
+    },
+    "c5": {
+        "enchant_ratio": 0,
+        "action_def": {
+            "a": "",
+            "e": "",
+            "q": "",
+            "shld": "",
+            "heal": ""
+        },
+        "round": {
+            "a": 0,
+            "e": 0,
+            "q": 0
         }
     }
 }

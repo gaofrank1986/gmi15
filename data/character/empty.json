@@ -10,12 +10,6 @@
             "ed": 0
         }
     },
-    "round": {
-        "a": 0,
-        "e": 0,
-        "q": 0
-    },
-    "enchant_ratio": 0.0,
     "ratios": {
         "a1": [
             0
@@ -28,13 +22,109 @@
         "a1": "phys"
     },
     "buffs": {},
-    "action_def": {
-        "c0": {
+    "c0": {
+        "action_def": {
             "a": "a1",
             "e": "",
             "q": "",
             "shld": "",
             "heal": ""
+        },
+        "enchant_ratio": 0.0,
+        "round": {
+            "a": 0,
+            "e": 0,
+            "q": 0
+        }
+    },
+    "c1": {
+        "enchant_ratio": 0,
+        "action_def": {
+            "a": "",
+            "e": "",
+            "q": "",
+            "shld": "",
+            "heal": ""
+        },
+        "round": {
+            "a": 0,
+            "e": 0,
+            "q": 0
+        }
+    },
+    "c2": {
+        "enchant_ratio": 0,
+        "action_def": {
+            "a": "",
+            "e": "",
+            "q": "",
+            "shld": "",
+            "heal": ""
+        },
+        "round": {
+            "a": 0,
+            "e": 0,
+            "q": 0
+        }
+    },
+    "c3": {
+        "enchant_ratio": 0,
+        "action_def": {
+            "a": "",
+            "e": "",
+            "q": "",
+            "shld": "",
+            "heal": ""
+        },
+        "round": {
+            "a": 0,
+            "e": 0,
+            "q": 0
+        }
+    },
+    "c4": {
+        "enchant_ratio": 0,
+        "action_def": {
+            "a": "",
+            "e": "",
+            "q": "",
+            "shld": "",
+            "heal": ""
+        },
+        "round": {
+            "a": 0,
+            "e": 0,
+            "q": 0
+        }
+    },
+    "c5": {
+        "enchant_ratio": 0,
+        "action_def": {
+            "a": "",
+            "e": "",
+            "q": "",
+            "shld": "",
+            "heal": ""
+        },
+        "round": {
+            "a": 0,
+            "e": 0,
+            "q": 0
+        }
+    },
+    "c6": {
+        "enchant_ratio": 0,
+        "action_def": {
+            "a": "",
+            "e": "",
+            "q": "",
+            "shld": "",
+            "heal": ""
+        },
+        "round": {
+            "a": 0,
+            "e": 0,
+            "q": 0
         }
     }
 }

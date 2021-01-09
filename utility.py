@@ -169,6 +169,8 @@ def extract_name2(a):
         ans = '充能'
     if list(a.keys())[0] == 'em':
         ans = '精通'
+    if list(a.keys())[0] == 'dheal':
+        ans = '治疗'
     return(ans)
 
 def extract_name3(a):

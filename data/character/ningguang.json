@@ -143,22 +143,109 @@
             "穿过璇玑屏的角色会获得12%岩元素伤害加成，持续10秒。"
         ]
     },
-    "round": {
-        "a": 4,
-        "e": 3,
-        "q": 1
-    },
-    "enchant_ratio": {
-        "c6": 0.0
-    },
-
-    "action_def": {
-        "c6": {
+    "c6": {
+        "action_def": {
             "a": "3*a1+3*a2+ah",
             "e": "e1",
             "q": "7*q1",
             "shld": "",
             "heal": ""
+        },
+        "enchant_ratio": 0.0,
+        "round": {
+            "a": 4,
+            "e": 3,
+            "q": 1
+        }
+    },
+    "c0": {
+        "enchant_ratio": 0,
+        "action_def": {
+            "a": "",
+            "e": "",
+            "q": "",
+            "shld": "",
+            "heal": ""
+        },
+        "round": {
+            "a": 0,
+            "e": 0,
+            "q": 0
+        }
+    },
+    "c1": {
+        "enchant_ratio": 0,
+        "action_def": {
+            "a": "",
+            "e": "",
+            "q": "",
+            "shld": "",
+            "heal": ""
+        },
+        "round": {
+            "a": 0,
+            "e": 0,
+            "q": 0
+        }
+    },
+    "c2": {
+        "enchant_ratio": 0,
+        "action_def": {
+            "a": "",
+            "e": "",
+            "q": "",
+            "shld": "",
+            "heal": ""
+        },
+        "round": {
+            "a": 0,
+            "e": 0,
+            "q": 0
+        }
+    },
+    "c3": {
+        "enchant_ratio": 0,
+        "action_def": {
+            "a": "",
+            "e": "",
+            "q": "",
+            "shld": "",
+            "heal": ""
+        },
+        "round": {
+            "a": 0,
+            "e": 0,
+            "q": 0
+        }
+    },
+    "c4": {
+        "enchant_ratio": 0,
+        "action_def": {
+            "a": "",
+            "e": "",
+            "q": "",
+            "shld": "",
+            "heal": ""
+        },
+        "round": {
+            "a": 0,
+            "e": 0,
+            "q": 0
+        }
+    },
+    "c5": {
+        "enchant_ratio": 0,
+        "action_def": {
+            "a": "",
+            "e": "",
+            "q": "",
+            "shld": "",
+            "heal": ""
+        },
+        "round": {
+            "a": 0,
+            "e": 0,
+            "q": 0
         }
     }
 }

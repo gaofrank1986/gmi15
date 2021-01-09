@@ -10,11 +10,6 @@
             "ed": 28.8
         }
     },
-    "round": {
-        "a": 4,
-        "e": 1,
-        "q": 1
-    },
     "ratios": {
         "a_flash": [
             37.2,
@@ -309,24 +304,109 @@
             "q技能等级加3"
         ]
     },
-    "enchant_ratio": {
-        "c0": 1.0,
-        "c6": 1.0
-    },
-    "action_def": {
-        "c0": {
+    "c0": {
+        "action_def": {
             "a": "e1+e2+e3+e4+e5+e6",
             "e": "e0+8*e_slash",
             "q": "q_range+q_blast",
             "shld": "",
             "heal": ""
         },
-        "c6": {
+        "enchant_ratio": 1.0,
+        "round": {
+            "a": 4,
+            "e": 1,
+            "q": 1
+        }
+    },
+    "c1": {
+        "enchant_ratio": 0,
+        "action_def": {
+            "a": "",
+            "e": "",
+            "q": "",
+            "shld": "",
+            "heal": ""
+        },
+        "round": {
+            "a": 0,
+            "e": 0,
+            "q": 0
+        }
+    },
+    "c2": {
+        "enchant_ratio": 0,
+        "action_def": {
+            "a": "",
+            "e": "",
+            "q": "",
+            "shld": "",
+            "heal": ""
+        },
+        "round": {
+            "a": 0,
+            "e": 0,
+            "q": 0
+        }
+    },
+    "c3": {
+        "enchant_ratio": 0,
+        "action_def": {
+            "a": "",
+            "e": "",
+            "q": "",
+            "shld": "",
+            "heal": ""
+        },
+        "round": {
+            "a": 0,
+            "e": 0,
+            "q": 0
+        }
+    },
+    "c4": {
+        "enchant_ratio": 0,
+        "action_def": {
+            "a": "",
+            "e": "",
+            "q": "",
+            "shld": "",
+            "heal": ""
+        },
+        "round": {
+            "a": 0,
+            "e": 0,
+            "q": 0
+        }
+    },
+    "c5": {
+        "enchant_ratio": 0,
+        "action_def": {
+            "a": "",
+            "e": "",
+            "q": "",
+            "shld": "",
+            "heal": ""
+        },
+        "round": {
+            "a": 0,
+            "e": 0,
+            "q": 0
+        }
+    },
+    "c6": {
+        "action_def": {
             "a": "e1+e2+e3+e4+e5+e6",
             "e": "e0+12*e_slash",
             "q": "q_range+q_melee+2*q_blast",
             "shld": "",
             "heal": ""
+        },
+        "enchant_ratio": 1.0,
+        "round": {
+            "a": 4,
+            "e": 1,
+            "q": 1
         }
     }
 }

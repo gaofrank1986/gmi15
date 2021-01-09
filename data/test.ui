@@ -617,6 +617,19 @@
         <string>生命</string>
        </property>
       </widget>
+      <widget class="QCheckBox" name="cbox_h_dheal">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>220</y>
+         <width>91</width>
+         <height>19</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>治疗</string>
+       </property>
+      </widget>
      </widget>
      <widget class="QGroupBox" name="groupBox_2">
       <property name="geometry">
@@ -854,9 +867,9 @@
       <property name="geometry">
        <rect>
         <x>50</x>
-        <y>60</y>
-        <width>291</width>
-        <height>351</height>
+        <y>40</y>
+        <width>321</width>
+        <height>391</height>
        </rect>
       </property>
       <property name="title">
@@ -1016,25 +1029,6 @@
         <string>暴伤</string>
        </property>
       </widget>
-      <widget class="QDoubleSpinBox" name="digit_sa">
-       <property name="geometry">
-        <rect>
-         <x>160</x>
-         <y>160</y>
-         <width>70</width>
-         <height>22</height>
-        </rect>
-       </property>
-       <property name="decimals">
-        <number>1</number>
-       </property>
-       <property name="maximum">
-        <double>1000.000000000000000</double>
-       </property>
-       <property name="singleStep">
-        <double>1.000000000000000</double>
-       </property>
-      </widget>
       <widget class="QLabel" name="label_11">
        <property name="geometry">
         <rect>
@@ -1061,14 +1055,98 @@
         <string>生命（固定）</string>
        </property>
       </widget>
+      <widget class="QDoubleSpinBox" name="digit_hr">
+       <property name="geometry">
+        <rect>
+         <x>160</x>
+         <y>280</y>
+         <width>70</width>
+         <height>22</height>
+        </rect>
+       </property>
+       <property name="decimals">
+        <number>1</number>
+       </property>
+       <property name="maximum">
+        <double>1000.000000000000000</double>
+       </property>
+       <property name="singleStep">
+        <double>1.000000000000000</double>
+       </property>
+      </widget>
+      <widget class="QSpinBox" name="digit_sh">
+       <property name="geometry">
+        <rect>
+         <x>160</x>
+         <y>320</y>
+         <width>101</width>
+         <height>22</height>
+        </rect>
+       </property>
+       <property name="maximum">
+        <number>5000</number>
+       </property>
+      </widget>
+      <widget class="QSpinBox" name="digit_sd">
+       <property name="geometry">
+        <rect>
+         <x>160</x>
+         <y>240</y>
+         <width>101</width>
+         <height>22</height>
+        </rect>
+       </property>
+       <property name="maximum">
+        <number>5000</number>
+       </property>
+      </widget>
+      <widget class="QSpinBox" name="digit_sa">
+       <property name="geometry">
+        <rect>
+         <x>160</x>
+         <y>160</y>
+         <width>101</width>
+         <height>22</height>
+        </rect>
+       </property>
+       <property name="maximum">
+        <number>5000</number>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_20">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>360</y>
+         <width>101</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>精通</string>
+       </property>
+      </widget>
+      <widget class="QSpinBox" name="digit_em">
+       <property name="geometry">
+        <rect>
+         <x>160</x>
+         <y>360</y>
+         <width>101</width>
+         <height>22</height>
+        </rect>
+       </property>
+       <property name="maximum">
+        <number>5000</number>
+       </property>
+      </widget>
      </widget>
      <widget class="QGroupBox" name="groupBox_5">
       <property name="geometry">
        <rect>
-        <x>690</x>
-        <y>60</y>
+        <x>740</x>
+        <y>40</y>
         <width>291</width>
-        <height>351</height>
+        <height>391</height>
        </rect>
       </property>
       <property name="title">
@@ -1174,10 +1252,10 @@
      <widget class="QGroupBox" name="groupBox_6">
       <property name="geometry">
        <rect>
-        <x>370</x>
-        <y>60</y>
+        <x>410</x>
+        <y>40</y>
         <width>291</width>
-        <height>351</height>
+        <height>391</height>
        </rect>
       </property>
       <property name="title">
@@ -1271,8 +1349,8 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>100</width>
-         <height>30</height>
+         <width>98</width>
+         <height>28</height>
         </rect>
        </property>
        <attribute name="label">
@@ -1314,8 +1392,8 @@ A：原神这个游戏，因为刷怪地点不一样，还有场景技能，导�
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>1281</width>
-         <height>379</height>
+         <width>98</width>
+         <height>28</height>
         </rect>
        </property>
        <attribute name="label">

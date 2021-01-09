@@ -177,25 +177,112 @@
             "普通攻击与重击的伤害转为岩元素,依据诺艾尔的防御力，提升攻击力"
         ]
     },
-    "round": {
-        "a": 3,
-        "e": 1,
-        "q": 1
-    },
-    "enchant_ratio": {
-        "c6": 1.0
-    },
-
     "rebase": {
         "e1": "def"
     },
-    "action_def": {
-        "c6": {
+    "c6": {
+        "action_def": {
             "a": "a1+a2+a3+a4",
             "e": "e1+e2",
             "q": "q",
             "shld": "",
             "heal": ""
+        },
+        "enchant_ratio": 1.0,
+        "round": {
+            "a": 3,
+            "e": 1,
+            "q": 1
+        }
+    },
+    "c0": {
+        "enchant_ratio": 0,
+        "action_def": {
+            "a": "",
+            "e": "",
+            "q": "",
+            "shld": "",
+            "heal": ""
+        },
+        "round": {
+            "a": 0,
+            "e": 0,
+            "q": 0
+        }
+    },
+    "c1": {
+        "enchant_ratio": 0,
+        "action_def": {
+            "a": "",
+            "e": "",
+            "q": "",
+            "shld": "",
+            "heal": ""
+        },
+        "round": {
+            "a": 0,
+            "e": 0,
+            "q": 0
+        }
+    },
+    "c2": {
+        "enchant_ratio": 0,
+        "action_def": {
+            "a": "",
+            "e": "",
+            "q": "",
+            "shld": "",
+            "heal": ""
+        },
+        "round": {
+            "a": 0,
+            "e": 0,
+            "q": 0
+        }
+    },
+    "c3": {
+        "enchant_ratio": 0,
+        "action_def": {
+            "a": "",
+            "e": "",
+            "q": "",
+            "shld": "",
+            "heal": ""
+        },
+        "round": {
+            "a": 0,
+            "e": 0,
+            "q": 0
+        }
+    },
+    "c4": {
+        "enchant_ratio": 0,
+        "action_def": {
+            "a": "",
+            "e": "",
+            "q": "",
+            "shld": "",
+            "heal": ""
+        },
+        "round": {
+            "a": 0,
+            "e": 0,
+            "q": 0
+        }
+    },
+    "c5": {
+        "enchant_ratio": 0,
+        "action_def": {
+            "a": "",
+            "e": "",
+            "q": "",
+            "shld": "",
+            "heal": ""
+        },
+        "round": {
+            "a": 0,
+            "e": 0,
+            "q": 0
         }
     }
 }

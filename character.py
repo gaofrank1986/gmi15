@@ -74,14 +74,14 @@ class Character(Basic_Panel):
         self.attack[0] = data1['basic_attack']
         self.load_att(data1['break_thru'])
         
-        self.enchant_ratio = data['enchant_ratio']['c'+str(self.constellation)]
+        self.enchant_ratio = data['c'+str(self.constellation)]['enchant_ratio']
 
 
-        data['round']['w'] = 1
-        data['round']['heal'] = 0
-        data['round']['shld'] = 0
+        data['c'+str(self.constellation)]['round']['w'] = 1
+        data['c'+str(self.constellation)]['round']['heal'] = 0
+        data['c'+str(self.constellation)]['round']['shld'] = 0
         for i in self.atk_name:
-            self.skill_round[i] = data['round'][i]        
+            self.skill_round[i] = data['c'+str(self.constellation)]['round'][i]        
 
         '''加载激活的buff'''
         self._load_buff(data['buffs'],self._check2)
@@ -92,12 +92,10 @@ class Character(Basic_Panel):
                 data['ratios'][i] = data['ratios'][i]*15
 
 
-        assert('c'+str(self.constellation) in data['action_def'])
-        # self.formula = data['formula']['c'+str(self.constellation)]
-        # self.formula.append('w')
-        if 'action_def' in data:
-            for i in data['action_def']['c'+str(self.constellation)]:
-                self.formula[i] = data['action_def']['c'+str(self.constellation)][i]
+        # assert('c'+str(self.constellation) in data['action_def'])
+        # if 'action_def' in data:
+        for i in data['c'+str(self.constellation)]['action_def']:
+            self.formula[i] = data['c'+str(self.constellation)]['action_def'][i]
         # print(self.formula)
         if 'rebase' in data.keys():
             self.switch = data['rebase']
@@ -350,11 +348,7 @@ class Character(Basic_Panel):
                             ans[1]+=area1*self.skill_effect[i]['damage']/100
                             logger.debug("武器附加伤害: area1 = {:.2f},ratio = {:.2f} 假设为物理伤害，不受益2，3乘区加成".format(area1,self.skill_effect[i]['damage']/100)) 
         
-                # '''处理技能附伤'''
-                # if 'damage' in self.skill_effect[i]:
-                #     area3 = (1 + self.dmg_eh[self.ed_pos]/100+self.dmg_eh[7]/100+self.dmg_eh[8]/100)                    
-                #     ans[0]+=area1*self.skill_effect[i]['damage']/100*area2*area3
-                #     logger.debug("技能附加伤害: area1 = {:.2f},area2 = {:.2f},area3 = {:.2f},ratio = {:.2f} 假设为元素伤害，受益2，3乘区加成".format(area1,area2,area3,self.skill_effect[i]['damage']/100)) 
+ 
 
             ##################################################
             result['maxhp'] = int(self._total_health())
