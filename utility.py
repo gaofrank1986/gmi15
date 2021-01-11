@@ -1,177 +1,71 @@
 import json
 from copy import deepcopy
-# from PyQt5.QtCore import QAbstractTableModel,Qt
 from PyQt5 import QtWidgets,QtGui
+from os import listdir
 
 import logging 
 
-# def generate_relics2():
-
-#     alist = ['head','glass','cup','flower','feather']
-#     blist=[['ar','cr','cd','dr'],['ar','dr'],['ar','ed','fd'],['sh'],['sa']]
-
-#     basic_main_rate = 31.1#满爆率
-
-#     prop_list = ['ar','ed','cr','cd','fd','sa','sh','dr']
-#     trans_ratio = [1.5,1.5,1,2,1.875,10,153.7,1.875]
-#     ratio_main = {prop_list[i]:trans_ratio[i] for i in range(len(prop_list))}
-
-#     ans = dict()
-#     for i in alist:
-#         ans[i] = []
-#         for j in blist[alist.index(i)]:
-#             tmp = dict()
-#             tmp[j] = round(basic_main_rate*ratio_main[j],2)
-#             ans[i].append(tmp.copy())
-
-#     with open('./tmp/run_list.json', 'w+') as fp:
-#         json.dump(ans, fp,indent = 4)
-
+# def extract_name(a):
+#     assert(isinstance(a,dict))
+#     assert(len(a)==1)
+#     ans = list(a.keys())[0]
 #     return(ans)
 
-# def generate_sub(N,luck):
-#     assert(isinstance(N,int))
-#     assert(isinstance(luck,int))
-
-#     # alist = ['head','glass','cup','flower','feather']
-#     # blist=[['cr','cd'],'ar','edr','sh','sa']
-
-#     basic_main_rate = 31.1#满爆率
-
-#     prop_list = ['ar','edr','cr','cd','phr','sa','sh']
-#     trans_ratio = [1.5,1.5,1,2,1.875,10,153.7]
-#     ratio_main = {prop_list[i]:trans_ratio[i] for i in range(len(prop_list))}
-
-#     ans = dict()
-            
-
-#     ans['sub'] = []
-#     total_sub = basic_main_rate*luck
-#     precision = N
-#     dist = np.linspace(0,1,precision)
-#     for i in range(precision):
-#         for j in range(precision-i):
-#             tmp =dict()
-#             tmp['cr'] = total_sub*dist[i]
-#             tmp['cd'] = total_sub*ratio_main['cd']*dist[j]
-#             tmp['ar'] = total_sub*ratio_main['ar']*dist[precision-i-j-1]
-#             ans['sub'].append(tmp)
-
-#     with open('./tmp/sub_run_list.json', 'w') as fp:
-#         json.dump(ans, fp,indent = 4)
-
-#     return(ans)
-# def generate_articrafts(N,luck):
-#     assert(isinstance(N,int))
-#     assert(isinstance(luck,int))
-
-#     alist = ['head','glass','cup','flower','feather']
-#     blist=[['cr','cd'],'ar','edr','sh','sa']
-
-#     basic_main_rate = 31.1#满爆率
-
-#     prop_list = ['ar','edr','cr','cd','phr','sa','sh']
-#     trans_ratio = [1.5,1.5,1,2,1.875,10,153.7]
-#     ratio_main = {prop_list[i]:trans_ratio[i] for i in range(len(prop_list))}
-
-#     ans = dict()
-#     for i in alist:
-#         tmp = blist[alist.index(i)]
-#         if isinstance(tmp,list):
-#             ans[i] = []
-#             for j in tmp:
-#                 tmp = dict()
-#                 tmp[j] = round(basic_main_rate*ratio_main[j],2)
-#                 ans[i].append(tmp.copy())
-#         else:
-#             ans[i] = {tmp:round(basic_main_rate*ratio_main[tmp],2)}
-            
-
-#     ans['sub'] = []
-#     luck = 3
-#     total_sub = 31.1*luck
-#     precision = N
-#     dist = np.linspace(0,1,precision)
-#     for i in range(precision):
-#         for j in range(precision-i):
-#             tmp =dict()
-#             tmp['cr'] = total_sub*dist[i]
-#             tmp['cd'] = total_sub*ratio_main['cd']*dist[j]
-#             tmp['ar'] = total_sub*ratio_main['ar']*dist[precision-i-j-1]
-#             ans['sub'].append(tmp)
-
-#     with open('./tmp/articraft_run_list.json', 'w') as fp:
-#         json.dump(ans, fp,indent = 4)
-
+# def extract_name2(a):
+#     assert(isinstance(a,dict))
+#     assert(len(a)==1)
+#     ans = list(a.keys())[0]
+#     if list(a.keys())[0] == 'cr':
+#         ans = '暴击'
+#     if list(a.keys())[0] == 'cd':
+#         ans = '暴伤'
+#     if list(a.keys())[0] == 'dr':
+#         ans = '防御'
+#     if list(a.keys())[0] == 'ar':
+#         ans = '攻击'
+#     if list(a.keys())[0] == 'ed':
+#         ans = '属伤'
+#     if list(a.keys())[0] == 'dphys':
+#         ans = '物伤'
+#     if list(a.keys())[0] == 'hr':
+#         ans = '生命'
+#     if list(a.keys())[0] == 'ef':
+#         ans = '充能'
+#     if list(a.keys())[0] == 'em':
+#         ans = '精通'
+#     if list(a.keys())[0] == 'dheal':
+#         ans = '治疗'
 #     return(ans)
 
-# def get_best_articraft(c,N=50,luck=3):
-#     assert(isinstance(c,Character))
-#     ww = generate_articrafts(N,luck)
-#     diluc = deepcopy(c)
-#     rls = Articraft()
 
-#     save = 0
-#     for head in ww['head']:
-#         rls.add(head,'head')
-#         glass = ww['glass']
-#         cup = ww['cup']
-#         flower = ww['flower']
-#         feather = ww['feather']
-#         rls.add(glass,'glass')        
-#         rls.add(cup,'cup')
-#         rls.add(flower,'flower')
-#         rls.add(feather,'feather')
-        
-#         for sub in ww['sub']:
-#             rls.add(sub,'sub')
-#             diluc.put_on(rls)
-#             tmp = diluc.damage_output({},"")
-#             if tmp>save:
-#                 save=tmp
-#                 save4=rls.buf.copy()
-#             diluc.take_off(rls)
-#             rls.rm(sub,'sub')
-#         rls.rm(feather,'feather')
-#         rls.rm(flower,'flower')
-#         rls.rm(cup,'cup')
-#         rls.rm(glass,'glass')
-#         rls.rm(head,'head')
-        
-#     with open('./data/articrfat.json', 'w') as fp:
-#         json.dump(save4, fp,indent = 4)
-    
-def extract_name(a):
-    assert(isinstance(a,dict))
-    assert(len(a)==1)
-    ans = list(a.keys())[0]
-    return(ans)
-
-def extract_name2(a):
-    assert(isinstance(a,dict))
-    assert(len(a)==1)
-    ans = list(a.keys())[0]
-    if list(a.keys())[0] == 'cr':
+def extract_name4(a):
+    assert(isinstance(a,str))
+    ans = a
+    if '_' in a:
+        ans = a.split('_')[1]
+    if a == 'cr':
         ans = '暴击'
-    if list(a.keys())[0] == 'cd':
+    if a == 'cd':
         ans = '暴伤'
-    if list(a.keys())[0] == 'dr':
+    if a == 'dr':
         ans = '防御'
-    if list(a.keys())[0] == 'ar':
+    if a == 'ar':
         ans = '攻击'
-    if list(a.keys())[0] == 'ed':
+    if a == 'ed':
         ans = '属伤'
-    if list(a.keys())[0] == 'dphys':
+    if a == 'dphys':
         ans = '物伤'
-    if list(a.keys())[0] == 'hr':
+    if a == 'hr':
         ans = '生命'
-    if list(a.keys())[0] == 'ef':
+    if a == 'ef':
         ans = '充能'
-    if list(a.keys())[0] == 'em':
+    if a == 'em':
         ans = '精通'
-    if list(a.keys())[0] == 'dheal':
+    if a == 'dheal':
         ans = '治疗'
+
     return(ans)
+
 
 def extract_name3(a):
     if a == 'phys':
@@ -190,22 +84,7 @@ def extract_name3(a):
         ans = '技能基数'
     return(ans)   
 
-# class pandasModel(QAbstractTableModel):
-#     def __init__(self,data):
-#         QAbstractTableModel.__init__(self)
-#         self._data = data
-#     def rowCount(self,parent=None):
-#         return self._data.shape[0]
-#     def columnCount(self,parent=None):
-#         return self._data.shape[1]
-#     def data(self,index,role=Qt.DisplayRole):
-#         if index.isValid():
-#             if role == Qt.DisplayRole:
-#                 return (str(self._data.iloc[index.row(),index.column()]))
-#     def headerData(self,col,orentation,role):
-#         # if orentation == Qt.Horizontal and role == Qt.DisplayRole:
-#             return self._data.columns[col]    
-#         # return None        
+    
 
 
 
@@ -260,6 +139,145 @@ def run_thru(path,c,rls,pbar,ksort=1):
                 acc+=1
     return(save)
 
+def run_thru_folders(path,affect,c,rls,pbar,ksort=1):
+    logger = logging.getLogger('Main')
+
+    alist = list(affect.keys())
+    alist = list(set([_[:-1] for _ in  alist]))
+    alist[0] = '无'
+    
+    save = dict()
+    diluc = deepcopy(c)
+    total = 1
+    acc = 1
+    # total = len( data['head'])*len( data['glass'])*len( data['cup'])
+    pos = ['head','glass','cup','flower','feather']
+    dirs =[]
+    gen_list=[]
+    for i in pos:
+        folder = path+i+"/"
+        dirs.append(folder)
+        logger.info(dirs[-1])
+        gen_list.append([f for f in listdir(folder) if f.endswith('.json')])
+        logger.info(gen_list[-1])
+        assert len(gen_list[-1])>=1
+        total =total*len(gen_list[-1])
+        
+    for hfile in gen_list[0]:
+        e_dict = { _:0 for _ in alist}
+        print(hfile)
+        with open(dirs[0]+hfile, 'r', encoding='UTF-8') as fp:
+            data = json.load(fp)
+        head = data['sub']
+        for i in data['main']:
+            head[i] = head.get(i,0)+data['main'][i]
+        hd_name = 'hd_'+hfile.split('.')[0]
+        rls.add(head,hd_name)
+        assert(data['set'] in e_dict)
+        e_dict[data['set']] = e_dict[data['set']]+1
+        logger.info("理之冠: {} {}".format(head,data['set']))
+
+        for gfile in gen_list[1]:
+            with open(dirs[1]+gfile, 'r', encoding='UTF-8') as fp:
+                data = json.load(fp)
+            glass = data['sub']
+            for i in data['main']:
+                glass[i] = glass.get(i,0)+data['main'][i]
+            gl_name = 'gl_'+gfile.split('.')[0]
+            rls.add(glass,gl_name) 
+            assert(data['set'] in e_dict)
+            e_dict[data['set']] = e_dict[data['set']]+1       
+            logger.info("时之沙: {} {}".format(glass,data['set']))
+            
+            for cfile in gen_list[2] :
+                with open(dirs[2]+cfile, 'r', encoding='UTF-8') as fp:
+                    data = json.load(fp)
+                cup = data['sub']
+                for i in data['main']:
+                    cup[i] = cup.get(i,0)+data['main'][i]
+                cp_name = 'cp_'+cfile.split('.')[0]
+                rls.add(cup,cp_name)      
+                assert(data['set'] in e_dict)
+                e_dict[data['set']] = e_dict[data['set']]+1
+                logger.info("空之杯: {} {}".format(cup,data['set']))                           
+                for flfile in gen_list[3]:
+                    with open(dirs[3]+flfile, 'r', encoding='UTF-8') as fp:
+                        data = json.load(fp)
+                    flower = data['sub']
+                    for i in data['main']:
+                        flower[i] = flower.get(i,0)+data['main'][i]
+                    fl_name = 'fl_'+flfile.split('.')[0]
+                    rls.add(flower,fl_name) 
+                    assert(data['set'] in e_dict)
+                    e_dict[data['set']] = e_dict[data['set']]+1
+                    logger.info("生之花: {} {}".format(flower,data['set']))
+                    
+                    for ftfile in gen_list[4]:
+                        with open(dirs[4]+ftfile, 'r', encoding='UTF-8') as fp:
+                            data = json.load(fp)
+                        feather = data['sub']
+                        for i in data['main']:
+                            feather[i] = feather.get(i,0)+data['main'][i]
+                        ft_name = 'ft_'+ftfile.split('.')[0]
+                        rls.add(feather,ft_name) 
+                        assert(data['set'] in e_dict)
+                        e_dict[data['set']] = e_dict[data['set']]+1
+                        logger.info("死之羽: {} {}".format(feather,data['set']))
+                        pbar.setValue(float(acc/total)*100)
+              
+                        acc+=1
+
+
+                        diluc.put_on(rls)
+                        
+                        
+                        
+                        
+                        
+                    #             logger.info("副词条: {}".format(rls.buf['sub']))
+                        tmp2 = deepcopy(diluc)
+                        # print(e_dict)
+                        logger.info(e_dict)
+                        logging.getLogger('Buff').info("===========录入圣遗物穷举{}===========".format(acc-1))
+                        for i in e_dict:
+                            if i!='无':
+                                if e_dict[i] >=4 and i+'4' in affect:
+                                    tmp2._load_buff(affect[i+'4']['buffs'],tmp2._check1)
+                                if e_dict[i] >=4 and not i+'4' in affect:
+                                    tmp2._load_buff(affect[i+'2']['buffs'],tmp2._check1)
+                                if e_dict[i] >=2 and e_dict[i] <4:
+                                    tmp2._load_buff(affect[i+'2']['buffs'],tmp2._check1)
+                                    
+                        ans = deepcopy(tmp2.damage_rsl())
+                        if ksort == 1:
+                            tmp = ans['sum']
+                        if ksort == 3:
+                            tmp = ans['maxhp']
+                        if ksort == 4:
+                            tmp = ans['heal']
+                        if ksort == 2:
+                            tmp = ans['shld']
+                        while (tmp in save.keys()):
+                            tmp = tmp-1
+                        save[tmp] = [ans,deepcopy(rls.buf)]
+
+                        diluc.take_off(rls)
+                        rls.rm(feather,ft_name)        
+                    rls.rm(flower,fl_name) 
+                                
+                rls.rm(cup,cp_name)        
+
+            rls.rm(glass,gl_name)        
+
+        rls.rm(head,hd_name)
+
+        
+    return(save)
+
+
+
+
+
 class QTextEditLogger(logging.Handler):
     def __init__(self, parent):
         super().__init__()
@@ -300,13 +318,7 @@ class MyDialog(QtWidgets.QDialog, QtWidgets.QPlainTextEdit):
     def clear(self):
         self.save.setPlainText("")
 
-# def process_string(s):
-#     s = s.split("%")
-#     ans = []
-#     for i in s:
-#         if len(i)>0:
-#             ans.append(float(i))
-#     return(ans)
+
 
 def parse_formula(s):
     a = s.split("+")

@@ -6,14 +6,15 @@ import os
 from collections import OrderedDict
 from basic import Articraft
 from character import Character
-from utility import extract_name2,run_thru,MyDialog,parse_formula,extract_name3,trans
+from utility import run_thru,MyDialog,parse_formula,extract_name3,trans,run_thru_folders,extract_name4
 import traceback
 from PyQt5.QtWidgets import QApplication,QTableView,QMainWindow,QTableWidgetItem,QCheckBox,QDialog,QLineEdit,QLabel,QSpinBox
-# from PyQt5.QtWidgets.QTableWidgetItem import verticalHeaderItem
 import sys
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.uic import loadUi
 from PyQt5.QtCore import Qt
+from rec_art import Rec_Artifact
+from chng_action import Change_Action
         
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -23,30 +24,6 @@ class MainWindow(QMainWindow):
         self._data = {}
         self._wdata = {}
         self._aeffect = {}
-        
-        self.btn_run.clicked.connect(self.run) 
-        self.btn_load_wp.clicked.connect(self.new_win) 
-        self.pb_action.clicked.connect(self.show_action) 
-        self.pb_buff.clicked.connect(self.new_win_buff) 
-        self.pb_change.clicked.connect(self.change_action) 
-
-        self.cb_name.currentIndexChanged.connect(self.reset)
-        self.cb_wp.currentIndexChanged.connect(self.reset_table)
-        self.cb_cnum.currentIndexChanged.connect(self.reset_table)
-        self.cb_skill.currentIndexChanged.connect(self.reset_table)
-        self.cb_refine.currentIndexChanged.connect(self.reset_table)
-        self.cb_sort.currentIndexChanged.connect(self.change_ksort)
-
-        self.b_read.hide()
-        self.b_save.hide()
-        self.b_read_main.hide()
-        self.b_save_main.hide()
-        
-        self.pb_buff.hide()
-        
-        self.read_mainlist()
-        self.read_sub()
-
         
         path = "./data/info.json"
         with open(path, 'r', encoding='UTF-8') as fp:
@@ -58,36 +35,61 @@ class MainWindow(QMainWindow):
             data = json.load(fp)
             self._aeffect = data     
         
-        
-        
         self.cb_name.addItems(list(self._data.keys()))
         self.cb_aeffect1.addItems(list(self._aeffect.keys()))
         self.cb_aeffect2.addItems(list(self._aeffect.keys()))
+            
         
-        self.load_info()
+        self.dlg = MyDialog(self,'Main',logging.Formatter("%(asctime)s — %(message)s",datefmt='%m-%d,%H:%M'))
+        self.win_buff = MyDialog(self,'Buff',logging.Formatter("%(message)s"))
+        self.win_save_act = Change_Action(self._data)
+        self.win_rec_a = Rec_Artifact(self._aeffect,self._data[self.cb_name.currentText()]['name'])
+
+        self.win_action = QDialog(self)
+        loadUi("./data/win_action.ui",self.win_action)
+        
+        self.pb_change.clicked.connect(self.win_save_act.display) 
+        self.pb_artifact.clicked.connect(self.win_rec_a.display)         
+        self.btn_load_wp.clicked.connect(self.dlg.exec_) 
+        self.pb_buff.clicked.connect(self.win_buff.exec_) 
+
+       
+        self.btn_run.clicked.connect(self.run) 
+        self.pb_action.clicked.connect(self.list_action) 
+
+        self.cb_name.currentIndexChanged.connect(self.reset)
+        self.cb_wp.currentIndexChanged.connect(self.reset_table)
+        self.cb_cnum.currentIndexChanged.connect(self.reset_table)
+        self.cb_skill.currentIndexChanged.connect(self.reset_table)
+        self.cb_refine.currentIndexChanged.connect(self.reset_table)
+        self.cb_sort.currentIndexChanged.connect(self.change_ksort)
+        self.cb_mode2.stateChanged.connect(self.show_rec)
+        
+        self.b_read.hide()
+        self.b_save.hide()
+        self.b_read_main.hide()
+        self.b_save_main.hide()
+        self.pb_artifact.hide()
+        # self.setTabEnabled(5,False)
+        self.pb_buff.hide()
+        
+        self.read_mainlist()
+        self.read_sub()
+
+        
+        
+
+        
         font = QtGui.QFont()
         font.setFamily("微软雅黑")
         font.setPointSize(10)
-        fmt = logging.Formatter("%(asctime)s — %(message)s",datefmt='%m-%d,%H:%M')
-        self.dlg = MyDialog(self,'Main',fmt)
         self.dlg.setFont(font)
         
-        self.win_action = QDialog(self)
-        loadUi("./data/win_action.ui",self.win_action)
 
-        self.win_change = QDialog(self)
-        loadUi("./data/change_action.ui",self.win_change)
-        self.win_change.le_a.editingFinished.connect(lambda: self.checkline('a'))
-        self.win_change.le_e.editingFinished.connect(lambda: self.checkline('e'))
-        self.win_change.le_q.editingFinished.connect(lambda: self.checkline('q'))
-        self.win_change.le_shld.editingFinished.connect(lambda: self.checkline('shld'))
-        self.win_change.le_heal.editingFinished.connect(lambda: self.checkline('heal'))
-        self.win_change.pb_save.clicked.connect(self.save_action)
+
 
         font.setFamily("汉仪文黑-85w")
         font.setPointSize(9)
-        fmt = logging.Formatter("%(message)s")
-        self.win_buff = MyDialog(self,'Buff',fmt)
         self.win_buff.setFont(font)
   
         header = self.tbl_2.horizontalHeader()       
@@ -96,18 +98,12 @@ class MainWindow(QMainWindow):
         header.setSectionResizeMode(3, QtWidgets.QHeaderView.Stretch)
         self._ksort = 1
         self.reset()
-        # self.rb_display.hide()
-        
-        
-    #======================================
-    def new_win(self):
 
-        self.dlg.setWindowTitle("计算日志")
-        self.dlg.exec_()
 
-    def new_win_buff(self):
-        self.win_buff.setWindowTitle("增益效果")
-        self.win_buff.exec_()    
+
+
+        
+    # #======================================
 
     
     def run(self):
@@ -140,8 +136,7 @@ class MainWindow(QMainWindow):
                 c.skill_round['a'] = 0
             else:
                 pass
-            rls = Articraft()
-            rls.load_json("./data/artifacts/sub.json")
+
             
             ae1 = self._aeffect[self.cb_aeffect1.currentText()]
             ae2 = self._aeffect[self.cb_aeffect2.currentText()]
@@ -152,13 +147,19 @@ class MainWindow(QMainWindow):
             except:
                 self.label2.setText("圣遗物套装信息错误，套装效果未加载")
 
-
             logging.getLogger('Buff').info("总效果: {}\n".format(c.skill_effect))
             logging.getLogger('Buff').info("特殊攻击加成: {}\n".format(c.sp_buff))
             
-
-            save = run_thru("./data/artifacts/main_list.json",c,rls,self.pbar,self._ksort)
-
+            
+            rls = Articraft()
+            if self.cb_mode2.isChecked():
+                rm_sub={'ed':self.digit_ed.value(),'dphys':self.digit_fd.value(),'d':self.digit_alld.value()}
+                c.load_att(rm_sub)
+                save = run_thru_folders(self.win_rec_a.path,self._aeffect,c,rls,self.pbar,self._ksort)
+            else:
+                rls.load_json("./data/artifacts/sub.json")
+                save = run_thru("./data/artifacts/main_list.json",c,rls,self.pbar,self._ksort)
+                
             if "rebase" in c._data.keys():
                 for i in c._data['rebase']:
                     logging.getLogger('Buff').info("更换倍率基础 {}".format(i))
@@ -166,20 +167,25 @@ class MainWindow(QMainWindow):
                     logging.getLogger('Buff').info("")
 
 
-            # self.tbl_2.insertRow(4)
             test = OrderedDict(sorted(save.items(),reverse=True))
             N=0
             limit = 4
             for i in test:
-                tmp = test[i][1]
+                if 'sub' in test[i][1]:
+                    test[i][1].pop('sub')
+                tmp = list(test[i][1].keys())
+                tmp2 = [list(test[i][1][_].keys())[0] for _ in tmp]
+                if self.cb_mode2.isChecked():
+                    tmp2 = tmp
+                tmp2 = [extract_name4(_) for _ in tmp2]
                 tmp0 = test[i][0]
-                print(tmp0)
 
                 if self.rb_display.isChecked():
-                    content = [i,extract_name2(tmp['head']),extract_name2(tmp['glass']),extract_name2(tmp['cup']),tmp0['shld'],tmp0['heal'],tmp0['maxhp'],tmp0['sum']]
+                    # content = [i,extract_name2(tmp['head']),extract_name2(tmp['glass']),extract_name2(tmp['cup']),tmp0['shld'],tmp0['heal'],tmp0['maxhp'],tmp0['sum']]
+                    pass
                 else:
-                    content = [trans(i),extract_name2(tmp['head']),extract_name2(tmp['glass']),extract_name2(tmp['cup']),trans(tmp0['shld']),trans(tmp0['heal']),trans(tmp0['maxhp']),trans(tmp0['sum'])]
-                
+                    # content = [trans(i),extract_name2(tmp['head']),extract_name2(tmp['glass']),extract_name2(tmp['cup']),trans(tmp0['shld']),trans(tmp0['heal']),trans(tmp0['maxhp']),trans(tmp0['sum'])]
+                    content = [trans(i)]+tmp2+[trans(tmp0['shld']),trans(tmp0['heal']),trans(tmp0['maxhp']),trans(tmp0['sum'])]                
                 for i in range(len(content)):
                     item =  QTableWidgetItem(str(content[i]))
                     item.setTextAlignment(Qt.AlignRight|Qt.AlignVCenter)
@@ -296,7 +302,7 @@ class MainWindow(QMainWindow):
         with open('./data/artifacts/main_list.json', 'w+') as fp:
             json.dump(ans, fp,indent = 4)
             
-    def show_action(self):
+    def list_action(self):
         try:
             desc = ['普攻','元素战技','元素爆发','护盾技能','治疗技能']
             prop_name =['a','e','q','shld','heal']
@@ -337,88 +343,15 @@ class MainWindow(QMainWindow):
             print("Error: ", e)
             traceback.print_exc()
 
-    def change_action(self):
-        try:
-            
-            character = self._data[self.cb_name.currentText()]['name']
-            cstl = 'c'+str(int(self.cb_cnum.currentText()))
 
-            with open('./data/character/'+character+'.json', 'r', encoding='UTF-8') as fp:
-                data = json.load(fp)
-            self._cdata = data
-            self.win_change.lb_name.setText(data['name'])
-            self.win_change.lb_c.setText(cstl)
-            while (self.win_change.tb_skill.rowCount() > 0):
-                self.win_change.tb_skill.removeRow(0)
-            N = 0
-            for i in data['ratios']:
-                item =  QTableWidgetItem(i)
-                item.setFlags(QtCore.Qt.ItemIsEnabled)
-                self.win_change.tb_skill.insertRow(N)
-                self.win_change.tb_skill.setItem(N,0,item)
-                text = extract_name3(data['atk_type'][i])
-                item = QTableWidgetItem(text)
-                self.win_change.tb_skill.setItem(N,2,item)
-                item = QTableWidgetItem(data['ratio_cmt'][i])
-                self.win_change.tb_skill.setItem(N,1,item)
 
-                N+=1
-            header = self.win_change.tb_skill.horizontalHeader()       
-            header.setSectionResizeMode(0, QtWidgets.QHeaderView.ResizeToContents)
-            header.setSectionResizeMode(2, QtWidgets.QHeaderView.ResizeToContents)
-            header.setSectionResizeMode(1, QtWidgets.QHeaderView.Stretch)
+    def show_rec(self):
+        if self.cb_mode2.isChecked():
+            self.pb_artifact.show()
+        else:
+            self.pb_artifact.hide()
 
-            for i in ['a','e','q','shld','heal']:           
 
-                self.win_change.findChild(QLineEdit,"le_"+i).setText((data[cstl]['action_def'][i]))
-                                                                     
-            for i in ['a','e','q']:           
-                self.win_change.findChild(QSpinBox,"sb_rnd_"+i).setValue(data[cstl]['round'][i])                                                            
-            self.win_change.dsb_enchant.setValue(data[cstl]['enchant_ratio'])
-            if 'cmts' in data[cstl]:
-                self.win_change.pte_cmts.setPlainText(data[cstl]['cmts'])
-
-            self.win_change.exec_()
-        except Exception as e:
-            print("Error: ", e)
-            traceback.print_exc()
-
-    def save_action(self):
-        try:
-            character = self._data[self.cb_name.currentText()]['name']
-            cstl = 'c'+str(int(self.cb_cnum.currentText()))        
-            rnd = dict()
-            self._cdata[cstl] = {}
-            self._cdata[cstl]['action_def'] = {}
-            for i in ['a','e','q','shld','heal']:
-                assert self.win_change.findChild(QLabel,"lb_status_"+i).text() == '正确'
-                self._cdata[cstl]['action_def'][i] = self.win_change.findChild(QLineEdit,"le_"+i).text()
-                
-            for i in ['a','e','q']:
-                    rnd[i]= self.win_change.findChild(QSpinBox,"sb_rnd_"+i).value()
-            self._cdata[cstl]['enchant_ratio'] = self.win_change.dsb_enchant.value()
-            self._cdata[cstl]['round'] = rnd
-            self._cdata[cstl]['cmts']= self.win_change.pte_cmts.toPlainText()
-
-            tmp =['c0','c1','c2','c3','c4','c5','c6']
-            tmp2 = {_:'' for _ in ('a','e','q','shld','heal')}
-            for i in tmp:
-                if not i in self._cdata:
-                    self._cdata[i] = {}
-                self._cdata[i]['enchant_ratio'] = self._cdata[i].get('enchant_ratio',0)
-                self._cdata[i]['action_def']= self._cdata[i].get('action_def',tmp2)
-                self._cdata[i]['round']= self._cdata[i].get('round',{'a':0,'e':0,'q':0})
-
-            for i in ['round','enchant_ratio','action_def']:
-                if i in self._cdata:
-                    self._cdata.pop(i)
-
-            with open('./data/character/'+character+'.json', 'w', encoding='utf-8') as fp:
-                json.dump(self._cdata, fp,indent = 4,ensure_ascii=False)
-
-        except Exception as e:
-            print("Error: ", e)
-            traceback.print_exc()
             
     def reset(self):
         self.cb_wp.clear()
@@ -426,19 +359,29 @@ class MainWindow(QMainWindow):
         self.label.setText("")
         self.reset_table()
         self.load_info()
+        self.win_rec_a.update(self._data[self.cb_name.currentText()]['name'])
+
 
     def reset_table(self):
-        bbb ={'伤害':7,'护盾':4,'生命':6,'治疗':5}
+        bbb ={'伤害':9,'护盾':6,'生命':8,'治疗':7}
         self.pb_buff.hide()
         self.label2.setText("")
         self.label.setText("")
-        for i in range(8):
+        for i in range(self.tbl_2.rowCount()):
             for j in range(4):
                 self.tbl_2.setItem(i, j,QTableWidgetItem(""))
             self.tbl_2.setRowHidden(i,False)
         text = self.cb_sort.currentText()
         self.tbl_2.setRowHidden(bbb[text],True)
-        self.pbar.setValue(0)         
+        self.pbar.setValue(0)
+        self.win_save_act.update(self.cb_name.currentText(),self.cb_cnum.currentText())   
+        if not self.cb_mode2.isChecked():
+            self.tbl_2.setRowHidden(4,True)
+            self.tbl_2.setRowHidden(5,True)
+                 
+        
+        
+         
     def load_info(self):
         self.cb_wp.clear()
         self.cb_cnum.clear()
@@ -455,34 +398,10 @@ class MainWindow(QMainWindow):
         self.cb_wp.addItems(ans)
         self.cb_cnum.addItems(self._data[self.cb_name.currentText()]['c'])
 
-    def checkline(self,s):
-        assert(s in['a','e','q','heal','shld'])
-        fm = self.win_change.findChild(QLineEdit,"le_"+s).text()
-        status = self.win_change.findChild(QLabel,"lb_status_"+s)
-        if fm!='':
-            try:
-                tmp = fm.split('+')
-                for i in tmp:
-                    assert(i.count('*')<2)
-                    tmp2 = i.split('*')
-                    assert(tmp2[-1] in self._cdata['ratios'] or tmp2[-1] in ['ks'])
-                    if not(tmp2[-1] in ['ks']):
-                        atk_t = self._cdata['atk_type'][tmp2[-1]]
-                        # print(atk_t,s)
-                        if s in  ['a','e','q']:
-                            assert atk_t in ['elem','phys','env']
-                        if s in  ['shld','heal']:
-                            assert atk_t in ['shld','base','heal']
 
-                status.setText('正确')
-            except:
-                status.setText('错误')
-        else:
-            status.setText('正确')
     
     def change_ksort(self):
         aaa ={'伤害':1,'护盾':2,'生命':3,'治疗':4}
-        # print(self.cb_sort.currentText())
         text = self.cb_sort.currentText()
         assert(text in aaa)
         self.tbl_2.setVerticalHeaderItem(0,QTableWidgetItem(text))

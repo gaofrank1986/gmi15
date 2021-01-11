@@ -136,6 +136,16 @@
       </row>
       <row>
        <property name="text">
+        <string>生之花</string>
+       </property>
+      </row>
+      <row>
+       <property name="text">
+        <string>死之羽</string>
+       </property>
+      </row>
+      <row>
+       <property name="text">
         <string>护盾量</string>
        </property>
       </row>
@@ -385,7 +395,7 @@
         <x>40</x>
         <y>310</y>
         <width>93</width>
-        <height>28</height>
+        <height>31</height>
        </rect>
       </property>
       <property name="text">
@@ -424,7 +434,7 @@
         <x>40</x>
         <y>350</y>
         <width>93</width>
-        <height>28</height>
+        <height>31</height>
        </rect>
       </property>
       <property name="text">
@@ -449,8 +459,8 @@
        <rect>
         <x>140</x>
         <y>310</y>
-        <width>93</width>
-        <height>28</height>
+        <width>101</width>
+        <height>31</height>
        </rect>
       </property>
       <property name="text">
@@ -513,6 +523,32 @@
        <number>24</number>
       </property>
      </widget>
+     <widget class="QPushButton" name="pb_artifact">
+      <property name="geometry">
+       <rect>
+        <x>140</x>
+        <y>350</y>
+        <width>101</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>圣遗物录入</string>
+      </property>
+     </widget>
+     <widget class="QCheckBox" name="cb_mode2">
+      <property name="geometry">
+       <rect>
+        <x>40</x>
+        <y>190</y>
+        <width>141</width>
+        <height>19</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>录入模式</string>
+      </property>
+     </widget>
      <zorder>graphicsView</zorder>
      <zorder>tbl_2</zorder>
      <zorder>label</zorder>
@@ -536,6 +572,8 @@
      <zorder>cb_sort</zorder>
      <zorder>label_19</zorder>
      <zorder>pbar</zorder>
+     <zorder>pb_artifact</zorder>
+     <zorder>cb_mode2</zorder>
     </widget>
     <widget class="QWidget" name="tab_4">
      <attribute name="title">
@@ -1342,6 +1380,145 @@
      <zorder>groupBox_5</zorder>
      <zorder>groupBox_6</zorder>
     </widget>
+    <widget class="QWidget" name="tab_5">
+     <attribute name="title">
+      <string>环境设定</string>
+     </attribute>
+     <widget class="QGroupBox" name="groupBox_7">
+      <property name="geometry">
+       <rect>
+        <x>370</x>
+        <y>50</y>
+        <width>321</width>
+        <height>301</height>
+       </rect>
+      </property>
+      <property name="title">
+       <string>特殊条件</string>
+      </property>
+      <widget class="QCheckBox" name="cb_cond_frozen">
+       <property name="geometry">
+        <rect>
+         <x>30</x>
+         <y>50</y>
+         <width>91</width>
+         <height>19</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>冻结</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="cb_cond_lowhp">
+       <property name="geometry">
+        <rect>
+         <x>30</x>
+         <y>90</y>
+         <width>151</width>
+         <height>19</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>生命低于50%</string>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QGroupBox" name="groupBox_8">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>50</y>
+        <width>321</width>
+        <height>301</height>
+       </rect>
+      </property>
+      <property name="title">
+       <string>元素影响</string>
+      </property>
+      <widget class="QCheckBox" name="cb_cond_fire">
+       <property name="geometry">
+        <rect>
+         <x>30</x>
+         <y>50</y>
+         <width>91</width>
+         <height>19</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>火影响</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="cb_cond_wtr">
+       <property name="geometry">
+        <rect>
+         <x>30</x>
+         <y>80</y>
+         <width>91</width>
+         <height>19</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>水影响</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="cb_cond_ice">
+       <property name="geometry">
+        <rect>
+         <x>30</x>
+         <y>110</y>
+         <width>91</width>
+         <height>19</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>冰影响</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="cb_cond_elec">
+       <property name="geometry">
+        <rect>
+         <x>30</x>
+         <y>140</y>
+         <width>91</width>
+         <height>19</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>雷影响</string>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QGraphicsView" name="graphicsView_4">
+      <property name="geometry">
+       <rect>
+        <x>-10</x>
+        <y>-10</y>
+        <width>1831</width>
+        <height>891</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background: url(./data/bg.png);	</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_21">
+      <property name="geometry">
+       <rect>
+        <x>760</x>
+        <y>60</y>
+        <width>261</width>
+        <height>131</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>本页未完成，结果不受影响</string>
+      </property>
+     </widget>
+     <zorder>graphicsView_4</zorder>
+     <zorder>groupBox_7</zorder>
+     <zorder>groupBox_8</zorder>
+     <zorder>label_21</zorder>
+    </widget>
     <widget class="QWidget" name="tab_3">
      <attribute name="title">
       <string>说明</string>
@@ -1363,8 +1540,8 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>1281</width>
-         <height>379</height>
+         <width>98</width>
+         <height>28</height>
         </rect>
        </property>
        <attribute name="label">
@@ -1443,6 +1620,10 @@ A：原神这个游戏，因为刷怪地点不一样，还有场景技能，导�
 不计普攻
 -----------
 勾中时，普攻伤害不计入结果
+
+录入模式
+------------
+圣遗物信息从录入文件读取，圣遗物主词条，其他增益中套装效果及副词条不再计入，其他加成仍然生效
 
 技能参数
 -----------
