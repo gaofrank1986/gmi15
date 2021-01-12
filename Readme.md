@@ -3,13 +3,9 @@
 ------------------
 
 
-
-```python
-    skill_level = 6 #技能等级
-    constellation = 6 #命座
-    weapon ="lm" #武器
-    character = "diluc" #角色
-
+图形界面使用
+```bash
+python main_qt.py
 ```
 
 ------------------------
