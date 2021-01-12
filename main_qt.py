@@ -129,7 +129,7 @@ class MainWindow(QMainWindow):
             
             c = Character(skill_level,constellation)
             c.load_from_json("./data/character/"+character+".json",env)
-            c.load_weapon_from_json("./data/weapon/"+c.weapon_class+".json",weapon,env,refine)
+            c.load_weapon_from_json("./data/weapon/"+c.weapon_class+".json",weapon,refine)
 
             if self.rb_pop.isChecked():
                 c.skill_round['a'] = 0

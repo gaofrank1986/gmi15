@@ -46,12 +46,13 @@ class Character(Basic_Panel):
         self.formula['w'] ='w'
         self._data = None
         self.ed_pos=-1
+        self.env = {}
 
 
     def load_from_json(self,path,env):
         
         self.loaded = True
-
+        self.env = env
         for i in range(0,self.constellation+1):
             self.activated_buff.append("c"+str(i))
             
@@ -197,7 +198,7 @@ class Character(Basic_Panel):
     #----------------------------------------------------------------------------------
     #----------------------------------------------------------------------------------
 
-    def load_weapon_from_json(self,path,name,env,refine = 1):
+    def load_weapon_from_json(self,path,name,refine = 1):
         
         assert(self.loaded)
         with open(path, 'r', encoding='UTF-8') as fp:
@@ -215,7 +216,7 @@ class Character(Basic_Panel):
                 
                 self.load_att(data[wp]['break_thru'])
                 
-                self._load_buff(data[wp]['buffs'],self._check1,env)
+                self._load_buff(data[wp]['buffs'],self._check1,self.env)
                 break
         assert(found)
         

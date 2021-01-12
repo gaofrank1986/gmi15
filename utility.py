@@ -199,12 +199,7 @@ def run_thru_folders(path,affect,c,rls,pbar,ksort=1):
 
 
                         diluc.put_on(rls)
-                        
-                        
-                        
-                        
-                        
-                    #             logger.info("副词条: {}".format(rls.buf['sub']))
+                                                
                         tmp2 = deepcopy(diluc)
                         # print(e_dict)
                         logger.info(e_dict)
@@ -212,11 +207,11 @@ def run_thru_folders(path,affect,c,rls,pbar,ksort=1):
                         for i in e_dict:
                             if i!='无':
                                 if e_dict[i] >=4 and i+'4' in affect:
-                                    tmp2._load_buff(affect[i+'4']['buffs'],tmp2._check1)
+                                    tmp2._load_buff(affect[i+'4']['buffs'],tmp2._check1,tmp2.env)
                                 if e_dict[i] >=4 and not i+'4' in affect:
-                                    tmp2._load_buff(affect[i+'2']['buffs'],tmp2._check1)
+                                    tmp2._load_buff(affect[i+'2']['buffs'],tmp2._check1,tmp2.env)
                                 if e_dict[i] >=2 and e_dict[i] <4:
-                                    tmp2._load_buff(affect[i+'2']['buffs'],tmp2._check1)
+                                    tmp2._load_buff(affect[i+'2']['buffs'],tmp2._check1,tmp2.env)
                                     
                         ans = deepcopy(tmp2.damage_rsl())
                         if ksort == 1:
