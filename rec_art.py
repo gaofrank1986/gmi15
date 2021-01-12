@@ -55,7 +55,7 @@ class Rec_Artifact(QDialog):
         data["set"] = self.cb_aeffect.currentText()
         data['cmt'] = self.le_cmt.text()
         if path != ('', ''):
-            print(path)
+            # print(path)
             with open(path[0], 'w', encoding='utf-8') as fp:
                 json.dump(data, fp,indent = 4,ensure_ascii=False)
 

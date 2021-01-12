@@ -135,7 +135,7 @@ def run_thru_folders(path,affect,c,rls,pbar,ksort=1):
         
     for hfile in gen_list[0]:
         e_dict = { _:0 for _ in alist}
-        print(hfile)
+        # print(hfile)
         with open(dirs[0]+hfile, 'r', encoding='UTF-8') as fp:
             data = json.load(fp)
         head = data['sub']
@@ -211,8 +211,7 @@ def run_thru_folders(path,affect,c,rls,pbar,ksort=1):
                                 if e_dict[i] >=4 and not i+'4' in affect:
                                     tmp2._load_buff(affect[i+'2']['buffs'],tmp2._check1,tmp2.env)
                                 if e_dict[i] >=2 and e_dict[i] <4:
-                                    tmp2._load_buff(affect[i+'2']['buffs'],tmp2._check1,tmp2.env)
-                                    
+                                    tmp2._load_buff(affect[i+'2']['buffs'],tmp2._check1,tmp2.env)                                    
                         ans = deepcopy(tmp2.damage_rsl())
                         if ksort == 1:
                             tmp = ans['sum']
