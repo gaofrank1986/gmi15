@@ -1379,12 +1379,12 @@
       <property name="title">
        <string>元素影响</string>
       </property>
-      <widget class="QCheckBox" name="cb_cond_fire">
+      <widget class="QRadioButton" name="rb_cond_fire">
        <property name="geometry">
         <rect>
          <x>30</x>
          <y>50</y>
-         <width>91</width>
+         <width>115</width>
          <height>19</height>
         </rect>
        </property>
@@ -1392,12 +1392,12 @@
         <string>火影响</string>
        </property>
       </widget>
-      <widget class="QCheckBox" name="cb_cond_watr">
+      <widget class="QRadioButton" name="rb_cond_watr">
        <property name="geometry">
         <rect>
          <x>30</x>
          <y>80</y>
-         <width>91</width>
+         <width>115</width>
          <height>19</height>
         </rect>
        </property>
@@ -1405,12 +1405,25 @@
         <string>水影响</string>
        </property>
       </widget>
-      <widget class="QCheckBox" name="cb_cond_ice">
+      <widget class="QRadioButton" name="rb_cond_elec">
+       <property name="geometry">
+        <rect>
+         <x>30</x>
+         <y>140</y>
+         <width>115</width>
+         <height>19</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>雷影响</string>
+       </property>
+      </widget>
+      <widget class="QRadioButton" name="rb_cond_ice">
        <property name="geometry">
         <rect>
          <x>30</x>
          <y>110</y>
-         <width>91</width>
+         <width>115</width>
          <height>19</height>
         </rect>
        </property>
@@ -1418,17 +1431,20 @@
         <string>冰影响</string>
        </property>
       </widget>
-      <widget class="QCheckBox" name="cb_cond_elec">
+      <widget class="QRadioButton" name="rb_cond_elec_2">
        <property name="geometry">
         <rect>
          <x>30</x>
-         <y>140</y>
-         <width>91</width>
+         <y>170</y>
+         <width>115</width>
          <height>19</height>
         </rect>
        </property>
        <property name="text">
-        <string>雷影响</string>
+        <string>无影响</string>
+       </property>
+       <property name="checked">
+        <bool>true</bool>
        </property>
       </widget>
      </widget>
@@ -1513,8 +1529,8 @@ A：原神这个游戏，因为刷怪地点不一样，还有场景技能，导�
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>98</width>
-         <height>28</height>
+         <width>1281</width>
+         <height>379</height>
         </rect>
        </property>
        <attribute name="label">

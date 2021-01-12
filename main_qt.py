@@ -124,8 +124,8 @@ class MainWindow(QMainWindow):
 
             self.label2.setText("")
 
-            env = {'spec':True,'fire':self.cb_cond_fire.isChecked(),'watr':self.cb_cond_watr.isChecked(),'elec':self.cb_cond_elec.isChecked(),'ice':self.cb_cond_ice.isChecked(),'frozen':self.cb_cond_frozen.isChecked(),'lowhp':self.cb_cond_lowhp.isChecked()}
-            # print(env)
+            env = {'spec':True,'fire':self.rb_cond_fire.isChecked(),'watr':self.rb_cond_watr.isChecked(),'elec':self.rb_cond_elec.isChecked(),'ice':self.rb_cond_ice.isChecked(),'frozen':self.cb_cond_frozen.isChecked(),'lowhp':self.cb_cond_lowhp.isChecked()}
+            logger.info(env)
             
             c = Character(skill_level,constellation)
             c.load_from_json("./data/character/"+character+".json",env)
