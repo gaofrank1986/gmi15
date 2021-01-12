@@ -5,37 +5,7 @@ from os import listdir
 
 import logging 
 
-# def extract_name(a):
-#     assert(isinstance(a,dict))
-#     assert(len(a)==1)
-#     ans = list(a.keys())[0]
-#     return(ans)
 
-# def extract_name2(a):
-#     assert(isinstance(a,dict))
-#     assert(len(a)==1)
-#     ans = list(a.keys())[0]
-#     if list(a.keys())[0] == 'cr':
-#         ans = '暴击'
-#     if list(a.keys())[0] == 'cd':
-#         ans = '暴伤'
-#     if list(a.keys())[0] == 'dr':
-#         ans = '防御'
-#     if list(a.keys())[0] == 'ar':
-#         ans = '攻击'
-#     if list(a.keys())[0] == 'ed':
-#         ans = '属伤'
-#     if list(a.keys())[0] == 'dphys':
-#         ans = '物伤'
-#     if list(a.keys())[0] == 'hr':
-#         ans = '生命'
-#     if list(a.keys())[0] == 'ef':
-#         ans = '充能'
-#     if list(a.keys())[0] == 'em':
-#         ans = '精通'
-#     if list(a.keys())[0] == 'dheal':
-#         ans = '治疗'
-#     return(ans)
 
 
 def extract_name4(a):

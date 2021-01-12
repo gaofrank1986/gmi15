@@ -839,32 +839,6 @@
        </property>
       </widget>
      </widget>
-     <widget class="QPushButton" name="b_read_main">
-      <property name="geometry">
-       <rect>
-        <x>1120</x>
-        <y>250</y>
-        <width>93</width>
-        <height>28</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>读取</string>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="b_save_main">
-      <property name="geometry">
-       <rect>
-        <x>1120</x>
-        <y>290</y>
-        <width>93</width>
-        <height>28</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>存储</string>
-      </property>
-     </widget>
      <widget class="QGraphicsView" name="graphicsView_2">
       <property name="geometry">
        <rect>
@@ -882,39 +856,11 @@
      <zorder>groupBox</zorder>
      <zorder>groupBox_2</zorder>
      <zorder>groupBox_3</zorder>
-     <zorder>b_read_main</zorder>
-     <zorder>b_save_main</zorder>
     </widget>
     <widget class="QWidget" name="tab_2">
      <attribute name="title">
       <string>其他增益</string>
      </attribute>
-     <widget class="QPushButton" name="b_save">
-      <property name="geometry">
-       <rect>
-        <x>1130</x>
-        <y>300</y>
-        <width>93</width>
-        <height>28</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>存储</string>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="b_read">
-      <property name="geometry">
-       <rect>
-        <x>1130</x>
-        <y>260</y>
-        <width>93</width>
-        <height>28</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>读取</string>
-      </property>
-     </widget>
      <widget class="QGroupBox" name="groupBox_4">
       <property name="geometry">
        <rect>
@@ -1374,8 +1320,6 @@
       </property>
      </widget>
      <zorder>graphicsView_3</zorder>
-     <zorder>b_save</zorder>
-     <zorder>b_read</zorder>
      <zorder>groupBox_4</zorder>
      <zorder>groupBox_5</zorder>
      <zorder>groupBox_6</zorder>
@@ -1448,7 +1392,7 @@
         <string>火影响</string>
        </property>
       </widget>
-      <widget class="QCheckBox" name="cb_cond_wtr">
+      <widget class="QCheckBox" name="cb_cond_watr">
        <property name="geometry">
         <rect>
          <x>30</x>
@@ -1501,23 +1445,9 @@
        <string notr="true">background: url(./data/bg.png);	</string>
       </property>
      </widget>
-     <widget class="QLabel" name="label_21">
-      <property name="geometry">
-       <rect>
-        <x>760</x>
-        <y>60</y>
-        <width>261</width>
-        <height>131</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>本页未完成，结果不受影响</string>
-      </property>
-     </widget>
      <zorder>graphicsView_4</zorder>
      <zorder>groupBox_7</zorder>
      <zorder>groupBox_8</zorder>
-     <zorder>label_21</zorder>
     </widget>
     <widget class="QWidget" name="tab_3">
      <attribute name="title">
@@ -1583,8 +1513,8 @@ A：原神这个游戏，因为刷怪地点不一样，还有场景技能，导�
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>1281</width>
-         <height>379</height>
+         <width>98</width>
+         <height>28</height>
         </rect>
        </property>
        <attribute name="label">

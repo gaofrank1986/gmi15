@@ -65,13 +65,10 @@ class MainWindow(QMainWindow):
         self.cb_sort.currentIndexChanged.connect(self.change_ksort)
         self.cb_mode2.stateChanged.connect(self.show_rec)
         
-        self.b_read.hide()
-        self.b_save.hide()
-        self.b_read_main.hide()
-        self.b_save_main.hide()
+
         self.pb_artifact.hide()
-        # self.setTabEnabled(5,False)
         self.pb_buff.hide()
+        self.rb_pop.hide()
         
         self.read_mainlist()
         self.read_sub()
@@ -127,10 +124,12 @@ class MainWindow(QMainWindow):
 
             self.label2.setText("")
 
+            env = {'spec':True,'fire':self.cb_cond_fire.isChecked(),'watr':self.cb_cond_watr.isChecked(),'elec':self.cb_cond_elec.isChecked(),'ice':self.cb_cond_ice.isChecked(),'frozen':self.cb_cond_frozen.isChecked(),'lowhp':self.cb_cond_lowhp.isChecked()}
+            # print(env)
             
             c = Character(skill_level,constellation)
-            c.load_from_json("./data/character/"+character+".json")
-            c.load_weapon_from_json("./data/weapon/"+c.weapon_class+".json",weapon,refine)
+            c.load_from_json("./data/character/"+character+".json",env)
+            c.load_weapon_from_json("./data/weapon/"+c.weapon_class+".json",weapon,env,refine)
 
             if self.rb_pop.isChecked():
                 c.skill_round['a'] = 0
@@ -142,10 +141,11 @@ class MainWindow(QMainWindow):
             ae2 = self._aeffect[self.cb_aeffect2.currentText()]
             try:
                 assert(int(ae1['n'])+int(ae2['n'])<=4)
-                c._load_buff(ae1['buffs'],c._check1)
-                c._load_buff(ae2['buffs'],c._check1)
+                c._load_buff(ae1['buffs'],c._check1,env)
+                c._load_buff(ae2['buffs'],c._check1,env)
             except:
                 self.label2.setText("圣遗物套装信息错误，套装效果未加载")
+                traceback.print_exc()
 
             logging.getLogger('Buff').info("总效果: {}\n".format(c.skill_effect))
             logging.getLogger('Buff').info("特殊攻击加成: {}\n".format(c.sp_buff))
@@ -181,10 +181,8 @@ class MainWindow(QMainWindow):
                 tmp0 = test[i][0]
 
                 if self.rb_display.isChecked():
-                    # content = [i,extract_name2(tmp['head']),extract_name2(tmp['glass']),extract_name2(tmp['cup']),tmp0['shld'],tmp0['heal'],tmp0['maxhp'],tmp0['sum']]
-                    pass
+                    content = [i]+tmp2+[tmp0['shld'],tmp0['heal'],tmp0['maxhp'],tmp0['sum']]                
                 else:
-                    # content = [trans(i),extract_name2(tmp['head']),extract_name2(tmp['glass']),extract_name2(tmp['cup']),trans(tmp0['shld']),trans(tmp0['heal']),trans(tmp0['maxhp']),trans(tmp0['sum'])]
                     content = [trans(i)]+tmp2+[trans(tmp0['shld']),trans(tmp0['heal']),trans(tmp0['maxhp']),trans(tmp0['sum'])]                
                 for i in range(len(content)):
                     item =  QTableWidgetItem(str(content[i]))

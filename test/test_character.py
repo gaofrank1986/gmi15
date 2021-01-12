@@ -23,15 +23,17 @@ def c1():
 
 @pytest.fixture
 def c2():
+    env = {'spec':True,'fire':True,'watr':True,'elec':True,'ice':True,'frozen':True,'lowhp':True}
     c2  = Character(6,6)
-    c2.load_from_json("./data/test/diluc.json")
+    c2.load_from_json("./data/test/diluc.json",env)
     return(c2)
 
 @pytest.fixture
 def c3():
+    env = {'spec':True,'fire':True,'watr':True,'elec':True,'ice':True,'frozen':True,'lowhp':True}
     c3  = Character(6,6)
-    c3.load_from_json("./data/test/diluc.json")
-    c3.load_weapon_from_json("./data/test/claymore.json","lm",1)
+    c3.load_from_json("./data/test/diluc.json",env)
+    c3.load_weapon_from_json("./data/test/claymore.json","lm",env,1)
     return(c3)
 
 @pytest.fixture
@@ -83,11 +85,12 @@ def test_load_from_json(c2):
     assert c2.formula == {"a":"a2","e":"e","q":"q","w":"w","shld":"","heal":""}
     
 def test_load_buff_1(c0):
-    c0._load_buff({"c1": [["all"],{"d":15},0.5,"对生命值高于50％的敌人，迪卢克造成的伤害提高15％"]},c0._check1)
+    env = {'spec':True,'fire':True,'watr':True,'elec':True,'ice':True,'frozen':True,'lowhp':True}
+    c0._load_buff({"c1": [["all"],{"d":15},0.5,"对生命值高于50％的敌人，迪卢克造成的伤害提高15％"]},c0._check1,env)
     assert c0.skill_effect['a']["d"] == 7.5
-    c0._load_buff({"c1": [["all"],{"d":15},0.5,"对生命值高于50％的敌人，迪卢克造成的伤害提高15％"]},c0._check1)
+    c0._load_buff({"c1": [["all"],{"d":15},0.5,"对生命值高于50％的敌人，迪卢克造成的伤害提高15％"]},c0._check1,env)
     assert c0.skill_effect['a']["d"] == 15
 
 def test_dmg(c3,r1):
     c3.put_on(r1)
-    assert c3.damage_rsl() == 242190
+    assert c3.damage_rsl()['sum'] == 242188

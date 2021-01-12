@@ -48,7 +48,7 @@ class Character(Basic_Panel):
         self.ed_pos=-1
 
 
-    def load_from_json(self,path):
+    def load_from_json(self,path,env):
         
         self.loaded = True
 
@@ -84,7 +84,7 @@ class Character(Basic_Panel):
             self.skill_round[i] = data['c'+str(self.constellation)]['round'][i]        
 
         '''加载激活的buff'''
-        self._load_buff(data['buffs'],self._check2)
+        self._load_buff(data['buffs'],self._check2,env)
 
         data['ratios']['w'] = [100]
         for i in data['ratios']:
@@ -116,7 +116,7 @@ class Character(Basic_Panel):
         return i in self.activated_buff
     
     
-    def _load_buff(self,buffs,check):
+    def _load_buff(self,buffs,check,env):
         assert(isinstance(buffs,dict))
         logger =  logging.getLogger('Buff')
         for i in buffs:
@@ -146,8 +146,9 @@ class Character(Basic_Panel):
                     logger.info("")
 
                 for j in cond:
-                    assert(j in self.atk_name or j in ["shld","heal","spec"])
-                    if j in self.atk_name or j in ["shld","heal","spec"]:
+                    # print(j)
+                    assert(j in self.atk_name or j in env)
+                    if j in self.atk_name or env.get(j,False):
                         for k in effect:
                             assert(isinstance(effect[k],int) or isinstance(effect[k],float) or isinstance(effect[k],list) or isinstance(effect[k],str))
                             if isinstance(effect[k],list):
@@ -162,15 +163,20 @@ class Character(Basic_Panel):
                                 assert(value in self._data['ratios'])
                                 pos = self.atk_name.index(value[0])
                                 level = self.skill_level[pos]        
-                                value = self._data['ratios'][value][level-1]    
-                                                       
-                            if k in self.d_name or k in self.de_name or k in self.att_name or k in self.h_name or k in ['d','ratio','damage']:
-                                self.skill_effect[j][k] =self.skill_effect[j].get(k,0)+value*cover_ratio
-                            if k == 'level':
-                                self.skill_level[self.atk_name.index(j)]+=value
-                            if k in ['h2a','d2a','ef2ed']:
-                                # print(value,cover_ratio)
+                                value = self._data['ratios'][value][level-1] 
+                                   
+                            if j in env:
+                                # for ii in self.skill_effect:
+                                #     self.skill_effect[ii][k] =self.skill_effect[ii].get(k,0)+value*cover_ratio
                                 self.sp_buff[k] = self.sp_buff.get(k,0)+value*cover_ratio
+                            else:         
+                                if k in self.d_name or k in self.de_name or k in self.att_name or k in self.h_name or k in ['d','ratio','damage']:
+                                    self.skill_effect[j][k] =self.skill_effect[j].get(k,0)+value*cover_ratio
+                                if k == 'level':
+                                    self.skill_level[self.atk_name.index(j)]+=value
+                                # if k in ['h2a','d2a','ef2ed']:
+                                    # print(value,cover_ratio)
+                                    
                             
 
 
@@ -191,7 +197,7 @@ class Character(Basic_Panel):
     #----------------------------------------------------------------------------------
     #----------------------------------------------------------------------------------
 
-    def load_weapon_from_json(self,path,name,refine = 1):
+    def load_weapon_from_json(self,path,name,env,refine = 1):
         
         assert(self.loaded)
         with open(path, 'r', encoding='UTF-8') as fp:
@@ -209,7 +215,7 @@ class Character(Basic_Panel):
                 
                 self.load_att(data[wp]['break_thru'])
                 
-                self._load_buff(data[wp]['buffs'],self._check1)
+                self._load_buff(data[wp]['buffs'],self._check1,env)
                 break
         assert(found)
         
@@ -253,24 +259,34 @@ class Character(Basic_Panel):
         for i in self.atk_name:
             logger.debug("==============处理 {} 技能公式:[{}]===============".format(i,self.formula[i]))
             ans = [0,0,0,0,0,0]
+            save = {}
+
             logger.debug("buff加载前 area1 = {:.2f},area2 = {:.2f}".format(self._total_atk(),self._crit()))
 
             self.load_att(self.skill_effect[i])
+            self.load_att(self.sp_buff)
+                        
             area1 = self._total_atk()
             area2 = self._crit()
-            if len(self.sp_buff) != 0:
-                if 'd2a' in self.sp_buff.keys():
-                    delta = self.sp_buff['d2a']/100*self._total_def()
-                    area1+= delta
-                    logger.debug("防御转攻击 增加量 = {:.2f}".format(delta))
-                if 'h2a' in self.sp_buff.keys():
-                    delta = self.sp_buff['h2a']/100*self._total_health()
-                    area1+= delta
-                    logger.debug("生命转攻击 增加量 = {:.2f}".format(delta))
-                if 'ef2ed' in self.sp_buff.keys():
-                    delta = self.sp_buff['ef2ed']/100*self.attack[6]
-                    self.load_att({'ed':delta})
-                    logger.debug("充能转增伤 增加量 = {:.2f}".format(delta))                                         
+            area30 = 1 + self.dmg_eh[self.ed_pos]/100+self.dmg_eh[7]/100+self.dmg_eh[8]/100
+            area31 = 1 + self.dmg_eh[0]/100+self.dmg_eh[8]/100
+            
+                           
+            if 'd2a' in self.sp_buff.keys():
+                delta = self.sp_buff['d2a']/100*self._total_def()
+                area1+= delta
+                logger.debug("防御转攻击 增加量 = {:.2f}".format(delta))
+            if 'h2a' in self.sp_buff.keys():
+                delta = self.sp_buff['h2a']/100*self._total_health()
+                area1+= delta
+                logger.debug("生命转攻击 增加量 = {:.2f}".format(delta))
+            if 'ef2ed' in self.sp_buff.keys():
+                delta = self.sp_buff['ef2ed']/100*self.attack[6]
+                area30+=delta/100
+                logger.debug("充能转增伤 增加量 = {:.2f}".format(delta)) 
+            
+
+                                     
             logger.debug("buff加载后 area1 = {:.2f},area2 = {:.2f}".format(area1,area2))
             
 
@@ -302,27 +318,23 @@ class Character(Basic_Panel):
                             
                     if i in ['a','e','q']:        
                         assert(atk_t in ['elem','phys','env'])
-                        area3 = (1 + self.dmg_eh[self.ed_pos]/100+self.dmg_eh[7]/100+self.dmg_eh[8]/100)
-                        dmg = base*area2*area3*ratio*multi
                         if atk_t == 'elem':                            
-                            ans[0]+=dmg
-                            logger.debug("area1 = {:.2f},area2 = {:.2f},area3 = {:.2f},伤害类型:{}".format(base,area2,area3,atk_t))
+                            ans[0]+=base*area2*area30*ratio*multi
+                            logger.debug("area1 = {:.2f},area2 = {:.2f},area3 = {:.2f},伤害类型:{}".format(base,area2,area30,atk_t))
 
                         elif atk_t == 'phys':
-                            ans[0]+=dmg*self.enchant_ratio
-                            logger.debug("area1 = {:.2f},area2 = {:.2f},area3 = {:.2f},伤害类型:{},附魔,占比 {}".format(base,area2,area3,"属性元素",self.enchant_ratio))
+                            ans[0]+=base*area2*area30*ratio*multi*self.enchant_ratio
+                            logger.debug("area1 = {:.2f},area2 = {:.2f},area3 = {:.2f},伤害类型:{},附魔,占比 {}".format(base,area2,area30,"属性元素",self.enchant_ratio))
 
-                            area3 = (1 + self.dmg_eh[0]/100+self.dmg_eh[8]/100)                    
-                            ans[1]+=base*area2*area3*ratio*multi*(1-self.enchant_ratio)
-                            logger.debug("area1 = {:.2f},area2 = {:.2f},area3 = {:.2f},伤害类型:{},不附魔,占比 {}".format(base,area2,area3,"物理",1-self.enchant_ratio))
+                   
+                            ans[1]+=base*area2*area31*ratio*multi*(1-self.enchant_ratio)
+                            logger.debug("area1 = {:.2f},area2 = {:.2f},area3 = {:.2f},伤害类型:{},不附魔,占比 {}".format(base,area2,area31,"物理",1-self.enchant_ratio))
                         elif atk_t == 'env':
-                            area3 = 1
-                            ans[2]+=base*area2*area3*ratio*multi
-                            logger.debug("area1 = {:.2f},area2 = {:.2f},area3 = {:.2f},伤害类型:{}".format(base,area2,area3,"环境元素")) 
+                            ans[2]+=base*area2*ratio*multi
+                            logger.debug("area1 = {:.2f},area2 = {:.2f},area3 = {:.2f},伤害类型:{}".format(base,area2,1,"环境元素")) 
                         else:
                             pass
                     elif i in ['shld']:
-                        # print(atk_t)
                         assert(atk_t in ['shld','base'])
                         logger.debug("护盾强效{}%".format(self.dmg_eh[10]))
                         if atk_t == 'shld':
@@ -358,6 +370,9 @@ class Character(Basic_Panel):
             result['maxhp'] = int(self._total_health())
 
             self.load_att(self.skill_effect[i],"minus")
+            self.load_att(self.sp_buff,"minus")
+            self.load_att(save,"minus")
+
             logger.debug("total damage for {} is 属性元素: {}, 物理: {},其他:{}".format(i,int(ans[0]),int(ans[1]),int(ans[2]+ans[3])))
             logger.debug("total shield for {} is {},total heal {}".format(i,int(ans[4]),int(ans[5])))
             ans = [int(_) for _ in ans]
