@@ -4,11 +4,11 @@ import traceback
 import json
 import os
 import shutil
-
+from ocr import ocr
 class Rec_Artifact(QDialog):
     def __init__(self,data,name):
         super(Rec_Artifact,self).__init__()
-        loadUi("./data/artifacts.ui",self)        
+        loadUi("./data/ui/artifacts.ui",self)        
         self.pb_savefile.clicked.connect(self.savefile)
         self.pb_openfile.clicked.connect(self.openfile)
         
@@ -63,6 +63,35 @@ class Rec_Artifact(QDialog):
         pos={'理之冠':'head','时之沙':'glass','空之杯':'cup','生之花':'flower','死之羽':'feather'}
         
         folder = pos[self.cb_pos.currentText()]
+        path = QFileDialog.getOpenFileName(self, 'Open a file', self.path+folder,'圣遗物数据文件 (*.*)')
+        if path != ('', ''):
+            ans = ocr(path[0])['words_result']
+            ans = [i['words'] for i in ans][:8]
+            print(ans)
+                   
+            # self.digit_cr.setValue(data['sub']['cr']) 
+            # self.digit_cd.setValue(data['sub']['cd']) 
+            # self.digit_dr.setValue(data['sub']['dr']) 
+            # self.digit_ar.setValue(data['sub']['ar']) 
+            # self.digit_sa.setValue(data['sub']['sa']) 
+            # self.digit_sd.setValue(data['sub']['sd']) 
+            # self.digit_hr.setValue(data['sub']['hr']) 
+            # self.digit_em.setValue(data['sub']['em']) 
+            # self.digit_sh.setValue(data['sub']['sh']) 
+            # self.digit_ef.setValue(data['sub']['ef']) 
+            
+            # for i in data['main']:
+            self.cb_main.setCurrentIndex(self.dlist.index(i))
+            self.digit_main.setValue(data['main'][i])
+            # self.le_cmt.setText(data['cmt'])
+            tmp = list(self.pos.keys())
+            self.cb_pos.setCurrentIndex(tmp.index(ans[1]))        
+            # self.cb_aeffect.setCurrentIndex(self.elist.index(data["set"]))        
+
+    def openfile2(self):
+        pos={'理之冠':'head','时之沙':'glass','空之杯':'cup','生之花':'flower','死之羽':'feather'}
+        
+        folder = pos[self.cb_pos.currentText()]
         path = QFileDialog.getOpenFileName(self, 'Open a file', self.path+folder,'圣遗物数据文件 (*.json)')
         if path != ('', ''):
             with open(path[0], 'r', encoding='UTF-8') as fp:
@@ -85,8 +114,8 @@ class Rec_Artifact(QDialog):
             self.le_cmt.setText(data['cmt'])
             tmp = list(self.pos.keys())
             self.cb_pos.setCurrentIndex(tmp.index(data["pos"]))        
-            self.cb_aeffect.setCurrentIndex(self.elist.index(data["set"]))        
-
+            self.cb_aeffect.setCurrentIndex(self.elist.index(data["set"]))  
+            
     def display(self):
         if not os.path.exists("./data/compare/"+self.name):
             shutil.copytree(src="./data/compare/dummy",dst="./data/compare/"+self.name)

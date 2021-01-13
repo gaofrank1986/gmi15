@@ -9,7 +9,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Change_Action(QDialog):
     def __init__(self,data):
         super(Change_Action,self).__init__()
-        loadUi("./data/change_action.ui",self)       
+        loadUi("./data/ui/change_action.ui",self)       
         self.le_a.editingFinished.connect(lambda: self.checkline('a'))
         self.le_e.editingFinished.connect(lambda: self.checkline('e'))
         self.le_q.editingFinished.connect(lambda: self.checkline('q'))

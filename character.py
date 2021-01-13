@@ -47,6 +47,12 @@ class Character(Basic_Panel):
         self._data = None
         self.ed_pos=-1
         self.env = {}
+        self.elemrct = 1
+        self.elemrct2 = 0
+        self.ifer = False
+        self.if_def_r = False
+        self.rct_tbl ={'fire':2,'watr':2,'ice':1.5}
+        self.enemy = {"lvl":0,"erss":0,"frss":0}
 
 
     def load_from_json(self,path,env):
@@ -189,11 +195,38 @@ class Character(Basic_Panel):
     def _total_health(self):
         return(self.health[0]*(1+self.health[1]/100)+self.health[2])
     def _crit(self):
-        return(1+self.attack[3]/100*self.attack[4]/100)
+        if self.attack[3]<100:
+            return(1+self.attack[3]/100*self.attack[4]/100)
+        else:
+            return(1+self.attack[4]/100)
     
     def _em_formula(self,x):
         return(1e-7*x**3-3e-4*x**2+0.472*x)
+    def _em2(self,x):
+        return 20*x/(3*(x+1400))
+    def _em3(self,x):
+        return (6.665-9340/(x+1401))/2.4
     
+    def _rr(self,r0,r,cnst=0.75):
+        # if r0 < 0:
+        #     return 1+r/(200-r0)
+        # if r0>=0 and r>=r0 and r<=cnst:
+        #     return 100+(r-r0)/2
+        # if r>0 and r0>r and r0<=cnst:
+        #     return 1+r/(100-r0)
+        # if r0>cnst and r0<r:
+        #     return (25+r0)*(1-(r0-r)/2)/25
+        # if r0>r and r0-r<cnst and r0>cnst:
+        #     return (25+r0)*(1-(r0-r))/25
+        # if r0>r and r0-r>cnst and r0>cnst:
+        #     return (25+r0)*(1-(r0-r))/25
+        if (r0-r)<0:
+            return 1-(r0-r)/2
+        if (r0-r)>=0 and r0-r<0.75:
+            return 1-(r0-r)
+        if r0-r>=0.75:
+            return 1/(1+4*((r0-r)))
+        
     #----------------------------------------------------------------------------------
     #----------------------------------------------------------------------------------
     #----------------------------------------------------------------------------------
@@ -271,8 +304,24 @@ class Character(Basic_Panel):
             area2 = self._crit()
             area30 = 1 + self.dmg_eh[self.ed_pos]/100+self.dmg_eh[7]/100+self.dmg_eh[8]/100
             area31 = 1 + self.dmg_eh[0]/100+self.dmg_eh[8]/100
-            
-                           
+            if self.ifer:
+                self.elemrct = self.rct_tbl.get(self.elem_class,1)*(1+self._em3(self.attack[5])+self.dmg_eh[13])
+                self.elemrct2 = 1+2.4*self._em3(self.attack[5])+self.dmg_eh[13]
+            # print(self.rct_tbl.get(self.elem_class,1),self.attack[5],self._em3(self.attack[5]),self.dmg_eh[13])
+            # print(self.elemrct,self.elemrct2)
+            # 190/((1-f)Def+190) https://nga.178.com/read.php?tid=23633102
+            if self.if_def_r:
+                ratio_dr = 190/((1-self.dmg_eh[14])*(self.enemy['lvl']+100)+190)
+                ratio_rr0 = self._rr(self.enemy['erss']/100.0,self.dmg_eh[15]/100.0)  
+                ratio_rr1 = self._rr(self.enemy['frss']/100.0,self.dmg_eh[16]/100.0)  
+                ratio_rr2 = self._rr(self.enemy['frss']/100.0,0)
+            else:
+                ratio_dr = 1
+                ratio_rr0 = 1  
+                ratio_rr1 = 1  
+                ratio_rr2 = 1               
+            logger.info(ratio_dr)
+            print(ratio_rr0)
             if 'd2a' in self.sp_buff.keys():
                 delta = self.sp_buff['d2a']/100*self._total_def()
                 area1+= delta
@@ -316,22 +365,29 @@ class Character(Basic_Panel):
                         if self.switch[entry[0]] == 'life':
                                 base = self._total_health()
                                 logger.debug("切换基础乘区 攻击为生命 area1 = {:.2f}".format(base))
-                            
+                    delta = 0
+                    if 'ah' in entry[0] and 'dah' in self.skill_effect[i]:
+                        delta = self.skill_effect[i]['dah']/100
+                        logger.debug('dah:{}'.format(delta))
+                    if i =='a' and 'ah' not in entry[0] and 'ap' not in entry[0] and 'daa' in self.skill_effect[i]:
+                        delta = self.skill_effect[i]['daa']/100
+                        logger.debug('daa:{}'.format(delta))
+                        
                     if i in ['a','e','q']:        
                         assert(atk_t in ['elem','phys','env'])
                         if atk_t == 'elem':                            
-                            ans[0]+=base*area2*area30*ratio*multi
+                            ans[0]+=base*area2*(area30+delta)*ratio*multi*self.elemrct*ratio_dr*ratio_rr0
                             logger.debug("area1 = {:.2f},area2 = {:.2f},area3 = {:.2f},伤害类型:{}".format(base,area2,area30,atk_t))
 
                         elif atk_t == 'phys':
-                            ans[0]+=base*area2*area30*ratio*multi*self.enchant_ratio
+                            ans[0]+=base*area2*(area30+delta)*ratio*multi*self.enchant_ratio*self.elemrct*ratio_dr*ratio_rr0
                             logger.debug("area1 = {:.2f},area2 = {:.2f},area3 = {:.2f},伤害类型:{},附魔,占比 {}".format(base,area2,area30,"属性元素",self.enchant_ratio))
 
                    
-                            ans[1]+=base*area2*area31*ratio*multi*(1-self.enchant_ratio)
+                            ans[1]+=base*area2*(area31+delta)*ratio*multi*(1-self.enchant_ratio)*ratio_dr*ratio_rr1
                             logger.debug("area1 = {:.2f},area2 = {:.2f},area3 = {:.2f},伤害类型:{},不附魔,占比 {}".format(base,area2,area31,"物理",1-self.enchant_ratio))
                         elif atk_t == 'env':
-                            ans[2]+=base*area2*ratio*multi
+                            ans[2]+=base*area2*ratio*multi*ratio_dr*ratio_rr2
                             logger.debug("area1 = {:.2f},area2 = {:.2f},area3 = {:.2f},伤害类型:{}".format(base,area2,1,"环境元素")) 
                         else:
                             pass
@@ -357,12 +413,14 @@ class Character(Basic_Panel):
                     if entry[0] == 'ks':
                         multi  = float(entry[1])
                         em_base = 721
-                        ans[3] = em_base*multi*(1+self._em_formula(self.attack[5])/100)  
+                        # ans[3] = em_base*multi*(1+self._em_formula(self.attack[5])/100)
+                        #***再看看***  扩散减抗
+                        ans[3] = em_base*multi*self.elemrct2*ratio_dr*ratio_rr0 
                         logger.debug("扩散反应  基数 {},次数 = {},精通 = {:.2f},精通增益:{:.2f}".format(em_base,multi,self.attack[5],self._em_formula(self.attack[5])/100))
                     if entry[0] == 'w':
                         '''武器附伤'''
                         if 'damage' in self.skill_effect[i]:
-                            ans[1]+=area1*self.skill_effect[i]['damage']/100
+                            ans[1]+=area1*self.skill_effect[i]['damage']/100*ratio_dr*ratio_rr1
                             logger.debug("武器附加伤害: area1 = {:.2f},ratio = {:.2f} 假设为物理伤害，不受益2，3乘区加成".format(area1,self.skill_effect[i]['damage']/100)) 
         
  

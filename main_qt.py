@@ -19,7 +19,8 @@ from chng_action import Change_Action
 class MainWindow(QMainWindow):
     def __init__(self):
         super(MainWindow,self).__init__()
-        loadUi("./data/test.ui",self)
+        font_id = QtGui.QFontDatabase.addApplicationFont("./data/ui/zh-cn.ttf")
+        loadUi("./data/ui/test.ui",self)
 
         self._data = {}
         self._wdata = {}
@@ -46,7 +47,7 @@ class MainWindow(QMainWindow):
         self.win_rec_a = Rec_Artifact(self._aeffect,self._data[self.cb_name.currentText()]['name'])
 
         self.win_action = QDialog(self)
-        loadUi("./data/win_action.ui",self.win_action)
+        loadUi("./data/ui/win_action.ui",self.win_action)
         
         self.pb_change.clicked.connect(self.win_save_act.display) 
         self.pb_artifact.clicked.connect(self.win_rec_a.display)         
@@ -68,7 +69,7 @@ class MainWindow(QMainWindow):
 
         self.pb_artifact.hide()
         self.pb_buff.hide()
-        self.rb_pop.hide()
+        # self.rb_pop.hide()
         
         self.read_mainlist()
         self.read_sub()
@@ -132,9 +133,10 @@ class MainWindow(QMainWindow):
             c.load_weapon_from_json("./data/weapon/"+c.weapon_class+".json",weapon,refine)
 
             if self.rb_pop.isChecked():
-                c.skill_round['a'] = 0
-            else:
-                pass
+                c.ifer = True
+            if self.cb_switch_def.isChecked():
+                c.if_def_r = True            # else:
+            #     pass
 
             
             ae1 = self._aeffect[self.cb_aeffect1.currentText()]
@@ -149,7 +151,10 @@ class MainWindow(QMainWindow):
 
             logging.getLogger('Buff').info("总效果: {}\n".format(c.skill_effect))
             logging.getLogger('Buff').info("特殊攻击加成: {}\n".format(c.sp_buff))
-            
+
+            enemy = {"lvl":self.sb_enemy_lvl.value(),"erss":self.sb_enemy_erss.value(),"frss":self.sb_enemy_frss.value()}
+            print(enemy)
+            c.enemy = enemy         
             
             rls = Articraft()
             if self.cb_mode2.isChecked():
@@ -165,7 +170,8 @@ class MainWindow(QMainWindow):
                     logging.getLogger('Buff').info("更换倍率基础 {}".format(i))
                     logging.getLogger('Buff').info(c._data['rebase'][i])
                     logging.getLogger('Buff').info("")
-
+            # if self.rb_pop.isChecked():
+                # c.ifer = True
 
             test = OrderedDict(sorted(save.items(),reverse=True))
             N=0
@@ -314,8 +320,8 @@ class MainWindow(QMainWindow):
             tmp = self.win_action.info_action
             for i in range(len(prop_name)):
                 if data[cstl]['action_def'][prop_name[i]]!='':
-                    if i ==0 and self.rb_pop.isChecked():
-                        ans+="{}(速切不计入伤害 {}轮)\n{}".format(desc[i],0,div1)                    
+                    if i ==0 :
+                        pass                    
                     else:
                         if i <3:
                             rnd = data[cstl]['round'][prop_name[i]]

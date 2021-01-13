@@ -18,7 +18,7 @@ def c1():
     c1.health =[1,2,3]
     c1.attack =[4,5,6,7,8,9,10]
     c1.defense =[11,12,13]
-    c1.dmg_eh =[14,15,16,17,18,19,20,21,22,21,22,23,24]
+    c1.dmg_eh =[14,15,16,17,18,19,20,21,22,21,22,23,24,25,26,27,28]
     return(c1)
 
 @pytest.fixture
@@ -33,7 +33,7 @@ def c3():
     env = {'spec':True,'fire':True,'watr':True,'elec':True,'ice':True,'frozen':True,'lowhp':True}
     c3  = Character(6,6)
     c3.load_from_json("./data/test/diluc.json",env)
-    c3.load_weapon_from_json("./data/test/claymore.json","lm",env,1)
+    c3.load_weapon_from_json("./data/test/claymore.json","lm",1)
     return(c3)
 
 @pytest.fixture
