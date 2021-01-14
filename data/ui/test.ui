@@ -392,9 +392,9 @@
      <widget class="QPushButton" name="pb_action">
       <property name="geometry">
        <rect>
-        <x>40</x>
-        <y>330</y>
-        <width>93</width>
+        <x>140</x>
+        <y>370</y>
+        <width>101</width>
         <height>31</height>
        </rect>
       </property>
@@ -438,7 +438,7 @@
        </rect>
       </property>
       <property name="text">
-       <string>增益参数</string>
+       <string>校对信息</string>
       </property>
      </widget>
      <widget class="QGraphicsView" name="graphicsView">
@@ -457,9 +457,9 @@
      <widget class="QPushButton" name="pb_change">
       <property name="geometry">
        <rect>
-        <x>140</x>
+        <x>40</x>
         <y>330</y>
-        <width>101</width>
+        <width>91</width>
         <height>31</height>
        </rect>
       </property>
@@ -527,7 +527,7 @@
       <property name="geometry">
        <rect>
         <x>140</x>
-        <y>370</y>
+        <y>330</y>
         <width>101</width>
         <height>31</height>
        </rect>
@@ -1576,8 +1576,55 @@
        </rect>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
+      <widget class="QWidget" name="page_3">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>0</y>
+         <width>1281</width>
+         <height>343</height>
+        </rect>
+       </property>
+       <attribute name="label">
+        <string>版本更新日志</string>
+       </attribute>
+       <widget class="QPlainTextEdit" name="plainTextEdit_3">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>0</y>
+          <width>1261</width>
+          <height>341</height>
+         </rect>
+        </property>
+        <property name="font">
+         <font>
+          <family>汉仪文黑-85W</family>
+          <pointsize>9</pointsize>
+          <weight>50</weight>
+          <italic>false</italic>
+          <bold>false</bold>
+         </font>
+        </property>
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+        <property name="plainText">
+         <string>==v.1.70===
+1. 修正甘雨数据文件 元素属性错误
+2.增加最大暴击限制为100%
+3.增加元素反应计算
+4.增加防御抗性纳入计算
+5.增加 黑岩弓，锻造弓，绿弓，神射手之誓
+6.开放甘雨1-6命自定义，增加人物1命减抗增益定义
+7.修正windows下，原神字体不能加载问题
+8.取消技能参数按键， 在校对信息中 增加 人物、武器基础面板信息
+9.增加剧变反应技能定义 过载:gz 超导:cd 感电:gd</string>
+        </property>
+       </widget>
+      </widget>
       <widget class="QWidget" name="page">
        <property name="geometry">
         <rect>
@@ -1598,6 +1645,15 @@
           <width>1271</width>
           <height>391</height>
          </rect>
+        </property>
+        <property name="font">
+         <font>
+          <family>汉仪文黑-85W</family>
+          <pointsize>9</pointsize>
+          <weight>50</weight>
+          <italic>false</italic>
+          <bold>false</bold>
+         </font>
         </property>
         <property name="readOnly">
          <bool>true</bool>
@@ -1632,8 +1688,8 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>98</width>
-         <height>28</height>
+         <width>1281</width>
+         <height>343</height>
         </rect>
        </property>
        <attribute name="label">
@@ -1647,6 +1703,15 @@
           <width>1271</width>
           <height>391</height>
          </rect>
+        </property>
+        <property name="font">
+         <font>
+          <family>汉仪文黑-85W</family>
+          <pointsize>9</pointsize>
+          <weight>50</weight>
+          <italic>false</italic>
+          <bold>false</bold>
+         </font>
         </property>
         <property name="readOnly">
          <bool>true</bool>

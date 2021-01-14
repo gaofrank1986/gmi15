@@ -59,7 +59,7 @@ class Rec_Artifact(QDialog):
             with open(path[0], 'w', encoding='utf-8') as fp:
                 json.dump(data, fp,indent = 4,ensure_ascii=False)
 
-    def openfile(self):
+    def openimgfile(self):
         pos={'理之冠':'head','时之沙':'glass','空之杯':'cup','生之花':'flower','死之羽':'feather'}
         
         folder = pos[self.cb_pos.currentText()]
@@ -88,7 +88,7 @@ class Rec_Artifact(QDialog):
             self.cb_pos.setCurrentIndex(tmp.index(ans[1]))        
             # self.cb_aeffect.setCurrentIndex(self.elist.index(data["set"]))        
 
-    def openfile2(self):
+    def openfile(self):
         pos={'理之冠':'head','时之沙':'glass','空之杯':'cup','生之花':'flower','死之羽':'feather'}
         
         folder = pos[self.cb_pos.currentText()]

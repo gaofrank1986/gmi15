@@ -46,8 +46,8 @@ class MainWindow(QMainWindow):
         self.win_save_act = Change_Action(self._data)
         self.win_rec_a = Rec_Artifact(self._aeffect,self._data[self.cb_name.currentText()]['name'])
 
-        self.win_action = QDialog(self)
-        loadUi("./data/ui/win_action.ui",self.win_action)
+        # self.win_action = QDialog(self)
+        # loadUi("./data/ui/win_action.ui",self.win_action)
         
         self.pb_change.clicked.connect(self.win_save_act.display) 
         self.pb_artifact.clicked.connect(self.win_rec_a.display)         
@@ -56,7 +56,7 @@ class MainWindow(QMainWindow):
 
        
         self.btn_run.clicked.connect(self.run) 
-        self.pb_action.clicked.connect(self.list_action) 
+        # self.pb_action.clicked.connect(self.list_action) 
 
         self.cb_name.currentIndexChanged.connect(self.reset)
         self.cb_wp.currentIndexChanged.connect(self.reset_table)
@@ -70,6 +70,7 @@ class MainWindow(QMainWindow):
         self.pb_artifact.hide()
         self.pb_buff.hide()
         # self.rb_pop.hide()
+        self.pb_action.hide()
         
         self.read_mainlist()
         self.read_sub()
@@ -138,6 +139,9 @@ class MainWindow(QMainWindow):
                 c.if_def_r = True            # else:
             #     pass
 
+
+            # print(c.buffs)
+            c._load_buff(c.buffs,c._check1,env)
             
             ae1 = self._aeffect[self.cb_aeffect1.currentText()]
             ae2 = self._aeffect[self.cb_aeffect2.currentText()]
@@ -185,6 +189,7 @@ class MainWindow(QMainWindow):
                     tmp2 = tmp
                 tmp2 = [extract_name4(_) for _ in tmp2]
                 tmp0 = test[i][0]
+                print(character,constellation,c.equipment[0],tmp0)
 
                 if self.rb_display.isChecked():
                     content = [i]+tmp2+[tmp0['shld'],tmp0['heal'],tmp0['maxhp'],tmp0['sum']]                
@@ -306,46 +311,46 @@ class MainWindow(QMainWindow):
         with open('./data/artifacts/main_list.json', 'w+') as fp:
             json.dump(ans, fp,indent = 4)
             
-    def list_action(self):
-        try:
-            desc = ['普攻','元素战技','元素爆发','护盾技能','治疗技能']
-            prop_name =['a','e','q','shld','heal']
-            div1 = "==========\n"
-            character = self._data[self.cb_name.currentText()]['name']
-            cstl = 'c'+str(int(self.cb_cnum.currentText()))
+    # def list_action(self):
+    #     try:
+    #         desc = ['普攻','元素战技','元素爆发','护盾技能','治疗技能']
+    #         prop_name =['a','e','q','shld','heal']
+    #         div1 = "==========\n"
+    #         character = self._data[self.cb_name.currentText()]['name']
+    #         cstl = 'c'+str(int(self.cb_cnum.currentText()))
 
-            ans =''
-            with open('./data/character/'+character+'.json', 'r', encoding='UTF-8') as fp:
-                data = json.load(fp)
-            tmp = self.win_action.info_action
-            for i in range(len(prop_name)):
-                if data[cstl]['action_def'][prop_name[i]]!='':
-                    if i ==0 :
-                        pass                    
-                    else:
-                        if i <3:
-                            rnd = data[cstl]['round'][prop_name[i]]
-                        else:
-                            rnd = 1
-                        ans+="{}({}轮)\n{}".format(desc[i],rnd,div1)
-                    formula = data[cstl]['action_def'][prop_name[i]]
-                    for entry in parse_formula(formula):
-                        if entry[0] == 'ks':
-                            ans += '扩散伤害'
-                            ans += '  x {}'.format(entry[1])
-                        else:
-                            ans += data['ratio_cmt'][entry[0]]
-                            ans += '  x {}'.format(entry[1])
-                        ans+='\n'
-                else:
-                    ans+="{}\n{}".format(desc[i],div1)
-                    ans+='无定义\n'
-                ans+='\n'
-            tmp.setPlainText(ans)
-            self.win_action.exec_()
-        except Exception as e:
-            print("Error: ", e)
-            traceback.print_exc()
+    #         ans =''
+    #         with open('./data/character/'+character+'.json', 'r', encoding='UTF-8') as fp:
+    #             data = json.load(fp)
+    #         tmp = self.win_action.info_action
+    #         for i in range(len(prop_name)):
+    #             if data[cstl]['action_def'][prop_name[i]]!='':
+    #                 if i ==0 :
+    #                     pass                    
+    #                 else:
+    #                     if i <3:
+    #                         rnd = data[cstl]['round'][prop_name[i]]
+    #                     else:
+    #                         rnd = 1
+    #                     ans+="{}({}轮)\n{}".format(desc[i],rnd,div1)
+    #                 formula = data[cstl]['action_def'][prop_name[i]]
+    #                 for entry in parse_formula(formula):
+    #                     if entry[0] == 'ks':
+    #                         ans += '扩散伤害'
+    #                         ans += '  x {}'.format(entry[1])
+    #                     else:
+    #                         ans += data['ratio_cmt'][entry[0]]
+    #                         ans += '  x {}'.format(entry[1])
+    #                     ans+='\n'
+    #             else:
+    #                 ans+="{}\n{}".format(desc[i],div1)
+    #                 ans+='无定义\n'
+    #             ans+='\n'
+    #         tmp.setPlainText(ans)
+    #         self.win_action.exec_()
+    #     except Exception as e:
+    #         print("Error: ", e)
+    #         traceback.print_exc()
 
 
 

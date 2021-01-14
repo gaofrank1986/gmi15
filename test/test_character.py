@@ -92,5 +92,7 @@ def test_load_buff_1(c0):
     assert c0.skill_effect['a']["d"] == 15
 
 def test_dmg(c3,r1):
+    env = {'spec':True,'fire':True,'watr':True,'elec':True,'ice':True,'frozen':True,'lowhp':True}
     c3.put_on(r1)
+    c3._load_buff(c3.buffs,c3._check1,env)
     assert c3.damage_rsl()['sum'] == 242188

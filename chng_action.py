@@ -32,8 +32,8 @@ class Change_Action(QDialog):
                 for i in tmp:
                     assert(i.count('*')<2)
                     tmp2 = i.split('*')
-                    assert(tmp2[-1] in self._cdata['ratios'] or tmp2[-1] in ['ks'])
-                    if not(tmp2[-1] in ['ks']):
+                    assert(tmp2[-1] in self._cdata['ratios'] or tmp2[-1] in ['ks','cd','gz','gd'])
+                    if not(tmp2[-1] in ['ks','cd','gz','gd']):
                         atk_t = self._cdata['atk_type'][tmp2[-1]]
                         # print(atk_t,s)
                         if s in  ['a','e','q']:
