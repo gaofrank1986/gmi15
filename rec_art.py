@@ -87,7 +87,7 @@ class Rec_Artifact(QDialog):
         try:
             self.clear()
             trans = {'攻击力%':'ar','防御力%':'dr','生命值%':'hr','生命值':'sh','元素充能效率%':'ef','暴击率%':'cr','暴击伤害%':'cd','攻击力':'sa','元素精通':'em','防御力':'sd'}
-            path = QFileDialog.getOpenFileName(self, 'Open a file', "./data/",'圣遗物数据文件 (*.*)')
+            path = QFileDialog.getOpenFileName(self, 'Open a file', "./",'圣遗物图像文件 (*.*)')
             if path != ('', ''):
                 pixmap = QPixmap(path[0]).scaled(370,591, Qt.KeepAspectRatio, Qt.SmoothTransformation)
                 self.label_pic.setPixmap(pixmap)

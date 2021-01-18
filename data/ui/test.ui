@@ -79,9 +79,9 @@
       <property name="geometry">
        <rect>
         <x>540</x>
-        <y>160</y>
+        <y>130</y>
         <width>635</width>
-        <height>190</height>
+        <height>271</height>
        </rect>
       </property>
       <property name="sizePolicy">
@@ -185,24 +185,11 @@
        </property>
       </column>
      </widget>
-     <widget class="QLabel" name="label">
-      <property name="geometry">
-       <rect>
-        <x>970</x>
-        <y>370</y>
-        <width>271</width>
-        <height>51</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string/>
-      </property>
-     </widget>
      <widget class="QComboBox" name="cb_name">
       <property name="geometry">
        <rect>
         <x>40</x>
-        <y>110</y>
+        <y>90</y>
         <width>161</width>
         <height>31</height>
        </rect>
@@ -211,8 +198,8 @@
      <widget class="QPushButton" name="btn_run">
       <property name="geometry">
        <rect>
-        <x>310</x>
-        <y>330</y>
+        <x>1020</x>
+        <y>10</y>
         <width>121</width>
         <height>51</height>
        </rect>
@@ -224,8 +211,8 @@
      <widget class="QComboBox" name="cb_refine">
       <property name="geometry">
        <rect>
-        <x>340</x>
-        <y>260</y>
+        <x>360</x>
+        <y>230</y>
         <width>87</width>
         <height>22</height>
        </rect>
@@ -259,8 +246,8 @@
      <widget class="QComboBox" name="cb_cnum">
       <property name="geometry">
        <rect>
-        <x>340</x>
-        <y>110</y>
+        <x>360</x>
+        <y>90</y>
         <width>87</width>
         <height>22</height>
        </rect>
@@ -269,8 +256,8 @@
      <widget class="QComboBox" name="cb_skill">
       <property name="geometry">
        <rect>
-        <x>340</x>
-        <y>160</y>
+        <x>360</x>
+        <y>140</y>
         <width>87</width>
         <height>22</height>
        </rect>
@@ -304,8 +291,8 @@
      <widget class="QLabel" name="label_3">
       <property name="geometry">
        <rect>
-        <x>250</x>
-        <y>160</y>
+        <x>270</x>
+        <y>140</y>
         <width>72</width>
         <height>21</height>
        </rect>
@@ -318,7 +305,7 @@
       <property name="geometry">
        <rect>
         <x>40</x>
-        <y>260</y>
+        <y>230</y>
         <width>151</width>
         <height>31</height>
        </rect>
@@ -327,8 +314,8 @@
      <widget class="QLabel" name="label_2">
       <property name="geometry">
        <rect>
-        <x>290</x>
-        <y>110</y>
+        <x>310</x>
+        <y>90</y>
         <width>72</width>
         <height>21</height>
        </rect>
@@ -340,8 +327,8 @@
      <widget class="QLabel" name="label_14">
       <property name="geometry">
        <rect>
-        <x>270</x>
-        <y>260</y>
+        <x>290</x>
+        <y>230</y>
         <width>72</width>
         <height>21</height>
        </rect>
@@ -354,20 +341,20 @@
       <property name="geometry">
        <rect>
         <x>1010</x>
-        <y>100</y>
+        <y>70</y>
         <width>151</width>
         <height>41</height>
        </rect>
       </property>
       <property name="text">
-       <string>读取Log</string>
+       <string>计算详情</string>
       </property>
      </widget>
      <widget class="QCheckBox" name="rb_pop">
       <property name="geometry">
        <rect>
         <x>40</x>
-        <y>160</y>
+        <y>140</y>
         <width>141</width>
         <height>19</height>
        </rect>
@@ -380,26 +367,13 @@
       <property name="geometry">
        <rect>
         <x>720</x>
-        <y>108</y>
+        <y>78</y>
         <width>141</width>
         <height>31</height>
        </rect>
       </property>
       <property name="text">
        <string>精确数字</string>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="pb_action">
-      <property name="geometry">
-       <rect>
-        <x>140</x>
-        <y>370</y>
-        <width>101</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>技能参数</string>
       </property>
      </widget>
      <widget class="QLabel" name="label_17">
@@ -415,24 +389,11 @@
        <string/>
       </property>
      </widget>
-     <widget class="QLabel" name="label2">
-      <property name="geometry">
-       <rect>
-        <x>540</x>
-        <y>370</y>
-        <width>311</width>
-        <height>51</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string/>
-      </property>
-     </widget>
      <widget class="QPushButton" name="pb_buff">
       <property name="geometry">
        <rect>
-        <x>40</x>
-        <y>370</y>
+        <x>790</x>
+        <y>20</y>
         <width>93</width>
         <height>31</height>
        </rect>
@@ -458,7 +419,7 @@
       <property name="geometry">
        <rect>
         <x>40</x>
-        <y>330</y>
+        <y>290</y>
         <width>91</width>
         <height>31</height>
        </rect>
@@ -471,7 +432,7 @@
       <property name="geometry">
        <rect>
         <x>590</x>
-        <y>110</y>
+        <y>80</y>
         <width>71</width>
         <height>31</height>
        </rect>
@@ -501,7 +462,7 @@
       <property name="geometry">
        <rect>
         <x>540</x>
-        <y>110</y>
+        <y>80</y>
         <width>71</width>
         <height>31</height>
        </rect>
@@ -513,8 +474,8 @@
      <widget class="QProgressBar" name="pbar">
       <property name="geometry">
        <rect>
-        <x>310</x>
-        <y>390</y>
+        <x>900</x>
+        <y>20</y>
         <width>118</width>
         <height>23</height>
        </rect>
@@ -532,8 +493,8 @@
      <widget class="QPushButton" name="pb_artifact">
       <property name="geometry">
        <rect>
-        <x>140</x>
-        <y>330</y>
+        <x>40</x>
+        <y>350</y>
         <width>101</width>
         <height>31</height>
        </rect>
@@ -542,24 +503,11 @@
        <string>圣遗物录入</string>
       </property>
      </widget>
-     <widget class="QCheckBox" name="cb_mode2">
-      <property name="geometry">
-       <rect>
-        <x>40</x>
-        <y>220</y>
-        <width>141</width>
-        <height>19</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>录入模式</string>
-      </property>
-     </widget>
      <widget class="QCheckBox" name="cb_switch_def">
       <property name="geometry">
        <rect>
         <x>40</x>
-        <y>190</y>
+        <y>170</y>
         <width>111</width>
         <height>19</height>
        </rect>
@@ -568,9 +516,53 @@
        <string>防御抗性</string>
       </property>
      </widget>
+     <widget class="QGroupBox" name="groupBox_10">
+      <property name="geometry">
+       <rect>
+        <x>250</x>
+        <y>290</y>
+        <width>201</width>
+        <height>101</height>
+       </rect>
+      </property>
+      <property name="title">
+       <string/>
+      </property>
+      <widget class="QRadioButton" name="rb_mode2">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>60</y>
+         <width>161</width>
+         <height>19</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>圣遗物录入模式</string>
+       </property>
+       <property name="checked">
+        <bool>false</bool>
+       </property>
+      </widget>
+      <widget class="QRadioButton" name="rb_mode1">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>30</y>
+         <width>151</width>
+         <height>19</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>主词条穷举模式</string>
+       </property>
+       <property name="checked">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </widget>
      <zorder>graphicsView</zorder>
      <zorder>tbl_2</zorder>
-     <zorder>label</zorder>
      <zorder>cb_name</zorder>
      <zorder>btn_run</zorder>
      <zorder>cb_refine</zorder>
@@ -583,28 +575,250 @@
      <zorder>btn_load_wp</zorder>
      <zorder>rb_pop</zorder>
      <zorder>rb_display</zorder>
-     <zorder>pb_action</zorder>
      <zorder>label_17</zorder>
-     <zorder>label2</zorder>
      <zorder>pb_buff</zorder>
      <zorder>pb_change</zorder>
      <zorder>cb_sort</zorder>
      <zorder>label_19</zorder>
      <zorder>pbar</zorder>
      <zorder>pb_artifact</zorder>
-     <zorder>cb_mode2</zorder>
      <zorder>cb_switch_def</zorder>
+     <zorder>groupBox_10</zorder>
+    </widget>
+    <widget class="QWidget" name="tab_5">
+     <attribute name="title">
+      <string>环境设定</string>
+     </attribute>
+     <widget class="QGroupBox" name="groupBox_7">
+      <property name="geometry">
+       <rect>
+        <x>370</x>
+        <y>50</y>
+        <width>321</width>
+        <height>301</height>
+       </rect>
+      </property>
+      <property name="title">
+       <string>特殊条件</string>
+      </property>
+      <widget class="QCheckBox" name="cb_cond_frozen">
+       <property name="geometry">
+        <rect>
+         <x>30</x>
+         <y>50</y>
+         <width>91</width>
+         <height>19</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>冻结</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="cb_cond_lowhp">
+       <property name="geometry">
+        <rect>
+         <x>30</x>
+         <y>90</y>
+         <width>151</width>
+         <height>19</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>生命低于50%</string>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QGroupBox" name="groupBox_8">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>50</y>
+        <width>321</width>
+        <height>301</height>
+       </rect>
+      </property>
+      <property name="title">
+       <string>元素影响（增伤条件）</string>
+      </property>
+      <widget class="QRadioButton" name="rb_cond_fire">
+       <property name="geometry">
+        <rect>
+         <x>30</x>
+         <y>50</y>
+         <width>115</width>
+         <height>19</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>火影响</string>
+       </property>
+      </widget>
+      <widget class="QRadioButton" name="rb_cond_watr">
+       <property name="geometry">
+        <rect>
+         <x>30</x>
+         <y>80</y>
+         <width>115</width>
+         <height>19</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>水影响</string>
+       </property>
+      </widget>
+      <widget class="QRadioButton" name="rb_cond_elec">
+       <property name="geometry">
+        <rect>
+         <x>30</x>
+         <y>140</y>
+         <width>115</width>
+         <height>19</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>雷影响</string>
+       </property>
+      </widget>
+      <widget class="QRadioButton" name="rb_cond_ice">
+       <property name="geometry">
+        <rect>
+         <x>30</x>
+         <y>110</y>
+         <width>115</width>
+         <height>19</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>冰影响</string>
+       </property>
+      </widget>
+      <widget class="QRadioButton" name="rb_cond_elec_2">
+       <property name="geometry">
+        <rect>
+         <x>30</x>
+         <y>170</y>
+         <width>115</width>
+         <height>19</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>无影响</string>
+       </property>
+       <property name="checked">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QGraphicsView" name="graphicsView_4">
+      <property name="geometry">
+       <rect>
+        <x>-10</x>
+        <y>-10</y>
+        <width>1831</width>
+        <height>891</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background: url(./data/bg.png);	</string>
+      </property>
+     </widget>
+     <widget class="QGroupBox" name="groupBox_9">
+      <property name="geometry">
+       <rect>
+        <x>730</x>
+        <y>50</y>
+        <width>301</width>
+        <height>301</height>
+       </rect>
+      </property>
+      <property name="title">
+       <string>敌人</string>
+      </property>
+      <widget class="QSpinBox" name="sb_enemy_lvl">
+       <property name="geometry">
+        <rect>
+         <x>160</x>
+         <y>40</y>
+         <width>61</width>
+         <height>22</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_21">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>40</y>
+         <width>71</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>等级</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_22">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>80</y>
+         <width>121</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>全元素抗性(%)</string>
+       </property>
+      </widget>
+      <widget class="QSpinBox" name="sb_enemy_erss">
+       <property name="geometry">
+        <rect>
+         <x>160</x>
+         <y>80</y>
+         <width>61</width>
+         <height>22</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_23">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>120</y>
+         <width>121</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>物理抗性(%)</string>
+       </property>
+      </widget>
+      <widget class="QSpinBox" name="sb_enemy_frss">
+       <property name="geometry">
+        <rect>
+         <x>160</x>
+         <y>120</y>
+         <width>61</width>
+         <height>22</height>
+        </rect>
+       </property>
+      </widget>
+     </widget>
+     <zorder>graphicsView_4</zorder>
+     <zorder>groupBox_7</zorder>
+     <zorder>groupBox_8</zorder>
+     <zorder>groupBox_9</zorder>
     </widget>
     <widget class="QWidget" name="tab_4">
      <attribute name="title">
-      <string>圣遗物主词条</string>
+      <string>圣遗物</string>
      </attribute>
      <widget class="QGroupBox" name="groupBox">
       <property name="geometry">
        <rect>
-        <x>50</x>
-        <y>90</y>
-        <width>201</width>
+        <x>30</x>
+        <y>40</y>
+        <width>141</width>
         <height>291</height>
        </rect>
       </property>
@@ -706,9 +920,9 @@
      <widget class="QGroupBox" name="groupBox_2">
       <property name="geometry">
        <rect>
-        <x>290</x>
-        <y>90</y>
-        <width>201</width>
+        <x>200</x>
+        <y>40</y>
+        <width>141</width>
         <height>291</height>
        </rect>
       </property>
@@ -784,9 +998,9 @@
      <widget class="QGroupBox" name="groupBox_3">
       <property name="geometry">
        <rect>
-        <x>530</x>
-        <y>90</y>
-        <width>201</width>
+        <x>370</x>
+        <y>40</y>
+        <width>141</width>
         <height>291</height>
        </rect>
       </property>
@@ -872,19 +1086,10 @@
        <string notr="true">background: url(./data/bg.png);	</string>
       </property>
      </widget>
-     <zorder>graphicsView_2</zorder>
-     <zorder>groupBox</zorder>
-     <zorder>groupBox_2</zorder>
-     <zorder>groupBox_3</zorder>
-    </widget>
-    <widget class="QWidget" name="tab_2">
-     <attribute name="title">
-      <string>其他增益</string>
-     </attribute>
      <widget class="QGroupBox" name="groupBox_4">
       <property name="geometry">
        <rect>
-        <x>50</x>
+        <x>540</x>
         <y>40</y>
         <width>321</width>
         <height>391</height>
@@ -1158,11 +1363,81 @@
        </property>
       </widget>
      </widget>
+     <widget class="QGroupBox" name="groupBox_6">
+      <property name="geometry">
+       <rect>
+        <x>890</x>
+        <y>40</y>
+        <width>291</width>
+        <height>391</height>
+       </rect>
+      </property>
+      <property name="title">
+       <string>套装效果</string>
+      </property>
+      <widget class="QComboBox" name="cb_aeffect1">
+       <property name="geometry">
+        <rect>
+         <x>60</x>
+         <y>50</y>
+         <width>151</width>
+         <height>22</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QComboBox" name="cb_aeffect2">
+       <property name="geometry">
+        <rect>
+         <x>60</x>
+         <y>110</y>
+         <width>151</width>
+         <height>22</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_15">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>50</y>
+         <width>61</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>1：</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_16">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>110</y>
+         <width>61</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>2：</string>
+       </property>
+      </widget>
+     </widget>
+     <zorder>graphicsView_2</zorder>
+     <zorder>groupBox</zorder>
+     <zorder>groupBox_2</zorder>
+     <zorder>groupBox_3</zorder>
+     <zorder>groupBox_4</zorder>
+     <zorder>groupBox_6</zorder>
+    </widget>
+    <widget class="QWidget" name="tab_2">
+     <attribute name="title">
+      <string>其他增益</string>
+     </attribute>
      <widget class="QGroupBox" name="groupBox_5">
       <property name="geometry">
        <rect>
-        <x>740</x>
-        <y>40</y>
+        <x>50</x>
+        <y>30</y>
         <width>291</width>
         <height>391</height>
        </rect>
@@ -1266,63 +1541,36 @@
         <double>1.000000000000000</double>
        </property>
       </widget>
-     </widget>
-     <widget class="QGroupBox" name="groupBox_6">
-      <property name="geometry">
-       <rect>
-        <x>410</x>
-        <y>40</y>
-        <width>291</width>
-        <height>391</height>
-       </rect>
-      </property>
-      <property name="title">
-       <string>套装效果</string>
-      </property>
-      <widget class="QComboBox" name="cb_aeffect1">
+      <widget class="QDoubleSpinBox" name="digit_benett">
        <property name="geometry">
         <rect>
-         <x>60</x>
-         <y>50</y>
-         <width>151</width>
+         <x>160</x>
+         <y>160</y>
+         <width>70</width>
          <height>22</height>
         </rect>
        </property>
-      </widget>
-      <widget class="QComboBox" name="cb_aeffect2">
-       <property name="geometry">
-        <rect>
-         <x>60</x>
-         <y>110</y>
-         <width>151</width>
-         <height>22</height>
-        </rect>
+       <property name="decimals">
+        <number>1</number>
+       </property>
+       <property name="maximum">
+        <double>5000.000000000000000</double>
+       </property>
+       <property name="singleStep">
+        <double>1.000000000000000</double>
        </property>
       </widget>
-      <widget class="QLabel" name="label_15">
+      <widget class="QLabel" name="label_24">
        <property name="geometry">
         <rect>
          <x>20</x>
-         <y>50</y>
-         <width>61</width>
+         <y>160</y>
+         <width>121</width>
          <height>21</height>
         </rect>
        </property>
        <property name="text">
-        <string>1：</string>
-       </property>
-      </widget>
-      <widget class="QLabel" name="label_16">
-       <property name="geometry">
-        <rect>
-         <x>20</x>
-         <y>110</y>
-         <width>61</width>
-         <height>21</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>2：</string>
+        <string>班尼特加攻击</string>
        </property>
       </widget>
      </widget>
@@ -1340,233 +1588,7 @@
       </property>
      </widget>
      <zorder>graphicsView_3</zorder>
-     <zorder>groupBox_4</zorder>
      <zorder>groupBox_5</zorder>
-     <zorder>groupBox_6</zorder>
-    </widget>
-    <widget class="QWidget" name="tab_5">
-     <attribute name="title">
-      <string>环境设定</string>
-     </attribute>
-     <widget class="QGroupBox" name="groupBox_7">
-      <property name="geometry">
-       <rect>
-        <x>370</x>
-        <y>50</y>
-        <width>321</width>
-        <height>301</height>
-       </rect>
-      </property>
-      <property name="title">
-       <string>特殊条件</string>
-      </property>
-      <widget class="QCheckBox" name="cb_cond_frozen">
-       <property name="geometry">
-        <rect>
-         <x>30</x>
-         <y>50</y>
-         <width>91</width>
-         <height>19</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>冻结</string>
-       </property>
-      </widget>
-      <widget class="QCheckBox" name="cb_cond_lowhp">
-       <property name="geometry">
-        <rect>
-         <x>30</x>
-         <y>90</y>
-         <width>151</width>
-         <height>19</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>生命低于50%</string>
-       </property>
-      </widget>
-     </widget>
-     <widget class="QGroupBox" name="groupBox_8">
-      <property name="geometry">
-       <rect>
-        <x>20</x>
-        <y>50</y>
-        <width>321</width>
-        <height>301</height>
-       </rect>
-      </property>
-      <property name="title">
-       <string>元素影响（增伤条件）</string>
-      </property>
-      <widget class="QRadioButton" name="rb_cond_fire">
-       <property name="geometry">
-        <rect>
-         <x>30</x>
-         <y>50</y>
-         <width>115</width>
-         <height>19</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>火影响</string>
-       </property>
-      </widget>
-      <widget class="QRadioButton" name="rb_cond_watr">
-       <property name="geometry">
-        <rect>
-         <x>30</x>
-         <y>80</y>
-         <width>115</width>
-         <height>19</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>水影响</string>
-       </property>
-      </widget>
-      <widget class="QRadioButton" name="rb_cond_elec">
-       <property name="geometry">
-        <rect>
-         <x>30</x>
-         <y>140</y>
-         <width>115</width>
-         <height>19</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>雷影响</string>
-       </property>
-      </widget>
-      <widget class="QRadioButton" name="rb_cond_ice">
-       <property name="geometry">
-        <rect>
-         <x>30</x>
-         <y>110</y>
-         <width>115</width>
-         <height>19</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>冰影响</string>
-       </property>
-      </widget>
-      <widget class="QRadioButton" name="rb_cond_elec_2">
-       <property name="geometry">
-        <rect>
-         <x>30</x>
-         <y>170</y>
-         <width>115</width>
-         <height>19</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>无影响</string>
-       </property>
-       <property name="checked">
-        <bool>true</bool>
-       </property>
-      </widget>
-     </widget>
-     <widget class="QGraphicsView" name="graphicsView_4">
-      <property name="geometry">
-       <rect>
-        <x>-10</x>
-        <y>-10</y>
-        <width>1831</width>
-        <height>891</height>
-       </rect>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">background: url(./data/bg.png);	</string>
-      </property>
-     </widget>
-     <widget class="QGroupBox" name="groupBox_9">
-      <property name="geometry">
-       <rect>
-        <x>730</x>
-        <y>50</y>
-        <width>301</width>
-        <height>301</height>
-       </rect>
-      </property>
-      <property name="title">
-       <string>敌人</string>
-      </property>
-      <widget class="QSpinBox" name="sb_enemy_lvl">
-       <property name="geometry">
-        <rect>
-         <x>160</x>
-         <y>40</y>
-         <width>61</width>
-         <height>22</height>
-        </rect>
-       </property>
-      </widget>
-      <widget class="QLabel" name="label_21">
-       <property name="geometry">
-        <rect>
-         <x>20</x>
-         <y>40</y>
-         <width>71</width>
-         <height>21</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>等级</string>
-       </property>
-      </widget>
-      <widget class="QLabel" name="label_22">
-       <property name="geometry">
-        <rect>
-         <x>20</x>
-         <y>80</y>
-         <width>121</width>
-         <height>21</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>全元素抗性(%)</string>
-       </property>
-      </widget>
-      <widget class="QSpinBox" name="sb_enemy_erss">
-       <property name="geometry">
-        <rect>
-         <x>160</x>
-         <y>80</y>
-         <width>61</width>
-         <height>22</height>
-        </rect>
-       </property>
-      </widget>
-      <widget class="QLabel" name="label_23">
-       <property name="geometry">
-        <rect>
-         <x>20</x>
-         <y>120</y>
-         <width>121</width>
-         <height>21</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>物理抗性(%)</string>
-       </property>
-      </widget>
-      <widget class="QSpinBox" name="sb_enemy_frss">
-       <property name="geometry">
-        <rect>
-         <x>160</x>
-         <y>120</y>
-         <width>61</width>
-         <height>22</height>
-        </rect>
-       </property>
-      </widget>
-     </widget>
-     <zorder>graphicsView_4</zorder>
-     <zorder>groupBox_7</zorder>
-     <zorder>groupBox_8</zorder>
-     <zorder>groupBox_9</zorder>
     </widget>
     <widget class="QWidget" name="tab_3">
      <attribute name="title">

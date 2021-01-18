@@ -8,7 +8,7 @@ from basic import Articraft
 from character import Character
 from utility import run_thru,MyDialog,parse_formula,extract_name3,trans,run_thru_folders,extract_name4
 import traceback
-from PyQt5.QtWidgets import QApplication,QTableView,QMainWindow,QTableWidgetItem,QCheckBox,QDialog,QLineEdit,QLabel,QSpinBox,QFrame,QPushButton,QMenu,QMenuBar
+from PyQt5.QtWidgets import QApplication,QTableView,QMainWindow,QTableWidgetItem,QCheckBox,QDialog,QLineEdit,QLabel,QSpinBox,QFrame,QPushButton,QMenu,QMenuBar,QTabWidget
 import sys
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.uic import loadUi
@@ -17,8 +17,6 @@ from rec_art import Rec_Artifact
 from chng_action import Change_Action
 from ocr import cn
 
-# import tkinter as tk
-# from PIL import Image, ImageTk
 
 class VLine(QFrame):
     # a simple VLine, like the one you get from designer
@@ -57,8 +55,7 @@ class MainWindow(QMainWindow):
         self.win_save_act = Change_Action(self._data)
         self.win_rec_a = Rec_Artifact(self._aeffect,self._data[self.cb_name.currentText()]['name'],self.statusBar())
 
-        # self.win_action = QDialog(self)
-        # loadUi("./data/ui/win_action.ui",self.win_action)
+
         
         self.pb_change.clicked.connect(self.win_save_act.display) 
         self.pb_artifact.clicked.connect(self.win_rec_a.display)         
@@ -67,7 +64,6 @@ class MainWindow(QMainWindow):
 
        
         self.btn_run.clicked.connect(self.run) 
-        # self.pb_action.clicked.connect(self.list_action) 
 
         self.cb_name.currentIndexChanged.connect(self.reset)
         self.cb_wp.currentIndexChanged.connect(self.reset_table)
@@ -75,28 +71,22 @@ class MainWindow(QMainWindow):
         self.cb_skill.currentIndexChanged.connect(self.reset_table)
         self.cb_refine.currentIndexChanged.connect(self.reset_table)
         self.cb_sort.currentIndexChanged.connect(self.change_ksort)
-        self.cb_mode2.stateChanged.connect(self.show_rec)
+        # self.cb_mode2.stateChanged.connect(self.show_rec)
+        self.rb_mode2.toggled.connect(self.show_rec)
+        self.rb_mode1.toggled.connect(self.show_rec)
         
 
         self.pb_artifact.hide()
-        # self.pb_buff.hide()
-        # self.rb_pop.hide()
-        self.pb_action.hide()
         
         self.read_mainlist()
-        self.read_sub()
+        # self.read_sub()
 
-        
-        
 
-        
         font = QtGui.QFont()
         font.setFamily("微软雅黑")
         font.setPointSize(10)
         self.dlg.setFont(font)
         
-
-
 
         font.setFamily("汉仪文黑-85w")
         font.setPointSize(9)
@@ -120,7 +110,9 @@ class MainWindow(QMainWindow):
         self.statusBar().reformat()
         self.statusBar().setStyleSheet('border: 0; background-color: #FFF8DC;')
         self.statusBar().setStyleSheet("QStatusBar::item {border: none;}") 
-        
+
+        self.statusBar().addPermanentWidget(VLine())    # <---
+        self.statusBar().addPermanentWidget(self.btn_run)       
         self.statusBar().addPermanentWidget(VLine())    # <---
         self.statusBar().addPermanentWidget(self.pbar)
         self.statusBar().addPermanentWidget(VLine())    # <---
@@ -162,7 +154,6 @@ class MainWindow(QMainWindow):
             weapon = self._wdata[self.cb_wp.currentText()]
             refine = int(self.cb_refine.currentText())
 
-            # self.label2.setText("")
             
 
             env = {'spec':True,'fire':self.rb_cond_fire.isChecked(),'watr':self.rb_cond_watr.isChecked(),'elec':self.rb_cond_elec.isChecked(),'ice':self.rb_cond_ice.isChecked(),'frozen':self.cb_cond_frozen.isChecked(),'lowhp':self.cb_cond_lowhp.isChecked()}
@@ -176,10 +167,7 @@ class MainWindow(QMainWindow):
                 c.ifer = True
             if self.cb_switch_def.isChecked():
                 c.if_def_r = True            # else:
-            #     pass
 
-
-            # print(c.buffs)
             c._load_buff(c.buffs,c._check1,env)
             
             ae1 = self._aeffect[self.cb_aeffect1.currentText()]
@@ -201,9 +189,11 @@ class MainWindow(QMainWindow):
             c.enemy = enemy         
             
             rls = Articraft()
-            if self.cb_mode2.isChecked():
-                rm_sub={'ed':self.digit_ed.value(),'dphys':self.digit_fd.value(),'d':self.digit_alld.value()}
-                c.load_att(rm_sub)
+            rm_sub={'ed':self.digit_ed.value(),'dphys':self.digit_fd.value(),'d':self.digit_alld.value(),'sa':self.digit_benett.value()}
+            c.load_att(rm_sub)            
+            if self.rb_mode2.isChecked():
+                # rm_sub={'ed':self.digit_ed.value(),'dphys':self.digit_fd.value(),'d':self.digit_alld.value()}
+                # c.load_att(rm_sub)
                 save = run_thru_folders(self.win_rec_a.path,self._aeffect,c,rls,self.pbar,self._ksort)
             else:
                 rls.load_json("./data/artifacts/sub.json")
@@ -223,10 +213,9 @@ class MainWindow(QMainWindow):
                 if 'sub' in test[i][1]:
                     test[i][1].pop('sub')
                 tmp = list(test[i][1].keys())
-                # tmp3 = [test[i][1][_] for _ in tmp]
-                # print(tmp3)
+
                 tmp2 = [list(test[i][1][_].keys())[0] for _ in tmp]
-                if self.cb_mode2.isChecked():
+                if self.rb_mode2.isChecked():
                     tmp2 = tmp
                 tmp2 = [extract_name4(_) for _ in tmp2]
                 tmp0 = test[i][0]
@@ -238,13 +227,7 @@ class MainWindow(QMainWindow):
                     content = [trans(i)]+tmp2+[trans(tmp0['shld']),trans(tmp0['heal']),trans(tmp0['maxhp']),trans(tmp0['sum'])]                
                 for i in range(len(content)):
                     item =  QTableWidgetItem(str(content[i]))
-                    # if i in range(1,6):
-                    #     tst = ""
-                    #     for j in tmp3[i-1]:
-                    #         tst = "{: <5s}: {}{}\n".format(self.trans2[j][:-1],tmp3[i-1][j],self.trans2[j][-1]) + tst
-                    #     # tst = "{}".format(tmp3[i-1])
-                    #     item.setToolTip(tst)
-                        # item.setStatusTip(tst.replace('\n'," "))
+
                     item.setTextAlignment(Qt.AlignRight|Qt.AlignVCenter)
                     self.tbl_2.setItem(i, N,item)
 
@@ -253,19 +236,14 @@ class MainWindow(QMainWindow):
                 if N==limit:
                     break
 
-            # self.label.setText("计算成功")
             self.statusBar().showMessage("计算成功")
             self.pb_buff.show()
-            # raise ValueError
 
         except Exception as e:
             self.statusBar().showMessage("计算失败")
-
-            # print("Error: ", e)
             logging.getLogger('1').error("Error:{} ".format(e))
             logging.getLogger('1').error(traceback.format_exc())
-            # self.statusBar.showMessage("计算失败")
-            # traceback.print_exc()
+
 
 
     def read_sub(self):
@@ -277,10 +255,10 @@ class MainWindow(QMainWindow):
             self.digit_cd.setValue(self._sub_data['cd']) 
             self.digit_dr.setValue(self._sub_data['dr']) 
             self.digit_ar.setValue(self._sub_data['ar']) 
-            self.digit_ed.setValue(self._sub_data['ed']) 
-            self.digit_fd.setValue(self._sub_data['dphys']) 
+            # self.digit_ed.setValue(self._sub_data['ed']) 
+            # self.digit_fd.setValue(self._sub_data['dphys']) 
             self.digit_sa.setValue(self._sub_data['sa']) 
-            self.digit_alld.setValue(self._sub_data['d']) 
+            # self.digit_alld.setValue(self._sub_data['d']) 
             self.digit_sd.setValue(self._sub_data['sd']) 
             self.digit_hr.setValue(self._sub_data['hr']) 
             self.digit_em.setValue(self._sub_data['em']) 
@@ -289,17 +267,16 @@ class MainWindow(QMainWindow):
     def save_sub(self):
         path = "./data/artifacts/sub.json"
 
-        # self._sub_data = data["sub"]
         data ={}
         data['cr'] = self.digit_cr.value() 
         data['cd'] = self.digit_cd.value()
         data['dr'] = self.digit_dr.value()
         data['ar'] = self.digit_ar.value()
         data['cd'] = self.digit_cd.value()
-        data['ed'] = self.digit_ed.value()
-        data['dphys'] = self.digit_fd.value()
+        # data['ed'] = self.digit_ed.value()
+        # data['dphys'] = self.digit_fd.value()
         data['sa'] = self.digit_sa.value()
-        data['d'] = self.digit_alld.value()
+        # data['d'] = self.digit_alld.value()
         data['sd'] = self.digit_sd.value()
         data['sh'] = self.digit_sh.value()
         data['hr'] = self.digit_hr.value()
@@ -365,61 +342,30 @@ class MainWindow(QMainWindow):
         with open('./data/artifacts/main_list.json', 'w+') as fp:
             json.dump(ans, fp,indent = 4)
             
-    # def list_action(self):
-    #     try:
-    #         desc = ['普攻','元素战技','元素爆发','护盾技能','治疗技能']
-    #         prop_name =['a','e','q','shld','heal']
-    #         div1 = "==========\n"
-    #         character = self._data[self.cb_name.currentText()]['name']
-    #         cstl = 'c'+str(int(self.cb_cnum.currentText()))
 
-    #         ans =''
-    #         with open('./data/character/'+character+'.json', 'r', encoding='UTF-8') as fp:
-    #             data = json.load(fp)
-    #         tmp = self.win_action.info_action
-    #         for i in range(len(prop_name)):
-    #             if data[cstl]['action_def'][prop_name[i]]!='':
-    #                 if i ==0 :
-    #                     pass                    
-    #                 else:
-    #                     if i <3:
-    #                         rnd = data[cstl]['round'][prop_name[i]]
-    #                     else:
-    #                         rnd = 1
-    #                     ans+="{}({}轮)\n{}".format(desc[i],rnd,div1)
-    #                 formula = data[cstl]['action_def'][prop_name[i]]
-    #                 for entry in parse_formula(formula):
-    #                     if entry[0] == 'ks':
-    #                         ans += '扩散伤害'
-    #                         ans += '  x {}'.format(entry[1])
-    #                     else:
-    #                         ans += data['ratio_cmt'][entry[0]]
-    #                         ans += '  x {}'.format(entry[1])
-    #                     ans+='\n'
-    #             else:
-    #                 ans+="{}\n{}".format(desc[i],div1)
-    #                 ans+='无定义\n'
-    #             ans+='\n'
-    #         tmp.setPlainText(ans)
-    #         self.win_action.exec_()
-    #     except Exception as e:
-    #         print("Error: ", e)
-    #         traceback.print_exc()
 
 
 
     def show_rec(self):
-        if self.cb_mode2.isChecked():
+        if self.rb_mode2.isChecked():
             self.pb_artifact.show()
+            self.groupBox_4.hide()
+
+            self.groupBox_6.hide()
+            self.tabWidget.setTabEnabled(2,False)
+            self.tab_4.hide()
         else:
             self.pb_artifact.hide()
+            self.groupBox_4.show()
+            self.groupBox_6.show()
+            self.tabWidget.setTabEnabled(2,True)
 
-
+            self.tab_4.show()
             
     def reset(self):
         self.cb_wp.clear()
         self.cb_cnum.clear()
-        self.label.setText("")
+        # self.label.setText("")
         self.reset_table()
         self.load_info()
         self.win_rec_a.update(self._data[self.cb_name.currentText()]['name'])
@@ -428,8 +374,8 @@ class MainWindow(QMainWindow):
     def reset_table(self):
         bbb ={'伤害':9,'护盾':6,'生命':8,'治疗':7}
         # self.pb_buff.hide()
-        self.label2.setText("")
-        self.label.setText("")
+        # self.label2.setText("")
+        # self.label.setText("")
         for i in range(self.tbl_2.rowCount()):
             for j in range(4):
                 self.tbl_2.setItem(i, j,QTableWidgetItem(""))
@@ -438,7 +384,7 @@ class MainWindow(QMainWindow):
         self.tbl_2.setRowHidden(bbb[text],True)
         self.pbar.setValue(0)
         self.win_save_act.update(self.cb_name.currentText(),self.cb_cnum.currentText())   
-        if not self.cb_mode2.isChecked():
+        if not self.rb_mode2.isChecked():
             self.tbl_2.setRowHidden(4,True)
             self.tbl_2.setRowHidden(5,True)
                  
@@ -448,7 +394,7 @@ class MainWindow(QMainWindow):
     def load_info(self):
         self.cb_wp.clear()
         self.cb_cnum.clear()
-        self.label.setText("")
+        # self.label.setText("")
 
         wkind = self._data[self.cb_name.currentText()]['w']
         path = "./data/weapon/"+wkind+".json"
