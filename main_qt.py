@@ -223,7 +223,7 @@ class MainWindow(QMainWindow):
                 if 'sub' in test[i][1]:
                     test[i][1].pop('sub')
                 tmp = list(test[i][1].keys())
-                tmp3 = [test[i][1][_] for _ in tmp]
+                # tmp3 = [test[i][1][_] for _ in tmp]
                 # print(tmp3)
                 tmp2 = [list(test[i][1][_].keys())[0] for _ in tmp]
                 if self.cb_mode2.isChecked():
@@ -238,12 +238,12 @@ class MainWindow(QMainWindow):
                     content = [trans(i)]+tmp2+[trans(tmp0['shld']),trans(tmp0['heal']),trans(tmp0['maxhp']),trans(tmp0['sum'])]                
                 for i in range(len(content)):
                     item =  QTableWidgetItem(str(content[i]))
-                    if i in range(1,6):
-                        tst = ""
-                        for j in tmp3[i-1]:
-                            tst = "{: <5s}: {}{}\n".format(self.trans2[j][:-1],tmp3[i-1][j],self.trans2[j][-1]) + tst
-                        # tst = "{}".format(tmp3[i-1])
-                        item.setToolTip(tst)
+                    # if i in range(1,6):
+                    #     tst = ""
+                    #     for j in tmp3[i-1]:
+                    #         tst = "{: <5s}: {}{}\n".format(self.trans2[j][:-1],tmp3[i-1][j],self.trans2[j][-1]) + tst
+                    #     # tst = "{}".format(tmp3[i-1])
+                    #     item.setToolTip(tst)
                         # item.setStatusTip(tst.replace('\n'," "))
                     item.setTextAlignment(Qt.AlignRight|Qt.AlignVCenter)
                     self.tbl_2.setItem(i, N,item)
