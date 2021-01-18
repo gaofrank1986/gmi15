@@ -46,6 +46,8 @@ class Rec_Artifact(QDialog):
         self.cb_sub_3.addItems(self.slist)
         self.cb_sub_4.addItems(self.slist)
         
+    
+        
         # self.label = QLabel(self)
 
      
@@ -189,7 +191,7 @@ class Rec_Artifact(QDialog):
             self.cb_main.setCurrentIndex(0)
             self.digit_main.setValue(0)
             self.le_cmt.setText("")
-            self.cb_pos.setCurrentIndex(0)        
+            # self.cb_pos.setCurrentIndex(0)        
             self.cb_aeffect.setCurrentIndex(0)
             self.label_pic.setText("图形")
         except:

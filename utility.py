@@ -145,7 +145,8 @@ def run_thru_folders(path,affect,c,rls,pbar,ksort=1):
         rls.add(head,hd_name)
         assert(data['set'] in e_dict)
         e_dict[data['set']] = e_dict[data['set']]+1
-        logger.info("理之冠: {} {}".format(head,data['set']))
+        str1 = "{} 理之冠: {} {}".format(hd_name,head,data['set'])
+        # logger.info("理之冠: {} {}".format(head,data['set']))
 
         for gfile in gen_list[1]:
             with open(dirs[1]+gfile, 'r', encoding='UTF-8') as fp:
@@ -158,7 +159,7 @@ def run_thru_folders(path,affect,c,rls,pbar,ksort=1):
             e_dict2 = deepcopy(e_dict)
             assert(data['set'] in e_dict2)
             e_dict2[data['set']] = e_dict2[data['set']]+1       
-            logger.info("时之沙: {} {}".format(glass,data['set']))
+            str2 = "{} 时之沙: {} {}".format(gl_name,glass,data['set'])
             
             for cfile in gen_list[2] :
                 with open(dirs[2]+cfile, 'r', encoding='UTF-8') as fp:
@@ -171,7 +172,7 @@ def run_thru_folders(path,affect,c,rls,pbar,ksort=1):
                 e_dict3 = deepcopy(e_dict2)
                 assert(data['set'] in e_dict3)
                 e_dict3[data['set']] = e_dict3[data['set']]+1
-                logger.info("空之杯: {} {}".format(cup,data['set']))                           
+                str3 = "{} 空之杯: {} {}".format(cp_name ,cup,data['set'])                      
                 for flfile in gen_list[3]:
                     with open(dirs[3]+flfile, 'r', encoding='UTF-8') as fp:
                         data = json.load(fp)
@@ -183,7 +184,7 @@ def run_thru_folders(path,affect,c,rls,pbar,ksort=1):
                     e_dict4 = deepcopy(e_dict3)
                     assert(data['set'] in e_dict4)
                     e_dict4[data['set']] = e_dict4[data['set']]+1
-                    logger.info("生之花: {} {}".format(flower,data['set']))
+                    str4 = "{} 生之花: {} {}".format(fl_name,flower,data['set'])
                     
                     for ftfile in gen_list[4]:
                         with open(dirs[4]+ftfile, 'r', encoding='UTF-8') as fp:
@@ -197,7 +198,11 @@ def run_thru_folders(path,affect,c,rls,pbar,ksort=1):
 
                         assert(data['set'] in e_dict5)
                         e_dict5[data['set']] = e_dict5[data['set']]+1
-                        logger.info("死之羽: {} {}".format(feather,data['set']))
+                        logger.info(str1)
+                        logger.info(str2)
+                        logger.info(str3)
+                        logger.info(str4)
+                        logger.info("{} 死之羽: {} {}".format(ft_name,feather,data['set']))
                         pbar.setValue(float(acc/total)*100)
               
                         acc+=1
