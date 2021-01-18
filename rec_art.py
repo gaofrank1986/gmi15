@@ -60,27 +60,30 @@ class Rec_Artifact(QDialog):
             path = QFileDialog.getSaveFileName(self, 'Open a file', self.path+folder,'圣遗物数据文件 (*.json)')
             data = {"pos":"","main":{},"sub":{},"set":"","cmt":""}
             
-
+            data['main'] = {pos2[self.cb_main.currentText()]:self.digit_main.value()}
+            data["pos"] = self.cb_pos.currentText()
+            
             for i in range(1,5):
                 pos = pos1[self.findChild(QComboBox,"cb_sub_"+str(i)).currentText()]
                 assert(pos not in data["sub"])
+                assert(pos not in data['main'])
                 data["sub"][pos] = self.findChild(QDoubleSpinBox,"digit_sub_"+str(i)).value()
                 
-            
-            data['main'] = {pos2[self.cb_main.currentText()]:self.digit_main.value()}
-            data["pos"] = self.cb_pos.currentText()
+        
             data["set"] = self.cb_aeffect.currentText()
             data['cmt'] = self.le_cmt.text()
             if path != ('', ''):
-                # print(path)
                 with open(path[0], 'w', encoding='utf-8') as fp:
                     json.dump(data, fp,indent = 4,ensure_ascii=False)
+            self.sbar.showMessage("圣遗物数据存储成功")
+
         except:
             self.sbar.showMessage("圣遗物文件存储错误")
             logging.getLogger('1').error(traceback.format_exc())
 
     def openimgfile(self):
         try:
+            self.clear()
             trans = {'攻击力%':'ar','防御力%':'dr','生命值%':'hr','生命值':'sh','元素充能效率%':'ef','暴击率%':'cr','暴击伤害%':'cd','攻击力':'sa','元素精通':'em','防御力':'sd'}
             path = QFileDialog.getOpenFileName(self, 'Open a file', "./data/",'圣遗物数据文件 (*.*)')
             if path != ('', ''):
@@ -118,6 +121,8 @@ class Rec_Artifact(QDialog):
                         break
                 if not found:
                     self.cb_aeffect.setCurrentIndex(0)
+            self.sbar.showMessage("圣遗物图像读取成功")
+
         except:
             self.sbar.showMessage("圣遗物图像读取错误")
             logging.getLogger('1').error(traceback.format_exc())                  
@@ -127,7 +132,8 @@ class Rec_Artifact(QDialog):
             
     def openfile(self):
         try:
-            
+            self.clear()
+
             folder = self.pos[self.cb_pos.currentText()]
             path = QFileDialog.getOpenFileName(self, 'Open a file', self.path+folder,'圣遗物数据文件 (*.json)')
             if path != ('', ''):
@@ -155,6 +161,8 @@ class Rec_Artifact(QDialog):
                 tmp = list(self.pos.keys())
                 self.cb_pos.setCurrentIndex(tmp.index(data["pos"]))        
                 self.cb_aeffect.setCurrentIndex(self.elist.index(data["set"]))  
+            self.sbar.showMessage("圣遗物数据读取成功")
+
         except:
             self.sbar.showMessage("圣遗物文件读取错误")
             logging.getLogger('1').error(traceback.format_exc())
@@ -170,3 +178,20 @@ class Rec_Artifact(QDialog):
 
 
 
+    def clear(self):
+        try:
+
+            for i in range(1,5):
+                self.findChild(QComboBox,"cb_sub_"+str(i)).setCurrentIndex(0)
+                self.findChild(QDoubleSpinBox,"digit_sub_"+str(i)).setValue(0)
+
+            
+            self.cb_main.setCurrentIndex(0)
+            self.digit_main.setValue(0)
+            self.le_cmt.setText("")
+            self.cb_pos.setCurrentIndex(0)        
+            self.cb_aeffect.setCurrentIndex(0)
+            self.label_pic.setText("图形")
+        except:
+            self.sbar.showMessage("圣遗物界面clear错误")
+            logging.getLogger('1').error(traceback.format_exc())
