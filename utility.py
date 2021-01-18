@@ -155,8 +155,9 @@ def run_thru_folders(path,affect,c,rls,pbar,ksort=1):
                 glass[i] = glass.get(i,0)+data['main'][i]
             gl_name = 'gl_'+gfile.split('.')[0]
             rls.add(glass,gl_name) 
-            assert(data['set'] in e_dict)
-            e_dict[data['set']] = e_dict[data['set']]+1       
+            e_dict2 = deepcopy(e_dict)
+            assert(data['set'] in e_dict2)
+            e_dict2[data['set']] = e_dict2[data['set']]+1       
             logger.info("时之沙: {} {}".format(glass,data['set']))
             
             for cfile in gen_list[2] :
@@ -166,9 +167,10 @@ def run_thru_folders(path,affect,c,rls,pbar,ksort=1):
                 for i in data['main']:
                     cup[i] = cup.get(i,0)+data['main'][i]
                 cp_name = 'cp_'+cfile.split('.')[0]
-                rls.add(cup,cp_name)      
-                assert(data['set'] in e_dict)
-                e_dict[data['set']] = e_dict[data['set']]+1
+                rls.add(cup,cp_name) 
+                e_dict3 = deepcopy(e_dict2)
+                assert(data['set'] in e_dict3)
+                e_dict3[data['set']] = e_dict3[data['set']]+1
                 logger.info("空之杯: {} {}".format(cup,data['set']))                           
                 for flfile in gen_list[3]:
                     with open(dirs[3]+flfile, 'r', encoding='UTF-8') as fp:
@@ -177,9 +179,10 @@ def run_thru_folders(path,affect,c,rls,pbar,ksort=1):
                     for i in data['main']:
                         flower[i] = flower.get(i,0)+data['main'][i]
                     fl_name = 'fl_'+flfile.split('.')[0]
-                    rls.add(flower,fl_name) 
-                    assert(data['set'] in e_dict)
-                    e_dict[data['set']] = e_dict[data['set']]+1
+                    rls.add(flower,fl_name)
+                    e_dict4 = deepcopy(e_dict3)
+                    assert(data['set'] in e_dict4)
+                    e_dict4[data['set']] = e_dict4[data['set']]+1
                     logger.info("生之花: {} {}".format(flower,data['set']))
                     
                     for ftfile in gen_list[4]:
@@ -190,8 +193,10 @@ def run_thru_folders(path,affect,c,rls,pbar,ksort=1):
                             feather[i] = feather.get(i,0)+data['main'][i]
                         ft_name = 'ft_'+ftfile.split('.')[0]
                         rls.add(feather,ft_name) 
-                        assert(data['set'] in e_dict)
-                        e_dict[data['set']] = e_dict[data['set']]+1
+                        e_dict5 = deepcopy(e_dict4)
+
+                        assert(data['set'] in e_dict5)
+                        e_dict5[data['set']] = e_dict5[data['set']]+1
                         logger.info("死之羽: {} {}".format(feather,data['set']))
                         pbar.setValue(float(acc/total)*100)
               
@@ -202,15 +207,15 @@ def run_thru_folders(path,affect,c,rls,pbar,ksort=1):
                                                 
                         tmp2 = deepcopy(diluc)
                         # print(e_dict)
-                        logger.info(e_dict)
+                        logger.info(e_dict5)
                         logging.getLogger('Buff').info("===========录入圣遗物穷举{}===========".format(acc-1))
-                        for i in e_dict:
+                        for i in e_dict5:
                             if i!='无':
-                                if e_dict[i] >=4 and i+'4' in affect:
+                                if e_dict5[i] >=4 and i+'4' in affect:
                                     tmp2._load_buff(affect[i+'4']['buffs'],tmp2._check1,tmp2.env)
-                                if e_dict[i] >=4 and not i+'4' in affect:
+                                if e_dict5[i] >=4 and not i+'4' in affect:
                                     tmp2._load_buff(affect[i+'2']['buffs'],tmp2._check1,tmp2.env)
-                                if e_dict[i] >=2 and e_dict[i] <4:
+                                if e_dict5[i] >=2 and e_dict5[i] <4:
                                     tmp2._load_buff(affect[i+'2']['buffs'],tmp2._check1,tmp2.env)                                    
                         ans = deepcopy(tmp2.damage_rsl())
                         if ksort == 1:

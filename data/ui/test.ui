@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1270</width>
-    <height>505</height>
+    <height>515</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -19,13 +19,13 @@
   <property name="minimumSize">
    <size>
     <width>1270</width>
-    <height>505</height>
+    <height>515</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
     <width>1270</width>
-    <height>505</height>
+    <height>510</height>
    </size>
   </property>
   <property name="font">
@@ -518,6 +518,12 @@
         <width>118</width>
         <height>23</height>
        </rect>
+      </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
       </property>
       <property name="value">
        <number>24</number>
@@ -1583,8 +1589,8 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>1281</width>
-         <height>343</height>
+         <width>98</width>
+         <height>28</height>
         </rect>
        </property>
        <attribute name="label">
@@ -1688,8 +1694,8 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>1281</width>
-         <height>343</height>
+         <width>98</width>
+         <height>28</height>
         </rect>
        </property>
        <attribute name="label">

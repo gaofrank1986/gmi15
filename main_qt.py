@@ -8,18 +8,26 @@ from basic import Articraft
 from character import Character
 from utility import run_thru,MyDialog,parse_formula,extract_name3,trans,run_thru_folders,extract_name4
 import traceback
-from PyQt5.QtWidgets import QApplication,QTableView,QMainWindow,QTableWidgetItem,QCheckBox,QDialog,QLineEdit,QLabel,QSpinBox
+from PyQt5.QtWidgets import QApplication,QTableView,QMainWindow,QTableWidgetItem,QCheckBox,QDialog,QLineEdit,QLabel,QSpinBox,QFrame,QPushButton,QMenu,QMenuBar
 import sys
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.uic import loadUi
 from PyQt5.QtCore import Qt
 from rec_art import Rec_Artifact
 from chng_action import Change_Action
-        
+# import tkinter as tk
+# from PIL import Image, ImageTk
+
+class VLine(QFrame):
+    # a simple VLine, like the one you get from designer
+    def __init__(self):
+        super(VLine, self).__init__()
+        self.setFrameShape(self.VLine|self.Sunken)
+
 class MainWindow(QMainWindow):
     def __init__(self):
         super(MainWindow,self).__init__()
-        font_id = QtGui.QFontDatabase.addApplicationFont("./data/ui/zh-cn.ttf")
+        QtGui.QFontDatabase.addApplicationFont("./data/ui/zh-cn.ttf")
         loadUi("./data/ui/test.ui",self)
 
         self._data = {}
@@ -43,8 +51,9 @@ class MainWindow(QMainWindow):
         
         self.dlg = MyDialog(self,'Main',logging.Formatter("%(asctime)s — %(message)s",datefmt='%m-%d,%H:%M'))
         self.win_buff = MyDialog(self,'Buff',logging.Formatter("%(message)s"))
+        self.win_log = MyDialog(self,'1',logging.Formatter("%(message)s"))
         self.win_save_act = Change_Action(self._data)
-        self.win_rec_a = Rec_Artifact(self._aeffect,self._data[self.cb_name.currentText()]['name'])
+        self.win_rec_a = Rec_Artifact(self._aeffect,self._data[self.cb_name.currentText()]['name'],self.statusBar())
 
         # self.win_action = QDialog(self)
         # loadUi("./data/ui/win_action.ui",self.win_action)
@@ -68,7 +77,7 @@ class MainWindow(QMainWindow):
         
 
         self.pb_artifact.hide()
-        self.pb_buff.hide()
+        # self.pb_buff.hide()
         # self.rb_pop.hide()
         self.pb_action.hide()
         
@@ -99,9 +108,34 @@ class MainWindow(QMainWindow):
         self.reset()
 
 
+        self.statusBar().showMessage("bla-bla bla")
+        self.lbl1 = QLabel("Label: ")
+        self.lbl1.setStyleSheet('border: 0; color:  blue;')
+        self.lbl2 = QLabel("Data : ")
+        self.lbl2.setStyleSheet('border: 0; color:  red;')
+        ed = QPushButton('Log')
 
-
+        self.statusBar().reformat()
+        self.statusBar().setStyleSheet('border: 0; background-color: #FFF8DC;')
+        self.statusBar().setStyleSheet("QStatusBar::item {border: none;}") 
         
+        self.statusBar().addPermanentWidget(VLine())    # <---
+        self.statusBar().addPermanentWidget(self.pbar)
+        self.statusBar().addPermanentWidget(VLine())    # <---
+        self.statusBar().addPermanentWidget(self.pb_buff)
+        self.statusBar().addPermanentWidget(VLine())    # <---
+        self.statusBar().addPermanentWidget(ed)
+        self.statusBar().addPermanentWidget(VLine())    # <---
+        
+        self.lbl1.setText("Label: Hello")
+        self.lbl2.setText("Data : 15-09-2019")
+
+        # ed.clicked.connect(lambda: self.statusBar().showMessage("Hello "))
+        ed.clicked.connect(self.win_log.exec_)
+
+        menuBar = QMenuBar(self)
+        fileMenu = QMenu("&File", self)
+        menuBar.addMenu(fileMenu)
     # #======================================
 
     
@@ -124,7 +158,8 @@ class MainWindow(QMainWindow):
             weapon = self._wdata[self.cb_wp.currentText()]
             refine = int(self.cb_refine.currentText())
 
-            self.label2.setText("")
+            # self.label2.setText("")
+            
 
             env = {'spec':True,'fire':self.rb_cond_fire.isChecked(),'watr':self.rb_cond_watr.isChecked(),'elec':self.rb_cond_elec.isChecked(),'ice':self.rb_cond_ice.isChecked(),'frozen':self.cb_cond_frozen.isChecked(),'lowhp':self.cb_cond_lowhp.isChecked()}
             logger.info(env)
@@ -150,14 +185,15 @@ class MainWindow(QMainWindow):
                 c._load_buff(ae1['buffs'],c._check1,env)
                 c._load_buff(ae2['buffs'],c._check1,env)
             except:
-                self.label2.setText("圣遗物套装信息错误，套装效果未加载")
-                traceback.print_exc()
+
+                self.statusBar().showMessage("圣遗物套装信息错误，套装效果未加载")
+                logging.getLogger('1').error(traceback.format_exc())
 
             logging.getLogger('Buff').info("总效果: {}\n".format(c.skill_effect))
             logging.getLogger('Buff').info("特殊攻击加成: {}\n".format(c.sp_buff))
 
             enemy = {"lvl":self.sb_enemy_lvl.value(),"erss":self.sb_enemy_erss.value(),"frss":self.sb_enemy_frss.value()}
-            print(enemy)
+            logging.getLogger('1').info(enemy)
             c.enemy = enemy         
             
             rls = Articraft()
@@ -174,8 +210,7 @@ class MainWindow(QMainWindow):
                     logging.getLogger('Buff').info("更换倍率基础 {}".format(i))
                     logging.getLogger('Buff').info(c._data['rebase'][i])
                     logging.getLogger('Buff').info("")
-            # if self.rb_pop.isChecked():
-                # c.ifer = True
+
 
             test = OrderedDict(sorted(save.items(),reverse=True))
             N=0
@@ -189,7 +224,7 @@ class MainWindow(QMainWindow):
                     tmp2 = tmp
                 tmp2 = [extract_name4(_) for _ in tmp2]
                 tmp0 = test[i][0]
-                print(character,constellation,c.equipment[0],tmp0)
+                logging.getLogger('1').info("{}{}{}{}".format(character,constellation,c.equipment[0],tmp0))
 
                 if self.rb_display.isChecked():
                     content = [i]+tmp2+[tmp0['shld'],tmp0['heal'],tmp0['maxhp'],tmp0['sum']]                
@@ -205,13 +240,19 @@ class MainWindow(QMainWindow):
                 if N==limit:
                     break
 
-            self.label.setText("计算成功")
+            # self.label.setText("计算成功")
+            self.statusBar().showMessage("计算成功")
             self.pb_buff.show()
+            # raise ValueError
 
         except Exception as e:
-            print("Error: ", e)
-            self.label.setText("计算失败")
-            traceback.print_exc()
+            self.statusBar().showMessage("计算失败")
+
+            # print("Error: ", e)
+            logging.getLogger('1').error("Error:{} ".format(e))
+            logging.getLogger('1').error(traceback.format_exc())
+            # self.statusBar.showMessage("计算失败")
+            # traceback.print_exc()
 
 
     def read_sub(self):
@@ -373,7 +414,7 @@ class MainWindow(QMainWindow):
 
     def reset_table(self):
         bbb ={'伤害':9,'护盾':6,'生命':8,'治疗':7}
-        self.pb_buff.hide()
+        # self.pb_buff.hide()
         self.label2.setText("")
         self.label.setText("")
         for i in range(self.tbl_2.rowCount()):
