@@ -83,6 +83,11 @@ class Articraft(Basic_Panel):
         self.load_att(item,t="minus")
         self.buf.pop(pos)
 
+    def rm2(self,pos):
+        assert(pos in self.buf.keys())
+        self.load_att(self.buf[pos],t="minus")
+        self.buf.pop(pos)
+
     def load_json(self,path):
         with open(path, 'r') as fp:
             tmp = json.load(fp)

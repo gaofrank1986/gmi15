@@ -420,12 +420,12 @@
        <rect>
         <x>40</x>
         <y>290</y>
-        <width>91</width>
+        <width>121</width>
         <height>31</height>
        </rect>
       </property>
       <property name="text">
-       <string>修改技能</string>
+       <string>人物技能定义</string>
       </property>
      </widget>
      <widget class="QComboBox" name="cb_sort">
@@ -488,19 +488,6 @@
       </property>
       <property name="value">
        <number>24</number>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="pb_artifact">
-      <property name="geometry">
-       <rect>
-        <x>40</x>
-        <y>350</y>
-        <width>101</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>圣遗物录入</string>
       </property>
      </widget>
      <widget class="QCheckBox" name="cb_switch_def">
@@ -581,7 +568,6 @@
      <zorder>cb_sort</zorder>
      <zorder>label_19</zorder>
      <zorder>pbar</zorder>
-     <zorder>pb_artifact</zorder>
      <zorder>cb_switch_def</zorder>
      <zorder>groupBox_10</zorder>
     </widget>
@@ -1429,6 +1415,61 @@
      <zorder>groupBox_4</zorder>
      <zorder>groupBox_6</zorder>
     </widget>
+    <widget class="QWidget" name="tab_6">
+     <attribute name="title">
+      <string>圣遗物</string>
+     </attribute>
+     <widget class="QGraphicsView" name="graphicsView_5">
+      <property name="geometry">
+       <rect>
+        <x>-10</x>
+        <y>-10</y>
+        <width>1831</width>
+        <height>891</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background: url(./data/bg.png);	</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pb_load_db">
+      <property name="geometry">
+       <rect>
+        <x>1150</x>
+        <y>400</y>
+        <width>91</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>加载</string>
+      </property>
+     </widget>
+     <widget class="QWidget" name="verticalLayoutWidget">
+      <property name="geometry">
+       <rect>
+        <x>60</x>
+        <y>90</y>
+        <width>1151</width>
+        <height>271</height>
+       </rect>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout"/>
+     </widget>
+     <widget class="QPushButton" name="pb_artifact">
+      <property name="geometry">
+       <rect>
+        <x>1030</x>
+        <y>400</y>
+        <width>101</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>圣遗物录入</string>
+      </property>
+     </widget>
+    </widget>
     <widget class="QWidget" name="tab_2">
      <attribute name="title">
       <string>其他增益</string>
@@ -1611,8 +1652,8 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>98</width>
-         <height>28</height>
+         <width>1281</width>
+         <height>343</height>
         </rect>
        </property>
        <attribute name="label">
@@ -1658,8 +1699,8 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>98</width>
-         <height>28</height>
+         <width>100</width>
+         <height>30</height>
         </rect>
        </property>
        <attribute name="label">
@@ -1716,8 +1757,8 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>98</width>
-         <height>28</height>
+         <width>100</width>
+         <height>30</height>
         </rect>
        </property>
        <attribute name="label">

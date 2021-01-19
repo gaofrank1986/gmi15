@@ -6,7 +6,7 @@ import os
 from collections import OrderedDict
 from basic import Articraft
 from character import Character
-from utility import run_thru,MyDialog,parse_formula,extract_name3,trans,run_thru_folders,extract_name4
+from utility import MyDialog,parse_formula,trans,run_thru_data
 import traceback
 from PyQt5.QtWidgets import QApplication,QTableView,QMainWindow,QTableWidgetItem,QCheckBox,QDialog,QLineEdit,QLabel,QSpinBox,QFrame,QPushButton,QMenu,QMenuBar,QTabWidget
 import sys
@@ -16,7 +16,8 @@ from PyQt5.QtCore import Qt
 from rec_art import Rec_Artifact
 from chng_action import Change_Action
 from ocr import cn
-
+from db_setup import Entry,db_session,init_db,get_info_by_id
+from check_list import AppRemovalPage
 
 class VLine(QFrame):
     # a simple VLine, like the one you get from designer
@@ -76,7 +77,7 @@ class MainWindow(QMainWindow):
         self.rb_mode1.toggled.connect(self.show_rec)
         
 
-        self.pb_artifact.hide()
+        # self.pb_artifact.hide()
         
         self.read_mainlist()
         # self.read_sub()
@@ -127,13 +128,52 @@ class MainWindow(QMainWindow):
         # ed.clicked.connect(lambda: self.statusBar().showMessage("Hello "))
         ed.clicked.connect(self.win_log.exec_)
 
-        menuBar = QMenuBar(self)
-        fileMenu = QMenu("&File", self)
-        menuBar.addMenu(fileMenu)
+        # menuBar = QMenuBar(self)
+        # fileMenu = QMenu("&File", self)
+        # menuBar.addMenu(fileMenu)
         
         self.trans2 = cn().trans2
+        
+        init_db()
+        
+        self.tabWidget.setTabEnabled(3,False)
+
+        # ===============================
+        hlay = self.verticalLayout
+        lay = QtWidgets.QHBoxLayout()
+        lay2 = QtWidgets.QHBoxLayout()
+        hlay.addLayout(lay2)
+        hlay.addLayout(lay)
+        self.head = AppRemovalPage()
+        self.glass = AppRemovalPage()
+        self.cup = AppRemovalPage()
+        self.feather = AppRemovalPage()
+        self.flower = AppRemovalPage()
+        for i in ["理之冠","时之沙","空之杯","生之花","死之羽"]:
+            tmp = QLabel(i, alignment=QtCore.Qt.AlignCenter)
+            tmp.setFixedHeight(30)
+            lay2.addWidget(tmp)
+            
+        lay.addWidget(self.head)
+        lay.addWidget(self.glass)
+        lay.addWidget(self.cup)
+        lay.addWidget(self.flower)
+        lay.addWidget(self.feather)
+        self.pb_load_db.clicked.connect(self.load_db_info)
+
+        
     # #======================================
 
+    def load_db_info(self):
+        pos = ["理之冠","时之沙","空之杯","生之花","死之羽"]
+        trans = ['head','glass','cup','flower','feather']
+        for apos in pos:
+            ans = []
+            for i in db_session.query(Entry).filter(Entry.pos==apos).all():
+                ans.append(str(i.id)+'_'+i.name)
+            tmp = getattr(self,trans[pos.index(apos)])
+            tmp.add(ans)
+   
     
     def run(self):
         logger = logging.getLogger('Main')
@@ -192,12 +232,25 @@ class MainWindow(QMainWindow):
             rm_sub={'ed':self.digit_ed.value(),'dphys':self.digit_fd.value(),'d':self.digit_alld.value(),'sa':self.digit_benett.value()}
             c.load_att(rm_sub)            
             if self.rb_mode2.isChecked():
-                # rm_sub={'ed':self.digit_ed.value(),'dphys':self.digit_fd.value(),'d':self.digit_alld.value()}
-                # c.load_att(rm_sub)
-                save = run_thru_folders(self.win_rec_a.path,self._aeffect,c,rls,self.pbar,self._ksort)
+
+                cal_data={}
+                trans_pos = ['head','glass','cup','flower','feather']
+ 
+                for apos in trans_pos:
+                    cal_data[apos]=[]
+                    tmp = getattr(self,apos)
+                    assert len(tmp.record)>=1
+                    for jjj in tmp.record:
+                        cal_data[apos].append(get_info_by_id(int(jjj.split('_')[0])))
+                
+                save = run_thru_data(cal_data,self._aeffect,c,rls,self.pbar,self._ksort)
+                # save = run_thru_folders(self.win_rec_a.path,self._aeffect,c,rls,self.pbar,self._ksort)
             else:
                 rls.load_json("./data/artifacts/sub.json")
-                save = run_thru("./data/artifacts/main_list.json",c,rls,self.pbar,self._ksort)
+                with open('./data/artifacts/main_list.json', 'r', encoding='UTF-8') as fp:
+                    cal_data = json.load(fp)
+                # save = run_thru("./data/artifacts/main_list.json",c,rls,self.pbar,self._ksort)
+                save = run_thru_data(cal_data,self._aeffect,c,rls,self.pbar,self._ksort)
                 
             if "rebase" in c._data.keys():
                 for i in c._data['rebase']:
@@ -212,12 +265,12 @@ class MainWindow(QMainWindow):
             for i in test:
                 if 'sub' in test[i][1]:
                     test[i][1].pop('sub')
-                tmp = list(test[i][1].keys())
+                tmp2 = list(test[i][1].keys())
 
-                tmp2 = [list(test[i][1][_].keys())[0] for _ in tmp]
-                if self.rb_mode2.isChecked():
-                    tmp2 = tmp
-                tmp2 = [extract_name4(_) for _ in tmp2]
+                # tmp2 = [list(test[i][1][_].keys())[0] for _ in tmp]
+                # if self.rb_mode2.isChecked():
+                # tmp2 = tmp
+                tmp2 = [_.split('_')[1] for _ in tmp2]
                 tmp0 = test[i][0]
                 logging.getLogger('1').info("{}{}{}{}".format(character,constellation,c.equipment[0],tmp0))
 
@@ -336,11 +389,15 @@ class MainWindow(QMainWindow):
             ans[i] = []
             for j in blist[alist.index(i)]:
                 tmp = dict()
+                tmp['set'] = '无'
+                tmp['name'] = self.trans2[j]
                 tmp[j] = round(basic_main_rate*ratio_main[j],2)
                 ans[i].append(tmp.copy())
 
-        with open('./data/artifacts/main_list.json', 'w+') as fp:
-            json.dump(ans, fp,indent = 4)
+        # with open('./data/artifacts/main_list.json', 'w+') as fp:
+        #     json.dump(ans, fp,indent = 4)
+        with open('./data/artifacts/main_list.json', 'w+', encoding='utf-8') as fp:
+                json.dump(ans, fp,indent = 4,ensure_ascii=False)
             
 
 
@@ -348,19 +405,20 @@ class MainWindow(QMainWindow):
 
     def show_rec(self):
         if self.rb_mode2.isChecked():
-            self.pb_artifact.show()
-            self.groupBox_4.hide()
+            # self.pb_artifact.show()
+            # self.groupBox_4.hide()
 
-            self.groupBox_6.hide()
+            # self.groupBox_6.hide()
             self.tabWidget.setTabEnabled(2,False)
-            self.tab_4.hide()
+            self.tabWidget.setTabEnabled(3,True)
+            # self.tab_4.hide()
         else:
-            self.pb_artifact.hide()
-            self.groupBox_4.show()
-            self.groupBox_6.show()
+            # self.pb_artifact.hide()
+            # self.groupBox_4.show()
+            # self.groupBox_6.show()
             self.tabWidget.setTabEnabled(2,True)
+            self.tabWidget.setTabEnabled(3,False)
 
-            self.tab_4.show()
             
     def reset(self):
         self.cb_wp.clear()
