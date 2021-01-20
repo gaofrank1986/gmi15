@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1270</width>
+    <width>1100</width>
     <height>515</height>
    </rect>
   </property>
@@ -18,14 +18,14 @@
   </property>
   <property name="minimumSize">
    <size>
-    <width>1270</width>
+    <width>1000</width>
     <height>515</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
-    <width>1270</width>
-    <height>510</height>
+    <width>1100</width>
+    <height>515</height>
    </size>
   </property>
   <property name="font">
@@ -50,7 +50,7 @@
    <enum>Qt::LeftToRight</enum>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QTabWidget" name="tabWidget">
+   <widget class="QTabWidget" name="tabs">
     <property name="geometry">
      <rect>
       <x>0</x>
@@ -63,7 +63,7 @@
      <enum>Qt::TabFocus</enum>
     </property>
     <property name="tabPosition">
-     <enum>QTabWidget::South</enum>
+     <enum>QTabWidget::North</enum>
     </property>
     <property name="tabShape">
      <enum>QTabWidget::Rounded</enum>
@@ -78,7 +78,7 @@
      <widget class="QTableWidget" name="tbl_2">
       <property name="geometry">
        <rect>
-        <x>540</x>
+        <x>410</x>
         <y>130</y>
         <width>635</width>
         <height>271</height>
@@ -185,16 +185,6 @@
        </property>
       </column>
      </widget>
-     <widget class="QComboBox" name="cb_name">
-      <property name="geometry">
-       <rect>
-        <x>40</x>
-        <y>90</y>
-        <width>161</width>
-        <height>31</height>
-       </rect>
-      </property>
-     </widget>
      <widget class="QPushButton" name="btn_run">
       <property name="geometry">
        <rect>
@@ -211,8 +201,8 @@
      <widget class="QComboBox" name="cb_refine">
       <property name="geometry">
        <rect>
-        <x>360</x>
-        <y>230</y>
+        <x>250</x>
+        <y>240</y>
         <width>87</width>
         <height>22</height>
        </rect>
@@ -246,20 +236,20 @@
      <widget class="QComboBox" name="cb_cnum">
       <property name="geometry">
        <rect>
-        <x>360</x>
+        <x>250</x>
         <y>90</y>
         <width>87</width>
-        <height>22</height>
+        <height>31</height>
        </rect>
       </property>
      </widget>
      <widget class="QComboBox" name="cb_skill">
       <property name="geometry">
        <rect>
-        <x>360</x>
+        <x>250</x>
         <y>140</y>
         <width>87</width>
-        <height>22</height>
+        <height>31</height>
        </rect>
       </property>
       <item>
@@ -291,7 +281,7 @@
      <widget class="QLabel" name="label_3">
       <property name="geometry">
        <rect>
-        <x>270</x>
+        <x>160</x>
         <y>140</y>
         <width>72</width>
         <height>21</height>
@@ -301,20 +291,10 @@
        <string>技能等级</string>
       </property>
      </widget>
-     <widget class="QComboBox" name="cb_wp">
-      <property name="geometry">
-       <rect>
-        <x>40</x>
-        <y>230</y>
-        <width>151</width>
-        <height>31</height>
-       </rect>
-      </property>
-     </widget>
      <widget class="QLabel" name="label_2">
       <property name="geometry">
        <rect>
-        <x>310</x>
+        <x>190</x>
         <y>90</y>
         <width>72</width>
         <height>21</height>
@@ -327,8 +307,8 @@
      <widget class="QLabel" name="label_14">
       <property name="geometry">
        <rect>
-        <x>290</x>
-        <y>230</y>
+        <x>190</x>
+        <y>240</y>
         <width>72</width>
         <height>21</height>
        </rect>
@@ -340,7 +320,7 @@
      <widget class="QPushButton" name="btn_load_wp">
       <property name="geometry">
        <rect>
-        <x>1010</x>
+        <x>880</x>
         <y>70</y>
         <width>151</width>
         <height>41</height>
@@ -350,23 +330,10 @@
        <string>计算详情</string>
       </property>
      </widget>
-     <widget class="QCheckBox" name="rb_pop">
-      <property name="geometry">
-       <rect>
-        <x>40</x>
-        <y>140</y>
-        <width>141</width>
-        <height>19</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>元素反应</string>
-      </property>
-     </widget>
      <widget class="QCheckBox" name="rb_display">
       <property name="geometry">
        <rect>
-        <x>720</x>
+        <x>590</x>
         <y>78</y>
         <width>141</width>
         <height>31</height>
@@ -418,20 +385,20 @@
      <widget class="QPushButton" name="pb_change">
       <property name="geometry">
        <rect>
-        <x>40</x>
-        <y>290</y>
-        <width>121</width>
+        <x>50</x>
+        <y>180</y>
+        <width>91</width>
         <height>31</height>
        </rect>
       </property>
       <property name="text">
-       <string>人物技能定义</string>
+       <string>技能定义</string>
       </property>
      </widget>
      <widget class="QComboBox" name="cb_sort">
       <property name="geometry">
        <rect>
-        <x>590</x>
+        <x>460</x>
         <y>80</y>
         <width>71</width>
         <height>31</height>
@@ -461,7 +428,7 @@
      <widget class="QLabel" name="label_19">
       <property name="geometry">
        <rect>
-        <x>540</x>
+        <x>410</x>
         <y>80</y>
         <width>71</width>
         <height>31</height>
@@ -490,11 +457,37 @@
        <number>24</number>
       </property>
      </widget>
+     <widget class="QPushButton" name="pb_cara">
+      <property name="geometry">
+       <rect>
+        <x>50</x>
+        <y>80</y>
+        <width>90</width>
+        <height>90</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>人物</string>
+      </property>
+     </widget>
+     <widget class="QCheckBox" name="cb_mode2">
+      <property name="geometry">
+       <rect>
+        <x>640</x>
+        <y>20</y>
+        <width>91</width>
+        <height>19</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>模式2</string>
+      </property>
+     </widget>
      <widget class="QCheckBox" name="cb_switch_def">
       <property name="geometry">
        <rect>
-        <x>40</x>
-        <y>170</y>
+        <x>940</x>
+        <y>420</y>
         <width>111</width>
         <height>19</height>
        </rect>
@@ -503,64 +496,29 @@
        <string>防御抗性</string>
       </property>
      </widget>
-     <widget class="QGroupBox" name="groupBox_10">
+     <widget class="QCheckBox" name="rb_pop">
       <property name="geometry">
        <rect>
-        <x>250</x>
-        <y>290</y>
-        <width>201</width>
-        <height>101</height>
+        <x>760</x>
+        <y>410</y>
+        <width>141</width>
+        <height>19</height>
        </rect>
       </property>
-      <property name="title">
-       <string/>
+      <property name="text">
+       <string>元素反应</string>
       </property>
-      <widget class="QRadioButton" name="rb_mode2">
-       <property name="geometry">
-        <rect>
-         <x>20</x>
-         <y>60</y>
-         <width>161</width>
-         <height>19</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>圣遗物录入模式</string>
-       </property>
-       <property name="checked">
-        <bool>false</bool>
-       </property>
-      </widget>
-      <widget class="QRadioButton" name="rb_mode1">
-       <property name="geometry">
-        <rect>
-         <x>20</x>
-         <y>30</y>
-         <width>151</width>
-         <height>19</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>主词条穷举模式</string>
-       </property>
-       <property name="checked">
-        <bool>true</bool>
-       </property>
-      </widget>
      </widget>
      <zorder>graphicsView</zorder>
      <zorder>tbl_2</zorder>
-     <zorder>cb_name</zorder>
      <zorder>btn_run</zorder>
      <zorder>cb_refine</zorder>
      <zorder>cb_cnum</zorder>
      <zorder>cb_skill</zorder>
      <zorder>label_3</zorder>
-     <zorder>cb_wp</zorder>
      <zorder>label_2</zorder>
      <zorder>label_14</zorder>
      <zorder>btn_load_wp</zorder>
-     <zorder>rb_pop</zorder>
      <zorder>rb_display</zorder>
      <zorder>label_17</zorder>
      <zorder>pb_buff</zorder>
@@ -568,8 +526,10 @@
      <zorder>cb_sort</zorder>
      <zorder>label_19</zorder>
      <zorder>pbar</zorder>
+     <zorder>pb_cara</zorder>
+     <zorder>cb_mode2</zorder>
      <zorder>cb_switch_def</zorder>
-     <zorder>groupBox_10</zorder>
+     <zorder>rb_pop</zorder>
     </widget>
     <widget class="QWidget" name="tab_5">
      <attribute name="title">
@@ -1077,7 +1037,7 @@
        <rect>
         <x>540</x>
         <y>40</y>
-        <width>321</width>
+        <width>281</width>
         <height>391</height>
        </rect>
       </property>
@@ -1352,9 +1312,9 @@
      <widget class="QGroupBox" name="groupBox_6">
       <property name="geometry">
        <rect>
-        <x>890</x>
+        <x>850</x>
         <y>40</y>
-        <width>291</width>
+        <width>231</width>
         <height>391</height>
        </rect>
       </property>
@@ -1435,7 +1395,7 @@
      <widget class="QPushButton" name="pb_load_db">
       <property name="geometry">
        <rect>
-        <x>1150</x>
+        <x>990</x>
         <y>400</y>
         <width>91</width>
         <height>31</height>
@@ -1448,10 +1408,10 @@
      <widget class="QWidget" name="verticalLayoutWidget">
       <property name="geometry">
        <rect>
-        <x>60</x>
-        <y>90</y>
-        <width>1151</width>
-        <height>271</height>
+        <x>20</x>
+        <y>60</y>
+        <width>1061</width>
+        <height>301</height>
        </rect>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout"/>
@@ -1459,7 +1419,7 @@
      <widget class="QPushButton" name="pb_artifact">
       <property name="geometry">
        <rect>
-        <x>1030</x>
+        <x>870</x>
         <y>400</y>
         <width>101</width>
         <height>31</height>
@@ -1640,9 +1600,15 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>1281</width>
+        <width>1000</width>
         <height>451</height>
        </rect>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>1000</width>
+        <height>16777215</height>
+       </size>
       </property>
       <property name="currentIndex">
        <number>0</number>
@@ -1652,8 +1618,8 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>1281</width>
-         <height>343</height>
+         <width>98</width>
+         <height>28</height>
         </rect>
        </property>
        <attribute name="label">
@@ -1664,9 +1630,15 @@
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>1261</width>
+          <width>1000</width>
           <height>341</height>
          </rect>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>1000</width>
+          <height>16777215</height>
+         </size>
         </property>
         <property name="font">
          <font>
@@ -1699,8 +1671,8 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>100</width>
-         <height>30</height>
+         <width>98</width>
+         <height>28</height>
         </rect>
        </property>
        <attribute name="label">
@@ -1711,9 +1683,15 @@
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>1271</width>
+          <width>1000</width>
           <height>391</height>
          </rect>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>1000</width>
+          <height>16777215</height>
+         </size>
         </property>
         <property name="font">
          <font>
@@ -1757,8 +1735,8 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>100</width>
-         <height>30</height>
+         <width>98</width>
+         <height>28</height>
         </rect>
        </property>
        <attribute name="label">
@@ -1769,9 +1747,15 @@
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>1271</width>
+          <width>1000</width>
           <height>391</height>
          </rect>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>1000</width>
+          <height>16777215</height>
+         </size>
         </property>
         <property name="font">
          <font>

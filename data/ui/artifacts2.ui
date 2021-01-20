@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>785</width>
-    <height>660</height>
+    <height>684</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -39,7 +39,7 @@
      <x>0</x>
      <y>0</y>
      <width>370</width>
-     <height>641</height>
+     <height>671</height>
     </rect>
    </property>
    <property name="minimumSize">
@@ -65,7 +65,7 @@
      <property name="geometry">
       <rect>
        <x>20</x>
-       <y>540</y>
+       <y>570</y>
        <width>311</width>
        <height>31</height>
       </rect>
@@ -110,7 +110,7 @@
      <property name="geometry">
       <rect>
        <x>240</x>
-       <y>580</y>
+       <y>610</y>
        <width>101</width>
        <height>28</height>
       </rect>
@@ -126,9 +126,9 @@
      <property name="geometry">
       <rect>
        <x>20</x>
-       <y>190</y>
+       <y>200</y>
        <width>321</width>
-       <height>91</height>
+       <height>71</height>
       </rect>
      </property>
      <property name="title">
@@ -137,9 +137,9 @@
      <widget class="QComboBox" name="cb_main">
       <property name="geometry">
        <rect>
-        <x>50</x>
-        <y>40</y>
-        <width>87</width>
+        <x>40</x>
+        <y>30</y>
+        <width>111</width>
         <height>22</height>
        </rect>
       </property>
@@ -147,9 +147,9 @@
      <widget class="QDoubleSpinBox" name="digit_main">
       <property name="geometry">
        <rect>
-        <x>160</x>
-        <y>40</y>
-        <width>70</width>
+        <x>190</x>
+        <y>30</y>
+        <width>101</width>
         <height>22</height>
        </rect>
       </property>
@@ -168,7 +168,7 @@
      <property name="geometry">
       <rect>
        <x>20</x>
-       <y>290</y>
+       <y>280</y>
        <width>321</width>
        <height>211</height>
       </rect>
@@ -360,7 +360,7 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>480</y>
+       <y>550</y>
        <width>72</width>
        <height>15</height>
       </rect>
@@ -458,6 +458,29 @@
        <string>储存(新建项)</string>
       </property>
      </widget>
+    </widget>
+    <widget class="QLabel" name="label_3">
+     <property name="geometry">
+      <rect>
+       <x>130</x>
+       <y>510</y>
+       <width>72</width>
+       <height>15</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>装备者：</string>
+     </property>
+    </widget>
+    <widget class="QComboBox" name="cb_owner">
+     <property name="geometry">
+      <rect>
+       <x>210</x>
+       <y>510</y>
+       <width>87</width>
+       <height>22</height>
+      </rect>
+     </property>
     </widget>
    </widget>
    <widget class="QWidget" name="tab_2">

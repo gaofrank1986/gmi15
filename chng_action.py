@@ -4,10 +4,10 @@ import traceback
 import json
 from utility import extract_name3
 from PyQt5 import QtCore, QtGui, QtWidgets
-
+import logging
 
 class Change_Action(QDialog):
-    def __init__(self,data):
+    def __init__(self,data,sbar):
         super(Change_Action,self).__init__()
         loadUi("./data/ui/change_action.ui",self)       
         self.le_a.editingFinished.connect(lambda: self.checkline('a'))
@@ -18,6 +18,7 @@ class Change_Action(QDialog):
         self.pb_save.clicked.connect(self.save)
         
         self._data = data
+        self.sbar=sbar
         # self._cname = cname
         # self._clevel = 'c'+str(int(self.cb_cnum.currentText()))  
 
@@ -49,7 +50,7 @@ class Change_Action(QDialog):
             
     def save(self):
         try:
-            character = self._data[self.cname]['name']
+            character = self.cname
             cstl = 'c'+str(int(self.clevel))        
             rnd = dict()
             self._cdata[cstl] = {}
@@ -79,9 +80,11 @@ class Change_Action(QDialog):
 
             with open('./data/character/'+character+'.json', 'w', encoding='utf-8') as fp:
                 json.dump(self._cdata, fp,indent = 4,ensure_ascii=False)
-
+            self.sbar.showMessage("技能保存成功")
         except Exception as e:
-            print("Error: ", e)
+            # print("Error: ", e)
+            logging.logger('1').info("Error: {}".format(e))
+            logging.logger('1').info(traceback.format_exc())
             traceback.print_exc()
             
     def update(self,cname,clevel):
@@ -91,7 +94,7 @@ class Change_Action(QDialog):
     def display(self):
         try:
             # print(self._data)
-            character = self._data[self.cname]['name']
+            character = self.cname
             cstl = 'c'+str(int(self.clevel))  
 
             with open('./data/character/'+character+'.json', 'r', encoding='UTF-8') as fp:

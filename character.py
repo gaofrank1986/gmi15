@@ -19,9 +19,10 @@ class Character(Basic_Panel):
         self.constellation = c_num
         self.level = c_level
         
-        '''人物自带初始5暴击，50暴伤'''
+        '''人物自带初始5暴击，50暴伤,100充能'''
         self.attack[3] = 5
         self.attack[4] = 50
+        self.attack[6] = 100
 
         self.atk_name = ('a','e','q','shld','heal','w')
 

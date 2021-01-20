@@ -21,6 +21,20 @@
         "name": "hutao",
         "w": "polearm"
     },
+    "班尼特": {
+        "c": [
+            "6"
+        ],
+        "name": "bennett",
+        "w": "sword"
+    },
+    "香菱": {
+        "c": [
+            "6"
+        ],
+        "name": "xiangling",
+        "w": "polearm"
+    },
     "====水=====": {
         "c": [
             "0"
@@ -87,6 +101,13 @@
         "name": "qiqi",
         "w": "sword"
     },
+    "重云": {
+        "c": [
+            "6"
+        ],
+        "name": "chongyun",
+        "w": "claymore"
+    },
     "迪奥娜": {
         "c": [
             "6"
@@ -147,7 +168,7 @@
         "c": [
             "0"
         ],
-        "name": "abedo",
+        "name": "albedo",
         "w": "sword"
     },
     "诺艾尔": {

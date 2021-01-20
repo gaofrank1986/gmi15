@@ -2,39 +2,11 @@ import json
 from copy import deepcopy
 from PyQt5 import QtWidgets,QtGui
 from os import listdir
-
+from PyQt5 import QtCore
 import logging 
 
 
 
-
-def extract_name4(a):
-    assert(isinstance(a,str))
-    ans = a
-    if '_' in a:
-        ans = a.split('_')[1]
-    # if a == 'cr':
-    #     ans = '暴击'
-    # if a == 'cd':
-    #     ans = '暴伤'
-    # if a == 'dr':
-    #     ans = '防御'
-    # if a == 'ar':
-    #     ans = '攻击'
-    # if a == 'ed':
-    #     ans = '属伤'
-    # if a == 'dphys':
-    #     ans = '物伤'
-    # if a == 'hr':
-    #     ans = '生命'
-    # if a == 'ef':
-    #     ans = '充能'
-    # if a == 'em':
-    #     ans = '精通'
-    # if a == 'dheal':
-    #     ans = '治疗'
-
-    return(ans)
 
 
 def extract_name3(a):
@@ -465,6 +437,7 @@ class MyDialog(QtWidgets.QDialog, QtWidgets.QPlainTextEdit):
         self.save.setPlainText("")
 
 
+        
 
 def parse_formula(s):
     a = s.split("+")

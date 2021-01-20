@@ -10,6 +10,7 @@ import shutil
 from ocr import ocr,parse
 import logging
 from db_setup import Entry,db_session
+from sqlalchemy import or_
 
 def ps(s):
     s = s.replace('(测试无效果)','')
@@ -32,7 +33,22 @@ class RName(QDialog):
         # self.if_OK = True
         self.close()         
       
-
+class DB_Filter(QDialog):
+    def __init__(self,alist):
+        super(DB_Filter,self).__init__()
+        loadUi("./data/ui/filter_db.ui",self)
+        self.buttonBox.button(QDialogButtonBox.Ok).clicked.connect(self.OK)
+        self.buttonBox.button(QDialogButtonBox.Cancel).clicked.connect(self.Cancel)
+        self.cb_filter.addItems(['全部']+alist)
+        self.if_OK = False
+        self.filter = None
+    def OK(self):
+        self.if_OK = True
+        self.filter = self.cb_filter.currentText()
+        self.close()
+    def Cancel(self):
+        self.close()  
+        
 class Rec_Artifact(QDialog):
     def __init__(self,data,name,sbar):
         super(Rec_Artifact,self).__init__()
@@ -74,6 +90,16 @@ class Rec_Artifact(QDialog):
         
         self.cached = None
         self.look_up = {}
+        
+        self.owners=[]
+        path = "./data/info.json"
+        with open(path, 'r', encoding='UTF-8') as fp:
+            data = json.load(fp)
+        for i in data:
+            if "=" not in i:
+                self.owners.append(i)
+        self.cb_owner.addItems(self.owners)
+            
     
         
 
@@ -94,6 +120,7 @@ class Rec_Artifact(QDialog):
         self.cb_pos.setCurrentIndex(tmp.index(r1.pos))    
         self.cb_main.setCurrentIndex(self.dlist.index(r1.main0))
         self.digit_main.setValue(r1.main1)
+        self.cb_owner.setCurrentIndex(self.owners.index(r1.owner))
         for i in range(1,5):
             self.findChild(QComboBox,"cb_sub_"+str(i)).setCurrentIndex(self.tlist.index(getattr(r1,'sub'+str(i)+'0')))
             self.findChild(QDoubleSpinBox,"digit_sub_"+str(i)).setValue(getattr(r1,'sub'+str(i)+'1'))
@@ -107,7 +134,7 @@ class Rec_Artifact(QDialog):
         print (self.look_up)
         r1 = db_session.query(Entry).filter(Entry.id == self.look_up[aaa]).delete()
         db_session.commit()
-        self.lookupdb()
+        self.lookupdb(quick=True)
         
     
     def renew_entry(self):
@@ -127,6 +154,7 @@ class Rec_Artifact(QDialog):
             r1.main0 = pos2[self.cb_main.currentText()]
             saved_pos.append(pos2[self.cb_main.currentText()])
             r1.main1 = self.digit_main.value()
+            r1.owner = self.cb_owner.currentText()
             for i in range(1,5):
                 pos = pos1[self.findChild(QComboBox,"cb_sub_"+str(i)).currentText()]
                 assert(pos not in saved_pos)
@@ -147,25 +175,44 @@ class Rec_Artifact(QDialog):
             self.sbar.showMessage("圣遗物文件存储错误")
             logging.getLogger('1').error(traceback.format_exc())
 
-    def lookupdb(self):
+    def lookupdb(self,quick=False):
         try:
             try:
                 self.cb_db.currentIndexChanged.disconnect(self.load_entry)
             except:
                 pass
-
-            self.cb_db.clear()
-            N=0
-            for i in db_session.query(Entry).all():
-                self.cb_db.addItem(i.name)
-                self.look_up[N] = i.id
-                N+=1
-            # self.sbar.showMessage("圣遗物数据存储成功")
-            # print(1)
-            self.cb_db.currentIndexChanged.connect(self.load_entry)
-            self.load_entry()
+            
+            if not quick:
+                self.aaa = DB_Filter(self.owners)
+                self.aaa.exec_()
+                if self.aaa.if_OK:
+                    self.cb_db.clear()
+                    N=0
+                    self.last_filter = self.aaa.filter
+                    if self.aaa.filter == '全部':
+                        tmp = True
+                    else:
+                        tmp = False
+                    for i in db_session.query(Entry).filter(or_(Entry.owner==self.aaa.filter,tmp)).all():
+                        self.cb_db.addItem(i.name)
+                        self.look_up[N] = i.id
+                        N+=1
+                    
+                    
+            else:
+                self.cb_db.clear()
+                N=0
+                if self.last_filter == '全部':
+                    tmp = True
+                else:
+                    tmp = False
+                for i in db_session.query(Entry).filter(or_(Entry.owner==self.last_filter,tmp)).all():
+                    self.cb_db.addItem(i.name)
+                    self.look_up[N] = i.id
+                    N+=1
+            self.cb_db.currentIndexChanged.connect(self.load_entry)               
             self.sbar.showMessage("圣遗物数据库加载成功")
-
+            self.load_entry()
         except:
             self.sbar.showMessage("圣遗物数据库加载失败")
             logging.getLogger('1').error(traceback.format_exc())    
@@ -190,6 +237,7 @@ class Rec_Artifact(QDialog):
                 r1.main0 = pos2[self.cb_main.currentText()]
                 saved_pos.append(pos2[self.cb_main.currentText()])
                 r1.main1 = self.digit_main.value()
+                r1.owner = self.cb_owner.currentText()
                 # N=1
                 for i in range(1,5):
                     pos = pos1[self.findChild(QComboBox,"cb_sub_"+str(i)).currentText()]
@@ -333,6 +381,7 @@ class Rec_Artifact(QDialog):
             self.cb_aeffect.setCurrentIndex(0)
             self.label_pic.setText("图形")
             self.cached = None
+            self.label_id.setText("")
         except:
             self.sbar.showMessage("圣遗物界面clear错误")
             logging.getLogger('1').error(traceback.format_exc())
