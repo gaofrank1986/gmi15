@@ -35,6 +35,20 @@
         "name": "xiangling",
         "w": "polearm"
     },
+    "辛焱": {
+        "c": [
+            "6"
+        ],
+        "name": "xinyan",
+        "w": "claymore"
+    },
+    "安柏": {
+        "c": [
+            "6"
+        ],
+        "name": "amber",
+        "w": "bow"
+    },
     "====水=====": {
         "c": [
             "0"
@@ -64,6 +78,13 @@
         "name": "xingqiu",
         "w": "sword"
     },
+    "芭芭拉": {
+        "c": [
+            "6"
+        ],
+        "name": "barbara",
+        "w": "catalyst"
+    },
     "====雷=====": {
         "c": [
             "0"
@@ -77,6 +98,34 @@
         ],
         "name": "keqing",
         "w": "sword"
+    },
+    "菲谢尔": {
+        "c": [
+            "6"
+        ],
+        "name": "fischl",
+        "w": "bow"
+    },
+    "雷泽": {
+        "c": [
+            "6"
+        ],
+        "name": "razor",
+        "w": "claymore"
+    },
+    "北斗": {
+        "c": [
+            "6"
+        ],
+        "name": "beidou",
+        "w": "claymore"
+    },
+    "丽莎": {
+        "c": [
+            "6"
+        ],
+        "name": "lisa",
+        "w": "catalyst"
     },
     "====冰=====": {
         "c": [
@@ -107,6 +156,13 @@
         ],
         "name": "chongyun",
         "w": "claymore"
+    },
+    "凯亚": {
+        "c": [
+            "6"
+        ],
+        "name": "kaeya",
+        "w": "sword"
     },
     "迪奥娜": {
         "c": [
@@ -143,6 +199,13 @@
         "name": "xiao",
         "w": "polearm"
     },
+    "砂糖": {
+        "c": [
+            "6"
+        ],
+        "name": "sucrose",
+        "w": "catalyst"
+    },
     "====岩=====": {
         "c": [
             "0"
@@ -177,5 +240,12 @@
         ],
         "name": "noel",
         "w": "claymore"
+    },
+    "旅行者(岩)": {
+        "c": [
+            "6"
+        ],
+        "name": "traveler",
+        "w": "sword"
     }   
 }

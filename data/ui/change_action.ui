@@ -7,19 +7,19 @@
     <x>0</x>
     <y>0</y>
     <width>720</width>
-    <height>780</height>
+    <height>490</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
     <width>720</width>
-    <height>680</height>
+    <height>490</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
     <width>720</width>
-    <height>780</height>
+    <height>490</height>
    </size>
   </property>
   <property name="font">
@@ -30,19 +30,34 @@
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
-  <widget class="QTabWidget" name="tabWidget">
+  <widget class="QTabWidget" name="tabs">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
      <width>721</width>
-     <height>771</height>
+     <height>481</height>
     </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">
+
+font: 9pt &quot;汉仪文黑-85W&quot;;
+</string>
    </property>
    <property name="currentIndex">
     <number>0</number>
    </property>
    <widget class="QWidget" name="tab">
+    <property name="styleSheet">
+     <string notr="true">QWidget{
+background-color: rgb(224, 234, 244);
+}
+QLabel{
+background-color: transparent;
+}
+</string>
+    </property>
     <attribute name="title">
      <string>技能定义</string>
     </attribute>
@@ -62,10 +77,10 @@
     <widget class="QDoubleSpinBox" name="dsb_enchant">
      <property name="geometry">
       <rect>
-       <x>410</x>
-       <y>60</y>
+       <x>440</x>
+       <y>35</y>
        <width>70</width>
-       <height>22</height>
+       <height>21</height>
       </rect>
      </property>
      <property name="maximum">
@@ -75,48 +90,10 @@
       <double>0.100000000000000</double>
      </property>
     </widget>
-    <widget class="QGroupBox" name="groupBox">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>450</y>
-       <width>671</width>
-       <height>281</height>
-      </rect>
-     </property>
-     <property name="title">
-      <string>技能查询</string>
-     </property>
-     <widget class="QTableWidget" name="tb_skill">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>30</y>
-        <width>651</width>
-        <height>241</height>
-       </rect>
-      </property>
-      <column>
-       <property name="text">
-        <string>名字</string>
-       </property>
-      </column>
-      <column>
-       <property name="text">
-        <string>描述</string>
-       </property>
-      </column>
-      <column>
-       <property name="text">
-        <string>类型</string>
-       </property>
-      </column>
-     </widget>
-    </widget>
     <widget class="QLabel" name="label_5">
      <property name="geometry">
       <rect>
-       <x>360</x>
+       <x>300</x>
        <y>30</y>
        <width>131</width>
        <height>31</height>
@@ -389,7 +366,86 @@
      </property>
     </widget>
    </widget>
+   <widget class="QWidget" name="tab_4">
+    <attribute name="title">
+     <string>技能表</string>
+    </attribute>
+    <widget class="QTableWidget" name="tb_skill">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>711</width>
+       <height>441</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: rgb(224, 234, 244);</string>
+     </property>
+     <column>
+      <property name="text">
+       <string>名字</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>描述</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>类型</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>基础</string>
+      </property>
+     </column>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="tab_5">
+    <attribute name="title">
+     <string>剧变反应</string>
+    </attribute>
+    <widget class="QTableWidget" name="tb_jb">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>711</width>
+       <height>441</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: rgb(224, 234, 244);</string>
+     </property>
+     <column>
+      <property name="text">
+       <string>名字</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>描述</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>类型</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>基础</string>
+      </property>
+     </column>
+    </widget>
+   </widget>
    <widget class="QWidget" name="tab_3">
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(224, 234, 244);</string>
+    </property>
     <attribute name="title">
      <string>注释</string>
     </attribute>
@@ -399,8 +455,11 @@
        <x>20</x>
        <y>30</y>
        <width>671</width>
-       <height>661</height>
+       <height>400</height>
       </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: rgb(224, 234, 244);</string>
      </property>
      <property name="plainText">
       <string>自定义注释，技能定义保存时同时保存</string>
@@ -417,8 +476,11 @@
        <x>0</x>
        <y>0</y>
        <width>711</width>
-       <height>681</height>
+       <height>440</height>
       </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: rgb(224, 234, 244);</string>
      </property>
      <property name="plainText">
       <string>说明

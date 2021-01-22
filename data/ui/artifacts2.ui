@@ -58,6 +58,11 @@
     <number>0</number>
    </property>
    <widget class="QWidget" name="tab">
+    <property name="styleSheet">
+     <string notr="true">
+font: 9pt &quot;汉仪文黑-85W&quot;;
+</string>
+    </property>
     <attribute name="title">
      <string>输入</string>
     </attribute>
@@ -65,7 +70,7 @@
      <property name="geometry">
       <rect>
        <x>20</x>
-       <y>570</y>
+       <y>560</y>
        <width>311</width>
        <height>31</height>
       </rect>
@@ -75,7 +80,7 @@
      <property name="geometry">
       <rect>
        <x>30</x>
-       <y>140</y>
+       <y>160</y>
        <width>91</width>
        <height>31</height>
       </rect>
@@ -109,8 +114,8 @@
     <widget class="QPushButton" name="pb_clear">
      <property name="geometry">
       <rect>
-       <x>240</x>
-       <y>610</y>
+       <x>230</x>
+       <y>600</y>
        <width>101</width>
        <height>28</height>
       </rect>
@@ -337,7 +342,7 @@
      <property name="geometry">
       <rect>
        <x>230</x>
-       <y>140</y>
+       <y>160</y>
        <width>111</width>
        <height>31</height>
       </rect>
@@ -347,9 +352,9 @@
      <property name="geometry">
       <rect>
        <x>180</x>
-       <y>150</y>
-       <width>72</width>
-       <height>15</height>
+       <y>170</y>
+       <width>31</width>
+       <height>16</height>
       </rect>
      </property>
      <property name="text">
@@ -360,7 +365,7 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>550</y>
+       <y>540</y>
        <width>72</width>
        <height>15</height>
       </rect>
@@ -375,7 +380,7 @@
        <x>10</x>
        <y>10</y>
        <width>351</width>
-       <height>111</height>
+       <height>141</height>
       </rect>
      </property>
      <property name="autoFillBackground">
@@ -389,7 +394,7 @@
        <rect>
         <x>20</x>
         <y>30</y>
-        <width>87</width>
+        <width>321</width>
         <height>22</height>
        </rect>
       </property>
@@ -398,7 +403,7 @@
       <property name="geometry">
        <rect>
         <x>130</x>
-        <y>30</y>
+        <y>60</y>
         <width>101</width>
         <height>28</height>
        </rect>
@@ -414,7 +419,7 @@
       <property name="geometry">
        <rect>
         <x>130</x>
-        <y>70</y>
+        <y>100</y>
         <width>101</width>
         <height>28</height>
        </rect>
@@ -430,7 +435,7 @@
       <property name="geometry">
        <rect>
         <x>240</x>
-        <y>70</y>
+        <y>100</y>
         <width>101</width>
         <height>28</height>
        </rect>
@@ -446,7 +451,7 @@
       <property name="geometry">
        <rect>
         <x>240</x>
-        <y>30</y>
+        <y>60</y>
         <width>101</width>
         <height>28</height>
        </rect>
@@ -462,7 +467,7 @@
     <widget class="QLabel" name="label_3">
      <property name="geometry">
       <rect>
-       <x>130</x>
+       <x>100</x>
        <y>510</y>
        <width>72</width>
        <height>15</height>
@@ -475,9 +480,9 @@
     <widget class="QComboBox" name="cb_owner">
      <property name="geometry">
       <rect>
-       <x>210</x>
+       <x>176</x>
        <y>510</y>
-       <width>87</width>
+       <width>121</width>
        <height>22</height>
       </rect>
      </property>
@@ -499,24 +504,34 @@
        <x>0</x>
        <y>0</y>
        <width>361</width>
-       <height>500</height>
+       <height>621</height>
       </rect>
      </property>
      <property name="maximumSize">
       <size>
        <width>16777215</width>
-       <height>510</height>
+       <height>900</height>
       </size>
      </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: rgb(224, 234, 244);
+font: 9pt &quot;汉仪文黑-85W&quot;;</string>
+     </property>
      <property name="plainText">
-      <string>读取data/compare/当前人物目录下head/glass/cup/flower/feather下文件进行穷举，需要保证每个文件夹至少有一个文件
-比较结果显示文件名前缀
+      <string>
+图片ocr可以选择一个图片自动识别信息（需要有网络，用百度提供的免费识别服务）
 
-录入模式激活时，将不再从 圣遗物主词条及其他增益副词条、套装效果中读取信息
+更换图片，更换当前数据项的图片信息
 
-其他增益其他加成仍然有效
+加载数据库，从数据库里加载存储的圣遗物
 
-套装信息会累加并自动加载已定义的套装效果</string>
+存储（新建） 新增一个数据记录
+
+更新      改变当前加载的圣遗物数据
+
+删除    删除当前加载的圣遗物
+
+</string>
      </property>
     </widget>
    </widget>
@@ -539,7 +554,7 @@
     <rect>
      <x>630</x>
      <y>30</y>
-     <width>101</width>
+     <width>111</width>
      <height>28</height>
     </rect>
    </property>
@@ -547,7 +562,7 @@
     <enum>Qt::NoFocus</enum>
    </property>
    <property name="text">
-    <string>更换图片</string>
+    <string>设置参照图</string>
    </property>
   </widget>
   <widget class="QPushButton" name="pb_openimg">
@@ -555,7 +570,7 @@
     <rect>
      <x>630</x>
      <y>60</y>
-     <width>101</width>
+     <width>111</width>
      <height>28</height>
     </rect>
    </property>
@@ -563,7 +578,7 @@
     <enum>Qt::NoFocus</enum>
    </property>
    <property name="text">
-    <string>图片ocr</string>
+    <string>自动识别图片</string>
    </property>
   </widget>
   <widget class="QLabel" name="label_id">

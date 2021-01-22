@@ -11,11 +11,8 @@ from ocr import ocr,parse
 import logging
 from db_setup import Entry,db_session
 from sqlalchemy import or_
+from utility import extract_rlist
 
-def ps(s):
-    s = s.replace('(测试无效果)','')
-    s = s[:-1]
-    return(s)
 
 class RName(QDialog):
     def __init__(self):
@@ -29,6 +26,8 @@ class RName(QDialog):
         self.if_OK = True
         self.name = self.lineEdit.text()
         self.close()
+    def set_name(self,s):
+        self.lineEdit.setText(s)
     def Cancel(self):
         # self.if_OK = True
         self.close()         
@@ -50,13 +49,13 @@ class DB_Filter(QDialog):
         self.close()  
         
 class Rec_Artifact(QDialog):
-    def __init__(self,data,name,sbar):
+    def __init__(self,data,sbar):
         super(Rec_Artifact,self).__init__()
         loadUi("./data/ui/artifacts2.ui",self)        
         # self.pb_savefile.clicked.connect(self.savefile)
         self.pb_link_pic.clicked.connect(self.new_pic_link)
         self.pb_clear.clicked.connect(self.clear)
-        self.pb_savedb.clicked.connect(self.savedb)
+        self.pb_savedb.clicked.connect(self.save_entry)
         self.pb_lookupdb.clicked.connect(self.lookupdb)
         # self.pb_openfile.clicked.connect(self.openfile)
         self.pb_openimg.clicked.connect(self.openimgfile)
@@ -64,22 +63,17 @@ class Rec_Artifact(QDialog):
         self.pb_db_update.clicked.connect(self.renew_entry)
         
         self.pos = {'理之冠':'head','时之沙':'glass','空之杯':'cup','生之花':'flower','死之羽':'feather'}
-        self.plist = ['暴击','暴伤','攻击%','攻击(固定)','属伤','物伤','防御','生命%','生命(固定)','治疗','精通','充能']
-        self.dlist = ['cr','cd','ar','sa','ed','dphys','dr','hr','sh','dheal','em','ef']
+        self.plist = ['暴击','暴伤','攻击%','攻击(固定)','属伤','物伤','防御','生命%','生命(固定)','治疗','精通','充能','火伤','水伤','冰伤','雷伤','风伤','岩伤']
+        self.dlist = ['cr','cd','ar','sa','ed','dphys','dr','hr','sh','dheal','em','ef','dfire','dwatr','dice','delec','dwind','drock']
 
         self.slist = ['暴击','暴伤','攻击%','攻击(固定)','防御%','防御(固定)','生命%','生命(固定)','精通','充能']
         self.tlist = ['cr','cd','ar','sa','dr','sd','hr','sh','em','ef']
         
-        self.name = name
-        # self.path = "./data/compare/"+name+"/"
+
         self.sbar = sbar
-        alist = list(data.keys())
-        alist = list(ps(_) for _ in  alist)
-        alist[0] = '无'
-        self.elist = alist
-        print(self.elist)
-        # for i in self.plist:
-        self.cb_aeffect.addItems(alist)
+        self.elist = extract_rlist(data)
+        logging.getLogger('1').info("db套装{}".format(self.elist))
+        self.cb_aeffect.addItems(self.elist)
         self.cb_main.addItems(self.plist)
         self.cb_sub_1.addItems(self.slist)
         self.cb_sub_2.addItems(self.slist)
@@ -91,7 +85,7 @@ class Rec_Artifact(QDialog):
         self.cached = None
         self.look_up = {}
         
-        self.owners=[]
+        self.owners=['无']
         path = "./data/info.json"
         with open(path, 'r', encoding='UTF-8') as fp:
             data = json.load(fp)
@@ -99,6 +93,8 @@ class Rec_Artifact(QDialog):
             if "=" not in i:
                 self.owners.append(i)
         self.cb_owner.addItems(self.owners)
+        self.pathm='./data/'
+        self.save_pos = 0
             
     
         
@@ -106,7 +102,6 @@ class Rec_Artifact(QDialog):
     def load_entry(self):
         aaa = self.cb_db.currentIndex()
         assert aaa in self.look_up
-        print (self.look_up)
         r1 = db_session.query(Entry).filter(Entry.id == self.look_up[aaa]).first()
         pix = QPixmap()
         pix.loadFromData(r1.img)
@@ -130,23 +125,35 @@ class Rec_Artifact(QDialog):
    
     def delete_entry(self):
         aaa = self.cb_db.currentIndex()
-        assert aaa in self.look_up
-        print (self.look_up)
-        r1 = db_session.query(Entry).filter(Entry.id == self.look_up[aaa]).delete()
-        db_session.commit()
-        self.lookupdb(quick=True)
+        try:
+            assert aaa in self.look_up
+            r1 = db_session.query(Entry).filter(Entry.id == self.look_up[aaa]).delete()
+            db_session.commit()
+            self.lookupdb(quick=True)
+            if aaa==1:
+                aaa=1
+            self.cb_db.setCurrentIndex(aaa-1)
+        except:
+            pass
         
     
     def renew_entry(self):
+
         try:
             aaa = self.cb_db.currentIndex()
             assert aaa in self.look_up
+            self.bbb = RName()
+            self.bbb.set_name(self.cb_db.currentText().split('.')[1])
+            self.bbb.exec_()
+            
             r1 = db_session.query(Entry).filter(Entry.id == self.look_up[aaa]).first()
             
             pos2={self.plist[i]:self.dlist[i] for i in range(len(self.plist))}
             pos1={self.slist[i]:self.tlist[i] for i in range(len(self.slist))}
             
             saved_pos=[]
+            if self.bbb.if_OK:
+                r1.name = self.bbb.name
 
             r1.pos = self.cb_pos.currentText()
             r1.aset = self.cb_aeffect.currentText()
@@ -167,12 +174,14 @@ class Rec_Artifact(QDialog):
             if not (self.cached is None):
                 r1.img = self.cached
             db_session.commit()
+            self.lookupdb(quick=True)
+            self.cb_db.setCurrentIndex(aaa)
             
-            self.sbar.showMessage("圣遗物数据存储成功")
+            self.sbar.showMessage("圣遗物数据存储成功",1000)
 
         except:
-            db_session.roll_back()
-            self.sbar.showMessage("圣遗物文件存储错误")
+            db_session.rollback()
+            self.sbar.showMessage("圣遗物文件存储错误",2000)
             logging.getLogger('1').error(traceback.format_exc())
 
     def lookupdb(self,quick=False):
@@ -194,7 +203,7 @@ class Rec_Artifact(QDialog):
                     else:
                         tmp = False
                     for i in db_session.query(Entry).filter(or_(Entry.owner==self.aaa.filter,tmp)).all():
-                        self.cb_db.addItem(i.name)
+                        self.cb_db.addItem(str(i.id)+'.'+i.name)
                         self.look_up[N] = i.id
                         N+=1
                     
@@ -207,22 +216,21 @@ class Rec_Artifact(QDialog):
                 else:
                     tmp = False
                 for i in db_session.query(Entry).filter(or_(Entry.owner==self.last_filter,tmp)).all():
-                    self.cb_db.addItem(i.name)
+                    self.cb_db.addItem(str(i.id)+'.'+i.name)
                     self.look_up[N] = i.id
                     N+=1
             self.cb_db.currentIndexChanged.connect(self.load_entry)               
-            self.sbar.showMessage("圣遗物数据库加载成功")
+            self.sbar.showMessage("圣遗物数据库加载成功",1000)
             self.load_entry()
         except:
-            self.sbar.showMessage("圣遗物数据库加载失败")
+            self.sbar.showMessage("圣遗物数据库加载失败",2000)
             logging.getLogger('1').error(traceback.format_exc())    
         
-    def savedb(self):
+    def save_entry(self):
         try:
             self.aaa = RName()
             self.aaa.exec_()
-            # self.aaa.show()
-            print(self.aaa.if_OK,self.aaa.name)
+
             if self.aaa.if_OK:
                 pos2={self.plist[i]:self.dlist[i] for i in range(len(self.plist))}
                 pos1={self.slist[i]:self.tlist[i] for i in range(len(self.slist))}
@@ -253,17 +261,19 @@ class Rec_Artifact(QDialog):
                     r1.img = self.cached
                 db_session.add(r1)
                 db_session.commit()
+                self.lookupdb(quick=True)
+                self.cb_db.setCurrentIndex(self.cb_db.count()-1)
                 
-                self.sbar.showMessage("圣遗物数据存储成功")
+                self.sbar.showMessage("圣遗物数据存储成功",1000)
 
         except:
-            db_session.roll_back()
-            self.sbar.showMessage("圣遗物文件存储错误")
+            db_session.rollback()
+            self.sbar.showMessage("圣遗物文件存储错误",2000)
             logging.getLogger('1').error(traceback.format_exc())
 
 
     def new_pic_link(self):
-        path = QFileDialog.getOpenFileName(self, 'Open a file', "./",'圣遗物图像文件 (*.*)')
+        path = QFileDialog.getOpenFileName(self, 'Open a file', self.pathm,'圣遗物图像文件 (*.*)')
         if path != ('', ''):
             pixmap = QPixmap(path[0]).scaled(370,591, Qt.KeepAspectRatio, Qt.SmoothTransformation)
             self.label_pic.setPixmap(pixmap)
@@ -274,9 +284,10 @@ class Rec_Artifact(QDialog):
     def openimgfile(self):
         try:
             self.clear()
-            trans = {'攻击力%':'ar','防御力%':'dr','生命值%':'hr','生命值':'sh','元素充能效率%':'ef','暴击率%':'cr','暴击伤害%':'cd','攻击力':'sa','元素精通':'em','防御力':'sd'}
-            path = QFileDialog.getOpenFileName(self, 'Open a file', "./",'圣遗物图像文件 (*.*)')
+            trans = {'攻击力%':'ar','防御力%':'dr','生命值%':'hr','生命值':'sh','元素充能效率%':'ef','暴击率%':'cr','暴击伤害%':'cd','攻击力':'sa','元素精通':'em','防御力':'sd','风元素伤害加成%':'ed','火元素伤害加成%':'dfire','水元素伤害加成%':'dwatr','冰元素伤害加成%':'dice','雷元素伤害加成%':'delec','风元素伤害加成%':'dwind','岩元素伤害加成%':'drock','物理伤害加成%':'dphys'}
+            path = QFileDialog.getOpenFileName(self, 'Open a file', self.pathm,'圣遗物图像文件 (*.*)')
             if path != ('', ''):
+                self.pathm = path[0]
                 pixmap = QPixmap(path[0]).scaled(370,591, Qt.KeepAspectRatio, Qt.SmoothTransformation)
                 self.label_pic.setPixmap(pixmap)
                 self.label_pic.resize(pixmap.width(),pixmap.height())
@@ -289,9 +300,7 @@ class Rec_Artifact(QDialog):
                 assert pos in self.pos.keys()      
                 tmp = list(self.pos.keys())
                 self.cb_pos.setCurrentIndex(tmp.index(pos))    
-                print(ans)
                 ans2 = parse(ans)
-                # print(ans2)
                 assert(len(ans2[1])==5)
                 self.cb_main.setCurrentIndex(self.dlist.index(trans[ans2[1][0][0]]))
                 self.digit_main.setValue(ans2[1][0][1])
@@ -311,60 +320,15 @@ class Rec_Artifact(QDialog):
                         break
                 if not found:
                     self.cb_aeffect.setCurrentIndex(0)
-            self.sbar.showMessage("圣遗物图像读取成功")
+            self.sbar.showMessage("圣遗物图像读取成功",1000)
 
         except:
-            self.sbar.showMessage("圣遗物图像读取错误")
+            self.sbar.showMessage("圣遗物图像读取错误",2000)
             logging.getLogger('1').error(traceback.format_exc())                  
 
-
-
-            
-    # def openfile(self):
-    #     try:
-    #         self.clear()
-
-    #         folder = self.pos[self.cb_pos.currentText()]
-    #         path = QFileDialog.getOpenFileName(self, 'Open a file', self.path+folder,'圣遗物数据文件 (*.json)')
-    #         if path != ('', ''):
-    #             with open(path[0], 'r', encoding='UTF-8') as fp:
-    #                 data = json.load(fp)     
-                    
-    #             filtered = {}
-    #             for i in data['sub']:
-    #                 if data['sub'][i]>0:
-    #                     filtered[i] = data['sub'][i]
-    #             assert (len(filtered) <= 4)
-
-    #             N=1
-    #             for i in filtered:
-    #                 pass
-    #                 self.findChild(QComboBox,"cb_sub_"+str(N)).setCurrentIndex(self.tlist.index(i))
-    #                 self.findChild(QDoubleSpinBox,"digit_sub_"+str(N)).setValue(filtered[i])
-    #                 N+=1
-
-                
-    #             for i in data['main']:
-    #                 self.cb_main.setCurrentIndex(self.dlist.index(i))
-    #                 self.digit_main.setValue(data['main'][i])
-    #             self.le_cmt.setText(data['cmt'])
-    #             tmp = list(self.pos.keys())
-    #             self.cb_pos.setCurrentIndex(tmp.index(data["pos"]))        
-    #             self.cb_aeffect.setCurrentIndex(self.elist.index(data["set"]))  
-    #         self.sbar.showMessage("圣遗物数据读取成功")
-
-    #     except:
-    #         self.sbar.showMessage("圣遗物文件读取错误")
-    #         logging.getLogger('1').error(traceback.format_exc())
             
     def display(self):
-        self.exec_()
-     
-    def update(self,name):
-        self.name = name
-        # self.path = "./data/compare/"+name+"/"          
-
-
+        self.exec_()     
 
     def clear(self):
         try:

@@ -10,15 +10,44 @@ class Change_Action(QDialog):
     def __init__(self,data,sbar):
         super(Change_Action,self).__init__()
         loadUi("./data/ui/change_action.ui",self)       
-        self.le_a.editingFinished.connect(lambda: self.checkline('a'))
-        self.le_e.editingFinished.connect(lambda: self.checkline('e'))
-        self.le_q.editingFinished.connect(lambda: self.checkline('q'))
-        self.le_shld.editingFinished.connect(lambda: self.checkline('shld'))
-        self.le_heal.editingFinished.connect(lambda: self.checkline('heal'))
+        # self.le_a.editingFinished.connect(lambda: self.checkline('a'))
+        # self.le_e.editingFinished.connect(lambda: self.checkline('e'))
+        # self.le_q.editingFinished.connect(lambda: self.checkline('q'))
+        # self.le_shld.editingFinished.connect(lambda: self.checkline('shld'))
+        # self.le_heal.editingFinished.connect(lambda: self.checkline('heal'))
+        self.le_a.textEdited.connect(lambda: self.checkline('a'))
+        self.le_e.textEdited.connect(lambda: self.checkline('e'))
+        self.le_q.textEdited.connect(lambda: self.checkline('q'))
+        self.le_shld.textEdited.connect(lambda: self.checkline('shld'))
+        self.le_heal.textEdited.connect(lambda: self.checkline('heal'))
         self.pb_save.clicked.connect(self.save)
         
         self._data = data
         self.sbar=sbar
+        
+        N=0
+        jb_ds={'ks':'扩散伤害','cd':'超导伤害','gd':'感电伤害','gz':'过载伤害'}
+        for i in ['ks','gd','cd','gz']:
+            item =  QTableWidgetItem(i)
+            item.setFlags(QtCore.Qt.ItemIsEnabled)
+            self.tb_jb.insertRow(N)
+            self.tb_jb.setItem(N,0,item)
+            item = QTableWidgetItem("剧变反应")
+            self.tb_jb.setItem(N,2,item)
+            item = QTableWidgetItem(jb_ds[i])
+            self.tb_jb.setItem(N,1,item)
+            
+            s = "攻击"         
+            item = QTableWidgetItem(s)
+            self.tb_jb.setItem(N,3,item)        
+            N+=1
+          
+            
+        header = self.tb_jb.horizontalHeader()       
+        header.setSectionResizeMode(0, QtWidgets.QHeaderView.ResizeToContents)
+        header.setSectionResizeMode(2, QtWidgets.QHeaderView.ResizeToContents)
+        header.setSectionResizeMode(3, QtWidgets.QHeaderView.ResizeToContents)
+        header.setSectionResizeMode(1, QtWidgets.QHeaderView.Stretch)
         # self._cname = cname
         # self._clevel = 'c'+str(int(self.cb_cnum.currentText()))  
 
@@ -80,11 +109,11 @@ class Change_Action(QDialog):
 
             with open('./data/character/'+character+'.json', 'w', encoding='utf-8') as fp:
                 json.dump(self._cdata, fp,indent = 4,ensure_ascii=False)
-            self.sbar.showMessage("技能保存成功")
+            self.sbar.showMessage("技能保存成功",1000)
         except Exception as e:
-            # print("Error: ", e)
-            logging.logger('1').info("Error: {}".format(e))
-            logging.logger('1').info(traceback.format_exc())
+            self.sbar.showMessage("技能保存失败",1000)
+            logging.getLogger('1').info("Error: {}".format(e))
+            logging.getLogger('1').info(traceback.format_exc())
             traceback.print_exc()
             
     def update(self,cname,clevel):
@@ -101,7 +130,8 @@ class Change_Action(QDialog):
                 data = json.load(fp)
             self._cdata = data
             self.lb_name.setText(data['name'])
-            self.lb_c.setText(cstl)
+            c_trans={"c0":"0命","c1":"1命","c2":"2命","c3":"3命","c4":"4命","c5":"5命","c6":"6命"}
+            self.lb_c.setText(c_trans[cstl])
             while (self.tb_skill.rowCount() > 0):
                 self.tb_skill.removeRow(0)
             N = 0
@@ -115,24 +145,43 @@ class Change_Action(QDialog):
                 self.tb_skill.setItem(N,2,item)
                 item = QTableWidgetItem(data['ratio_cmt'][i])
                 self.tb_skill.setItem(N,1,item)
+                
+                s = "atk"
+                if "rebase" in data and i in data["rebase"]:
+                    s=data["rebase"][i]
+                if data['atk_type'][i] in ['buff','base']:
+                    s='none'
+                name_trans={'atk':'攻击','def':'防御','life':'生命','none':'无'}
+                s = name_trans[s]
+                    
+                item = QTableWidgetItem(s)
+                self.tb_skill.setItem(N,3,item)                
 
                 N+=1
+
             header = self.tb_skill.horizontalHeader()       
             header.setSectionResizeMode(0, QtWidgets.QHeaderView.ResizeToContents)
             header.setSectionResizeMode(2, QtWidgets.QHeaderView.ResizeToContents)
+            header.setSectionResizeMode(3, QtWidgets.QHeaderView.ResizeToContents)
             header.setSectionResizeMode(1, QtWidgets.QHeaderView.Stretch)
+
+            
+
 
             for i in ['a','e','q','shld','heal']:           
 
                 self.findChild(QLineEdit,"le_"+i).setText((data[cstl]['action_def'][i]))
-                                                                     
+                self.checkline(i)                                                                     
             for i in ['a','e','q']:           
                 self.findChild(QSpinBox,"sb_rnd_"+i).setValue(data[cstl]['round'][i])                                                            
             self.dsb_enchant.setValue(data[cstl]['enchant_ratio'])
             if 'cmts' in data[cstl]:
                 self.pte_cmts.setPlainText(data[cstl]['cmts'])
+            
+            self.tabs.setCurrentIndex(0)
 
             self.exec_()
         except Exception as e:
+            self.sbar.showMessage("技能显示成功",1000)
             print("Error: ", e)
             traceback.print_exc()

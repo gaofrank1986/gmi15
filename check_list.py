@@ -35,15 +35,25 @@ class AppRemovalPage(QtWidgets.QWizardPage):
         self.list_view.setModel(self.model)
         self.list_view.checked.connect(self.onChecked)
         self.record=set()
+
         
         
     def add(self,alist):
         self.model.clear()
+        self.record=set()
         for line in alist:
             self.item = QtGui.QStandardItem(line)
             self.item.setCheckable(True)
-            self.item.setCheckState(QtCore.Qt.Unchecked)
+            self.item.setCheckState(QtCore.Qt.Checked)
+            self.record.add(self.item.text())
+            
             self.model.appendRow(self.item)
+            font = QtGui.QFont()
+            font.setFamily("汉仪文黑-85w")
+            font.setPointSize(10)
+            self.item.setFont(font)
+
+
 
             
     @QtCore.pyqtSlot(QtCore.QModelIndex)
@@ -52,8 +62,7 @@ class AppRemovalPage(QtWidgets.QWizardPage):
         if item.checkState() == QtCore.Qt.Checked:
             print(item.text(), "was checked")
             self.record.add(item.text())
-            # print(get_info_by_id(int(item.text().split('_')[0])))
         else:
             print(item.text(), "was unchecked")
             self.record.remove(item.text())
-        print(self.record)
+        # print(self.record)

@@ -1,4 +1,3 @@
-# import numpy as np
 import json
 from copy import deepcopy
 import logging
@@ -6,9 +5,9 @@ import os
 from collections import OrderedDict
 from basic import Articraft
 from character import Character
-from utility import MyDialog,parse_formula,trans,run_thru_data
+from utility import MyDialog,parse_formula,trans,run_thru_data,trans2
 import traceback
-from PyQt5.QtWidgets import QApplication,QTableView,QMainWindow,QTableWidgetItem,QCheckBox,QDialog,QLineEdit,QLabel,QSpinBox,QFrame,QPushButton,QMenu,QMenuBar,QTableWidget,QToolButton 
+from PyQt5.QtWidgets import QApplication,QMainWindow,QTableWidgetItem,QCheckBox,QLabel,QFrame,QPushButton,QTableWidget,QToolButton 
 import sys
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.uic import loadUi
@@ -41,9 +40,7 @@ class MainWindow(QMainWindow):
         path = "./data/info.json"
         with open(path, 'r', encoding='UTF-8') as fp:
             data = json.load(fp)
-            # self._data = data      
         namelist=[]
-        # namelookup={}
         for i in data:
             if "=" not in i:
                 key = data[i]['name']
@@ -52,14 +49,13 @@ class MainWindow(QMainWindow):
                 self._data[key]['w']=data[i]['w']
                 self._data[key]['c']=data[i]['c']
                 self._data[key]['cn']=i
-                # namelookup[key] = i
                 
 
         self.current_role='diluc'
         self.win_cara = caraWindow(namelist,path="./data/character/icon/")
         
         self.pb_wpn = QToolButton(self.tab)
-        self.pb_wpn.setGeometry(50,240,90,100)
+        self.pb_wpn.setGeometry(65,280,90,100)
         self.pb_wpn.setText("武器")
         font.setPointSize(9)
         self.pb_wpn.setFont(font)
@@ -74,11 +70,11 @@ class MainWindow(QMainWindow):
         self.cb_aeffect2.addItems(list(self._aeffect.keys()))
             
         
-        self.dlg = MyDialog(self,'Main',logging.Formatter("%(asctime)s — %(message)s",datefmt='%m-%d,%H:%M'))
+        self.dlg = MyDialog(self,'Main',logging.Formatter("%(asctime)s — %(message)s",datefmt='%H:%M'))
         self.win_buff = MyDialog(self,'Buff',logging.Formatter("%(message)s"))
         self.win_log = MyDialog(self,'1',logging.Formatter("%(message)s"))
         self.win_save_act = Change_Action(self._data,self.statusBar())
-        self.win_rec_a = Rec_Artifact(self._aeffect,self.current_role,self.statusBar())
+        self.win_rec_a = Rec_Artifact(self._aeffect,self.statusBar())
 
 
         
@@ -103,7 +99,10 @@ class MainWindow(QMainWindow):
         self.cb_mode2.setToolTip("<b>模式1:</b> 选择圣遗物主词条穷举<br><b>模式2:</b> 圣遗物录入穷举")
         self.cb_switch_def.setToolTip("防御及抗性效果纳入计算，防御及抗性数值在<b>环境设置</b>中修改")
         self.rb_pop.setToolTip("元素反应纳入计算,增幅反应取最大系数,剧变反应需在<b>技能定义</b>中定义")
-
+        self.rb_cond_fire.setToolTip("渡火4等")
+        self.rb_cond_elec.setToolTip("平雷4,匣里龙吟等")
+        self.rb_cond_ice.setToolTip("冰风4等")
+        self.cb_cond_frozen.setToolTip("冰风4等")
 
         self.read_mainlist()
 
@@ -115,11 +114,9 @@ class MainWindow(QMainWindow):
 
         font.setFamily("汉仪文黑-85w")
         font.setPointSize(9)
-        self.win_buff.setFont(font)
+        self.win_buff.save.setFont(font)
   
         header = self.tbl_2.horizontalHeader()       
-        # header.setSectionResizeMode(0, QtWidgets.QHeaderView.ResizeToContents)
-        # header.setSectionResizeMode(2, QtWidgets.QHeaderView.ResizeToContents)
         header.setSectionResizeMode(3, QtWidgets.QHeaderView.Stretch)
         self._ksort = 1
         self.select_cara(noshow=True)
@@ -142,7 +139,6 @@ class MainWindow(QMainWindow):
         self.statusBar().addPermanentWidget(VLine())    # <---
         self.statusBar().addPermanentWidget(self.btn_run)       
         self.statusBar().addPermanentWidget(VLine())    # <---
-  # <---
         self.statusBar().addPermanentWidget(self.pbar)
         self.statusBar().addPermanentWidget(VLine())    # <---
         self.statusBar().addPermanentWidget(self.cb_mode2)       
@@ -152,15 +148,9 @@ class MainWindow(QMainWindow):
         self.statusBar().addPermanentWidget(ed)
         self.statusBar().addPermanentWidget(VLine())    # <---
         
-        # self.lbl1.setText("Label: Hello")
-        # self.lbl2.setText("Data : 15-09-2019")
-
-        # ed.clicked.connect(lambda: self.statusBar().showMessage("Hello "))
         ed.clicked.connect(self.win_log.exec_)
 
-        # menuBar = QMenuBar(self)
-        # fileMenu = QMenu("&File", self)
-        # menuBar.addMenu(fileMenu)
+
         
         self.trans2 = cn().trans2
         
@@ -190,6 +180,8 @@ class MainWindow(QMainWindow):
         lay.addWidget(self.flower)
         lay.addWidget(self.feather)
         self.pb_load_db.clicked.connect(self.load_db_info)
+    
+        self.tabs.setCurrentIndex(0)
 
         
     # #======================================
@@ -197,11 +189,12 @@ class MainWindow(QMainWindow):
         if not noshow:
             self.win_cara.clicked =False
             self.win_cara.exec_()
-            self.current_role = self.win_cara.cara
+            if self.win_cara.clicked:
+                self.current_role = self.win_cara.cara
         
         if noshow or self.win_cara.clicked:
             self.pb_cara.setIcon(QtGui.QIcon("./data/character/icon/"+self.current_role+".png"))
-            self.pb_cara.setIconSize(QtCore.QSize(80, 80))
+            self.pb_cara.setIconSize(QtCore.QSize(110, 110))
             self.pb_cara.setText("")
             self.reset()            
  
@@ -230,6 +223,7 @@ class MainWindow(QMainWindow):
                 check = True
             else:
                 check = False
+
             for apos in pos:
                 ans = []
                 for i in db_session.query(Entry).filter(and_(Entry.pos==apos,or_(check,Entry.owner==self.aaa.filter))).all():
@@ -246,70 +240,85 @@ class MainWindow(QMainWindow):
         logger.info("=================日志开始================")
         logger.info("精确显示伤害后可复制到其他文本编辑器进行查询")
         logger.info("========================================")
+        logging.getLogger('1').info("=================log开始================")
 
+        fail_info=[]
         try:
             self.save_sub()
             self.save_mainlist()
             
-            skill_level = int(self.cb_skill.currentText())
-            constellation = int(self.cb_cnum.currentText())
-            character = self.current_role
-            weapon = self.current_wpn
-            assert weapon!=''
-            
-            refine = int(self.cb_refine.currentText())
-
-            
-
             env = {'spec':True,'fire':self.rb_cond_fire.isChecked(),'watr':self.rb_cond_watr.isChecked(),'elec':self.rb_cond_elec.isChecked(),'ice':self.rb_cond_ice.isChecked(),'frozen':self.cb_cond_frozen.isChecked(),'lowhp':self.cb_cond_lowhp.isChecked()}
             logger.info(env)
             
-            c = Character(skill_level,constellation)
-            c.load_from_json("./data/character/"+character+".json",env)
-            c.load_weapon_from_json("./data/weapon/"+c.weapon_class+".json",weapon,refine)
+            enemy = {"lvl":self.sb_enemy_lvl.value(),"erss":self.sb_enemy_erss.value(),"frss":self.sb_enemy_frss.value()}
+     
+            
+            try:
+                skill_level = int(self.cb_skill.currentText())
+                constellation = int(self.cb_cnum.currentText())
+                character = self.current_role
+                c = Character(skill_level,constellation)
+                c.load_from_json("./data/character/"+character+".json",env)
+            except:
+                fail_info.append("人物信息错误")
+                raise ValueError
+                
+            try:
+                weapon = self.current_wpn
+                assert weapon!=''
+                refine = int(self.cb_refine.currentText())
+                c.load_weapon_from_json("./data/weapon/"+c.weapon_class+".json",weapon,refine)
+            except:
+                fail_info.append("武器信息错误")
+                raise ValueError
 
             if self.rb_pop.isChecked():
                 c.ifer = True
             if self.cb_switch_def.isChecked():
-                c.if_def_r = True            # else:
+                c.if_def_r = True       
 
             c._load_buff(c.buffs,c._check1,env)
             
-            ae1 = self._aeffect[self.cb_aeffect1.currentText()]
-            ae2 = self._aeffect[self.cb_aeffect2.currentText()]
-            try:
-                assert(int(ae1['n'])+int(ae2['n'])<=4)
-                c._load_buff(ae1['buffs'],c._check1,env)
-                c._load_buff(ae2['buffs'],c._check1,env)
-            except:
-
-                self.statusBar().showMessage("圣遗物套装信息错误，套装效果未加载")
-                logging.getLogger('1').error(traceback.format_exc())
+            if not self.cb_mode2.isChecked():
+                try:
+                    ae1 = self._aeffect[self.cb_aeffect1.currentText()]
+                    ae2 = self._aeffect[self.cb_aeffect2.currentText()]
+                    assert(int(ae1['n'])+int(ae2['n'])<=4)
+                    c._load_buff(ae1['buffs'],c._check1,env)
+                    c._load_buff(ae2['buffs'],c._check1,env)
+                except:
+                    fail_info.append("圣遗物套装信息错误")
+                    logging.getLogger('1').error(traceback.format_exc())
+                    raise ValueError
 
             logging.getLogger('Buff').info("总效果: {}\n".format(c.skill_effect))
             logging.getLogger('Buff').info("特殊攻击加成: {}\n".format(c.sp_buff))
 
-            enemy = {"lvl":self.sb_enemy_lvl.value(),"erss":self.sb_enemy_erss.value(),"frss":self.sb_enemy_frss.value()}
+
             logging.getLogger('1').info(enemy)
             c.enemy = enemy         
             
             rls = Articraft()
             rm_sub={'ed':self.digit_ed.value(),'dphys':self.digit_fd.value(),'d':self.digit_alld.value(),'sa':self.digit_benett.value()}
-            c.load_att(rm_sub)            
+            c.load_att(rm_sub)  
+            
+                      
             if self.cb_mode2.isChecked():
-
-                cal_data={}
-                trans_pos = ['head','glass','cup','flower','feather']
- 
-                for apos in trans_pos:
-                    cal_data[apos]=[]
-                    tmp = getattr(self,apos)
-                    assert len(tmp.record)>=1
-                    for jjj in tmp.record:
-                        cal_data[apos].append(get_info_by_id(int(jjj.split('_')[0])))
+                try:
+                    cal_data={}
+                    trans_pos = ['head','glass','cup','flower','feather']
+    
+                    for apos in trans_pos:
+                        cal_data[apos]=[]
+                        tmp = getattr(self,apos)
+                        assert len(tmp.record)>=1
+                        for jjj in tmp.record:
+                            cal_data[apos].append(get_info_by_id(int(jjj.split('_')[0])))
+                except:
+                    fail_info.append("圣遗物选择错误")
+                    raise ValueError
                 
                 save = run_thru_data(cal_data,self._aeffect,c,rls,self.pbar,self._ksort)
-                # save = run_thru_folders(self.win_rec_a.path,self._aeffect,c,rls,self.pbar,self._ksort)
             else:
                 rls.load_json("./data/artifacts/sub.json")
                 with open('./data/artifacts/main_list.json', 'r', encoding='UTF-8') as fp:
@@ -317,13 +326,6 @@ class MainWindow(QMainWindow):
                 # save = run_thru("./data/artifacts/main_list.json",c,rls,self.pbar,self._ksort)
                 save = run_thru_data(cal_data,self._aeffect,c,rls,self.pbar,self._ksort)
                 
-            if "rebase" in c._data.keys():
-                for i in c._data['rebase']:
-                    logging.getLogger('Buff').info("更换倍率基础 {}".format(i))
-                    logging.getLogger('Buff').info(c._data['rebase'][i])
-                    logging.getLogger('Buff').info("")
-
-
             test = OrderedDict(sorted(save.items(),reverse=True))
             N=0
             limit = 4
@@ -331,18 +333,14 @@ class MainWindow(QMainWindow):
                 if 'sub' in test[i][1]:
                     test[i][1].pop('sub')
                 tmp2 = list(test[i][1].keys())
-
-                # tmp2 = [list(test[i][1][_].keys())[0] for _ in tmp]
-                # if self.rb_mode2.isChecked():
-                # tmp2 = tmp
                 tmp2 = [_.split('_')[1] for _ in tmp2]
                 tmp0 = test[i][0]
-                logging.getLogger('1').info("{}{}{}{}".format(character,constellation,c.equipment[0],tmp0))
+                logging.getLogger('1').info("结果 {}{}{}{}".format(character,constellation,c.equipment[0],tmp0))
 
                 if self.rb_display.isChecked():
-                    content = [i]+tmp2+[tmp0['shld'],tmp0['heal'],tmp0['maxhp'],tmp0['sum']]                
+                    content = [i]+tmp2+[tmp0['shld'],tmp0['heal'],tmp0['maxhp'],tmp0['sum']]+[trans2(tmp0['perc_a']),trans2(tmp0['perc_e']),trans2(tmp0['perc_q'])]              
                 else:
-                    content = [trans(i)]+tmp2+[trans(tmp0['shld']),trans(tmp0['heal']),trans(tmp0['maxhp']),trans(tmp0['sum'])]                
+                    content = [trans(i)]+tmp2+[trans(tmp0['shld']),trans(tmp0['heal']),trans(tmp0['maxhp']),trans(tmp0['sum'])]+[trans2(tmp0['perc_a']),trans2(tmp0['perc_e']),trans2(tmp0['perc_q'])]                 
                 for i in range(len(content)):
                     item =  QTableWidgetItem(str(content[i]))
 
@@ -354,12 +352,12 @@ class MainWindow(QMainWindow):
                 if N==limit:
                     break
 
-            self.statusBar().showMessage("计算成功")
+            self.statusBar().showMessage("计算成功",2000)
             self.tabs.setCurrentIndex(0)
-            # self.pb_buff.show()
 
         except Exception as e:
-            self.statusBar().showMessage("计算失败")
+            fail_info.append("计算失败")
+            self.statusBar().showMessage("/".join(fail_info),3000)
             logging.getLogger('1').error("Error:{} ".format(e))
             logging.getLogger('1').error(traceback.format_exc())
 
@@ -374,10 +372,7 @@ class MainWindow(QMainWindow):
             self.digit_cd.setValue(self._sub_data['cd']) 
             self.digit_dr.setValue(self._sub_data['dr']) 
             self.digit_ar.setValue(self._sub_data['ar']) 
-            # self.digit_ed.setValue(self._sub_data['ed']) 
-            # self.digit_fd.setValue(self._sub_data['dphys']) 
             self.digit_sa.setValue(self._sub_data['sa']) 
-            # self.digit_alld.setValue(self._sub_data['d']) 
             self.digit_sd.setValue(self._sub_data['sd']) 
             self.digit_hr.setValue(self._sub_data['hr']) 
             self.digit_em.setValue(self._sub_data['em']) 
@@ -392,10 +387,7 @@ class MainWindow(QMainWindow):
         data['dr'] = self.digit_dr.value()
         data['ar'] = self.digit_ar.value()
         data['cd'] = self.digit_cd.value()
-        # data['ed'] = self.digit_ed.value()
-        # data['dphys'] = self.digit_fd.value()
         data['sa'] = self.digit_sa.value()
-        # data['d'] = self.digit_alld.value()
         data['sd'] = self.digit_sd.value()
         data['sh'] = self.digit_sh.value()
         data['hr'] = self.digit_hr.value()
@@ -407,7 +399,6 @@ class MainWindow(QMainWindow):
 
 
     def _set_cbox(self,pos,data):
-        #setObjectName()/findChild()
         assert(pos in ['head','glass','cup'])
         ans = []
         for i in data:
@@ -455,13 +446,12 @@ class MainWindow(QMainWindow):
             ans[i] = []
             for j in blist[alist.index(i)]:
                 tmp = dict()
-                tmp['set'] = '无'
-                tmp['name'] = self.trans2[j]
                 tmp[j] = round(basic_main_rate*ratio_main[j],2)
+                tmp['name'] = self.trans2[j]
+                tmp['set'] = '无'
                 ans[i].append(tmp.copy())
 
-        # with open('./data/artifacts/main_list.json', 'w+') as fp:
-        #     json.dump(ans, fp,indent = 4)
+
         with open('./data/artifacts/main_list.json', 'w+', encoding='utf-8') as fp:
                 json.dump(ans, fp,indent = 4,ensure_ascii=False)
             
@@ -473,16 +463,18 @@ class MainWindow(QMainWindow):
         if self.cb_mode2.isChecked():
             self.tabs.setTabEnabled(2,False)
             self.tabs.setTabEnabled(3,True)
+            self.tabs.setCurrentIndex(3)
         else:
             self.tabs.setTabEnabled(2,True)
             self.tabs.setTabEnabled(3,False)
+            self.tabs.setCurrentIndex(2)
 
             
     def reset(self):
         self.cb_cnum.clear()
         self.reset_table()
         self.load_info()
-        self.win_rec_a.update(self.current_role)
+        # self.win_rec_a.update(self.current_role)
 
 
     def reset_table(self):
@@ -495,12 +487,12 @@ class MainWindow(QMainWindow):
         text = self.cb_sort.currentText()
         self.tbl_2.setRowHidden(bbb[text],True)
         self.pbar.setValue(0)
-        # self.win_save_act.update(self.cb_name.currentText(),self.cb_cnum.currentText())   
         self.win_save_act.update(self.current_role,self.cb_cnum.currentText())   
         if not self.cb_mode2.isChecked():
             self.tbl_2.setRowHidden(4,True)
             self.tbl_2.setRowHidden(5,True)
-                 
+        self.statusBar().showMessage("重置结果",1000)
+         
         
         
          
@@ -519,9 +511,8 @@ class MainWindow(QMainWindow):
         self.pb_wpn.setText("武器")
         self.current_wpn=""
         self.pb_wpn.setIconSize(QtCore.QSize(0, 0))
-        
         self.cb_cnum.addItems(self._data[self.current_role]['c'])
-        self.statusBar().showMessage("信息重新加载")
+        self.statusBar().showMessage("信息重新加载",1000)
 
 
     

@@ -309,10 +309,12 @@ class Character(Basic_Panel):
             logger.info("增伤 {}".format(self.dmg_eh))
 
         result = dict()
+        atk_dmg = dict()
         for i in self.atk_name:
             logger.debug("==============处理 {} 技能公式:[{}]===============".format(i,self.formula[i]))
             ans = [0,0,0,0,0,0]
             ans2 = [0,0,0,0]
+            atk_dmg[i] =0
 
             save_value= [_*self._total_atk()*self._crit() for _ in self._area3()]
             save_value.append(self.attack[0]*(1+0.05*0.5))
@@ -405,30 +407,30 @@ class Character(Basic_Panel):
                         ans2[1]+=ratio*multi
                         if atk_t == 'elem':                            
                             ans[0]+=base*area2*(area30+delta)*ratio*multi*elemrct*ratio_dr*ratio_rr0
-                            ans2[2]+=base*area2*(area30+delta)*ratio*multi/save_value[0]
-                            ans2[3]+=base*area2*(area30+delta)*ratio*multi/save_value[2]
+                            # ans2[2]+=base*area2*(area30+delta)*ratio*multi/save_value[0]
+                            # ans2[3]+=base*area2*(area30+delta)*ratio*multi/save_value[2]
 
-                            logger.debug("area1 = {:.2f},area2 = {:.2f},area3 = {:.2f},伤害类型:{}".format(base,area2,area30,atk_t))
+                            logger.debug("base = {:.2f},area1 = {:.2f},area2 = {:.2f},area3 = {:.2f},伤害类型:{}".format(base,base/self.attack[0],area2,area30,atk_t))
 
                         elif atk_t == 'phys':
                             ans[0]+=base*area2*(area30+delta)*ratio*multi*self.enchant_ratio*elemrct*ratio_dr*ratio_rr0
-                            ans2[2]+=base*area2*(area30+delta)*ratio*multi*self.enchant_ratio/save_value[0]
-                            ans2[3]+=base*area2*(area30+delta)*ratio*multi*self.enchant_ratio/save_value[2]
+                            # ans2[2]+=base*area2*(area30+delta)*ratio*multi*self.enchant_ratio/save_value[0]
+                            # ans2[3]+=base*area2*(area30+delta)*ratio*multi*self.enchant_ratio/save_value[2]
 
-                            logger.debug("area1 = {:.2f},area2 = {:.2f},area3 = {:.2f},伤害类型:{},附魔,占比 {}".format(base,area2,area30,"属性元素",self.enchant_ratio))
+                            logger.debug("base = {:.2f},area1 = {:.2f},area2 = {:.2f},area3 = {:.2f},伤害类型:{},附魔,占比 {}".format(base,base/self.attack[0],area2,area30,"属性元素",self.enchant_ratio))
 
     
                             ans[1]+=base*area2*(area31+delta)*ratio*multi*(1-self.enchant_ratio)*ratio_dr*ratio_rr1
-                            ans2[2]+=base*area2*(area30+delta)*ratio*multi*(1-self.enchant_ratio)/save_value[1]
-                            ans2[3]+=base*area2*(area30+delta)*ratio*multi*(1-self.enchant_ratio)/save_value[2]
+                            # ans2[2]+=base*area2*(area30+delta)*ratio*multi*(1-self.enchant_ratio)/save_value[1]
+                            # ans2[3]+=base*area2*(area30+delta)*ratio*multi*(1-self.enchant_ratio)/save_value[2]
 
-                            logger.debug("area1 = {:.2f},area2 = {:.2f},area3 = {:.2f},伤害类型:{},不附魔,占比 {}".format(base,area2,area31,"物理",1-self.enchant_ratio))
+                            logger.debug("base = {:.2f},area1 = {:.2f},area2 = {:.2f},area3 = {:.2f},伤害类型:{},不附魔,占比 {}".format(base,base/self.attack[0],area2,area31,"物理",1-self.enchant_ratio))
                         elif atk_t == 'env':
                             ans[2]+=base*area2*ratio*multi*ratio_dr*ratio_rr2
-                            ans2[2]+=base*area2*ratio*multi/save_value[0]
-                            ans2[3]+=base*area2*ratio*multi/save_value[2]
+                            # ans2[2]+=base*area2*ratio*multi/save_value[0]
+                            # ans2[3]+=base*area2*ratio*multi/save_value[2]
 
-                            logger.debug("area1 = {:.2f},area2 = {:.2f},area3 = {:.2f},伤害类型:{}".format(base,area2,1,"环境元素")) 
+                            logger.debug("base = {:.2f},area1 = {:.2f},area2 = {:.2f},area3 = {:.2f},伤害类型:{}".format(base,base/self.attack[0],area2,1,"环境元素")) 
                         else:
                             pass
                     elif i in ['shld']:
@@ -457,7 +459,7 @@ class Character(Basic_Panel):
                         else:
                             ans[2] += em_base*multi*elemrct2*ratio_dr*ratio_rr2
                             
-                        logger.debug("剧变反应：{}  基数 {},次数 = {},精通 = {:.2f},精通增益:{:.2f}".format(entry[0],em_base,multi,self.attack[5],self._em3(self.attack[5])/100))
+                        logger.debug("剧变反应：{}  基数 {},次数 = {},精通 = {:.2f},精通增益:{:.2f}".format(entry[0],em_base,multi,self.attack[5],self._em3(self.attack[5])))
                     if entry[0] == 'w':
                         '''武器附伤'''
                         if 'damage' in self.skill_effect[i]:
@@ -481,14 +483,18 @@ class Character(Basic_Panel):
             result['othr'] = result.get('othr',0)+(ans[2])*self.skill_round[i]
             result['shld'] = result.get('shld',0)+ans[4]
             result['heal'] = result.get('heal',0)+ans[5]
+            atk_dmg[i] = (ans[0]+ans[1]+ans[2])*self.skill_round[i]
             # print(i,ans2[1],self.skill_round[i])
-            result['ratio1'] = result.get('ratio1',0)+ans2[1]*self.skill_round[i]
-            result['ratio2'] = result.get('ratio2',0)+ans2[0]*self.skill_round[i]
-            result['ratio3'] = result.get('ratio3',0)+ans2[2]*self.skill_round[i]
-            result['ratio4'] = result.get('ratio4',0)+ans2[3]*self.skill_round[i]
+            # result['ratio1'] = result.get('ratio1',0)+ans2[1]*self.skill_round[i]
+            # result['ratio2'] = result.get('ratio2',0)+ans2[0]*self.skill_round[i]
+            # result['ratio3'] = result.get('ratio3',0)+ans2[2]*self.skill_round[i]
+            # result['ratio4'] = result.get('ratio4',0)+ans2[3]*self.skill_round[i]
             
 
         result['sum'] = int(result.get('elem',0)+result.get('phys',0)+ result.get('othr',0))
+        result['perc_a'] = atk_dmg['a']/result['sum']
+        result['perc_e'] = atk_dmg['e']/result['sum']
+        result['perc_q'] = atk_dmg['q']/result['sum']
         logger.info("damage = {}".format(int(result['sum'])))
         logger.info("###############################################")        
         return(result)
