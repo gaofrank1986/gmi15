@@ -4,7 +4,7 @@ from PyQt5 import QtWidgets,QtGui
 from os import listdir
 from PyQt5 import QtCore
 import logging 
-
+from ocr import cn
 
 
 
@@ -86,45 +86,53 @@ def run_thru_data(cdata,affect,c,rls,pbar,ksort=1):
                         assert(ftdata['set'] in e_dict)
                         e_dict5 = deepcopy(e_dict4)
                         e_dict5[ftdata['set']] += 1
-                        
-                        logger.info("##############################################")
-                        logger.info("#############     穷举第{}次     #################".format(acc))
-                        logger.info("##############################################")
-                        logger.info("##############################################")
-                        logger.info(str1)
-                        logger.info(str2)
-                        logger.info(str3)
-                        logger.info(str4)
-                        logger.info("死之羽: {}".format(ftdata))
-                        
-                        pbar.setValue(float(acc/total)*100)
-                        acc+=1
-                        diluc.put_on(rls)                                                
-                        tmp2 = deepcopy(diluc)
-                        logger.info(e_dict5)
-                        logging.getLogger('Buff').info("===========录入圣遗物穷举{}===========".format(acc-1))
-                        for i in e_dict5:
-                            if i!='无':
-                                if e_dict5[i] >=4 and i+'4' in affect:
-                                    tmp2._load_buff(affect[i+'4']['buffs'],tmp2._check1,tmp2.env)
-                                if e_dict5[i] >=4 and not i+'4' in affect and i+'2' in affect:
-                                    tmp2._load_buff(affect[i+'2']['buffs'],tmp2._check1,tmp2.env)
-                                if e_dict5[i] >=2 and e_dict5[i] <4 and i+'2' in affect:
-                                    tmp2._load_buff(affect[i+'2']['buffs'],tmp2._check1,tmp2.env)                                    
-                        ans = deepcopy(tmp2.damage_rsl())
-                        if ksort == 1:
-                            tmp = ans['sum']
-                        if ksort == 3:
-                            tmp = ans['maxhp']
-                        if ksort == 4:
-                            tmp = ans['heal']
-                        if ksort == 2:
-                            tmp = ans['shld']
-                        while (tmp in save.keys()):
-                            tmp = tmp-1
-                        save[tmp] = [ans,deepcopy(rls.buf)]
+                        str5 = "死之羽: {}".format(ftdata)
 
-                        diluc.take_off(rls)
+                        for subdata in cdata['sub']:
+                            sub_name = 'sub_'+subdata['name']
+                            rls.add(subdata,sub_name)
+                            str6 = "副词条: {}".format(subdata)
+                        
+                            logger.info("##############################################")
+                            logger.info("#############     穷举第{}次     #################".format(acc))
+                            logger.info("##############################################")
+                            logger.info("##############################################")
+                            logger.info(str1)
+                            logger.info(str2)
+                            logger.info(str3)
+                            logger.info(str4)
+                            logger.info(str5)
+                            logger.info(str6)
+                            
+                            pbar.setValue(float(acc/total)*100)
+                            acc+=1
+                            diluc.put_on(rls)                                                
+                            tmp2 = deepcopy(diluc)
+                            logger.info(e_dict5)
+                            logging.getLogger('Buff').info("===========录入圣遗物穷举{}===========".format(acc-1))
+                            for i in e_dict5:
+                                if i!='无':
+                                    if e_dict5[i] >=4 and i+'4' in affect:
+                                        tmp2._load_buff(affect[i+'4']['buffs'],tmp2._check1,tmp2.env)
+                                    if e_dict5[i] >=4 and not i+'4' in affect and i+'2' in affect:
+                                        tmp2._load_buff(affect[i+'2']['buffs'],tmp2._check1,tmp2.env)
+                                    if e_dict5[i] >=2 and e_dict5[i] <4 and i+'2' in affect:
+                                        tmp2._load_buff(affect[i+'2']['buffs'],tmp2._check1,tmp2.env)                                    
+                            ans = deepcopy(tmp2.damage_rsl())
+                            if ksort == 1:
+                                tmp = ans['sum']
+                            if ksort == 3:
+                                tmp = ans['maxhp']
+                            if ksort == 4:
+                                tmp = ans['heal']
+                            if ksort == 2:
+                                tmp = ans['shld']
+                            while (tmp in save.keys()):
+                                tmp = tmp-1
+                            save[tmp] = [ans,deepcopy(rls.buf)]
+
+                            diluc.take_off(rls)
+                            rls.rm2(sub_name)
                         rls.rm2(ft_name)        
                     rls.rm2(fl_name)                                 
                 rls.rm2(cp_name)        
@@ -133,7 +141,23 @@ def run_thru_data(cdata,affect,c,rls,pbar,ksort=1):
         
     return(save)
 
-
+def gen_sublist(n,alist):
+    ans=[]
+    assert len(alist)<5
+    if len(alist)==1:
+        return([{alist[0]:n}])
+    else:
+        for i in range(n+1):
+            tmp1 ={}
+            tmp1[alist[0]] = i
+            for acase in gen_sublist(n-i,alist[1:]):
+                tmp2 = deepcopy(tmp1)
+                for k in acase:
+                    tmp2[k] = acase[k]
+                ans.append(tmp2)
+        return ans
+            
+    
 
 class QTextEditLogger(logging.Handler):
     def __init__(self, parent):
@@ -194,13 +218,13 @@ def parse_formula(s):
           raise ValueError("invalid formula: {}".format(s))
     return(ans) 
 
-def trans(i):
+def ps1(i):
     assert(isinstance(i,int) or isinstance(i,float))
     if i<10000:
         return i
     return str(round(i/10000,1))+'万'
 
-def trans2(i):
+def ps2(i):
     s = "{:.1f}%".format(i*100)
     return s
 
@@ -218,3 +242,33 @@ def extract_rlist(data):
         if i not in blist:
             blist.append(i)
     return(blist)
+
+def rename(a):
+    assert isinstance(a,dict)
+    s = cn()
+    ans=''
+    for i in a:
+        ans+='{}{}\n'.format(s.trans2[i],a[i])
+    return(ans[:-1])
+
+def gen_mainlist(blist):
+
+    alist = ['head','glass','cup','flower','feather']
+    basic_main_rate = 31.1#满爆率
+    lang = cn()
+
+    prop_list = ['ar','ed','cr','cd','dphys','sa','sh','dr','em','hr','dheal','ef']
+    trans_ratio = [1.5,1.5,1,2,1.875,10,153.7,1.875,6.0128,1.5,1.1428,1.1543,1.6656]
+    ratio_main = {prop_list[i]:trans_ratio[i] for i in range(len(prop_list))}
+
+    ans = dict()
+    for i in alist:
+        ans[i] = []
+        for j in blist[alist.index(i)]:
+            tmp = dict()
+            tmp[j] = round(basic_main_rate*ratio_main[j],2)
+            tmp['name'] = lang.trans2[j]
+            tmp['set'] = '无'
+            ans[i].append(tmp.copy())
+
+    return(ans)

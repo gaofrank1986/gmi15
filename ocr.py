@@ -54,10 +54,11 @@ class cn():
 
 		self.ignore = ['in']
   
-		self.plist = ['暴击','暴伤','攻击','攻击','属伤','物伤','防御','防御','生命','生命','治疗','精通','充能']
+		self.plist = ['暴击','暴伤','攻击','攻击力','属伤','物伤','防御','防御力','生命','生命值','治疗','精通','充能']
 		self.dlist = ['cr','cd','ar','sa','ed','dphys','dr','sd','hr','sh','dheal','em','ef']
 
 		self.trans2 = {self.dlist[i]:self.plist[i] for i in range(len(self.plist))}
+		self.trans1 = {self.plist[i]:self.dlist[i] for i in range(len(self.dlist))}
 
 def parse(text):
 	stat = None

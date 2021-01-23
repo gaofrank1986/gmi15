@@ -317,7 +317,7 @@
         "enchant_ratio": 0.0,
         "round": {
             "a": 4,
-            "e": 2,
+            "e": 1,
             "q": 1
         },
         "cmts": "假设 q ehh ehh e\n大招击中10次"

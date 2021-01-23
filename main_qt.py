@@ -5,9 +5,9 @@ import os
 from collections import OrderedDict
 from basic import Articraft
 from character import Character
-from utility import MyDialog,parse_formula,trans,run_thru_data,trans2
+from utility import MyDialog,parse_formula,ps2,run_thru_data,ps1,gen_sublist,rename,gen_mainlist
 import traceback
-from PyQt5.QtWidgets import QApplication,QMainWindow,QTableWidgetItem,QCheckBox,QLabel,QFrame,QPushButton,QTableWidget,QToolButton 
+from PyQt5.QtWidgets import QApplication,QMainWindow,QTableWidgetItem,QCheckBox,QLabel,QFrame,QPushButton,QTableWidget,QToolButton,QListWidget
 import sys
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.uic import loadUi
@@ -19,6 +19,22 @@ from db_setup import Entry,db_session,init_db,get_info_by_id
 from check_list import AppRemovalPage
 from sqlalchemy import and_,or_
 from wincara import caraWindow
+from PyQt5.QtCore import QItemSelectionModel
+import pprint
+from win_ratio import Win_Ratio
+
+class MyListWidget(QListWidget):
+    def __init__(self, parent=None, max_selected = 3):
+        super().__init__(parent)
+        self.max_selected = max_selected
+
+    def selectionCommand(self, index, event):
+        if len(self.selectedItems()) >= self.max_selected:
+            return QItemSelectionModel.Deselect
+        else:
+            return super().selectionCommand(index, event)
+
+
 class VLine(QFrame):
     # a simple VLine, like the one you get from designer
     def __init__(self):
@@ -55,7 +71,7 @@ class MainWindow(QMainWindow):
         self.win_cara = caraWindow(namelist,path="./data/character/icon/")
         
         self.pb_wpn = QToolButton(self.tab)
-        self.pb_wpn.setGeometry(65,280,90,100)
+        self.pb_wpn.setGeometry(65,300,90,100)
         self.pb_wpn.setText("武器")
         font.setPointSize(9)
         self.pb_wpn.setFont(font)
@@ -75,7 +91,7 @@ class MainWindow(QMainWindow):
         self.win_log = MyDialog(self,'1',logging.Formatter("%(message)s"))
         self.win_save_act = Change_Action(self._data,self.statusBar())
         self.win_rec_a = Rec_Artifact(self._aeffect,self.statusBar())
-
+        self.win_ratio = Win_Ratio(self.current_role,self.statusBar())
 
         
         self.pb_change.clicked.connect(self.win_save_act.display) 
@@ -84,6 +100,7 @@ class MainWindow(QMainWindow):
         self.pb_buff.clicked.connect(self.win_buff.exec_) 
         self.pb_cara.clicked.connect(self.select_cara)
         self.pb_wpn.clicked.connect(self.select_wpn)
+        self.pb_ratio.clicked.connect(self.win_ratio.display)
 
        
         self.btn_run.clicked.connect(self.run) 
@@ -95,8 +112,8 @@ class MainWindow(QMainWindow):
         self.cb_sort.currentIndexChanged.connect(self.change_ksort)
         # self.rb_mode2.toggled.connect(self.show_rec)
         # self.rb_mode1.toggled.connect(self.show_rec)
-        self.cb_mode2.stateChanged.connect(self.show_rec)
-        self.cb_mode2.setToolTip("<b>模式1:</b> 选择圣遗物主词条穷举<br><b>模式2:</b> 圣遗物录入穷举")
+        self.cb_mode2.currentIndexChanged.connect(self.show_rec)
+        self.cb_mode2.setToolTip("<b>模式1:</b> 主词条穷举<br><b>模式2:</b> 副词条穷举<b>模式3:</b> 录入穷举")
         self.cb_switch_def.setToolTip("防御及抗性效果纳入计算，防御及抗性数值在<b>环境设置</b>中修改")
         self.rb_pop.setToolTip("元素反应纳入计算,增幅反应取最大系数,剧变反应需在<b>技能定义</b>中定义")
         self.rb_cond_fire.setToolTip("渡火4等")
@@ -105,7 +122,7 @@ class MainWindow(QMainWindow):
         self.cb_cond_frozen.setToolTip("冰风4等")
 
         self.read_mainlist()
-
+        self.read_sub()
 
         font.setFamily("微软雅黑")
         font.setPointSize(10)
@@ -118,6 +135,10 @@ class MainWindow(QMainWindow):
   
         header = self.tbl_2.horizontalHeader()       
         header.setSectionResizeMode(3, QtWidgets.QHeaderView.Stretch)
+        # self.tbl_2.setRowHeight(6,100)
+        header = self.tbl_2.verticalHeader()       
+        header.setSectionResizeMode(6, QtWidgets.QHeaderView.ResizeToContents)
+        
         self._ksort = 1
         self.select_cara(noshow=True)
 
@@ -153,6 +174,7 @@ class MainWindow(QMainWindow):
 
         
         self.trans2 = cn().trans2
+        self.trans1 = cn().trans1
         
         init_db()
         
@@ -181,8 +203,35 @@ class MainWindow(QMainWindow):
         lay.addWidget(self.feather)
         self.pb_load_db.clicked.connect(self.load_db_info)
     
+        
+        self.select_subs = MyListWidget(self.groupBox_11,3)
+        self.select_subs.setSelectionMode(
+            QtWidgets.QAbstractItemView.ExtendedSelection
+        )
+        self.select_subs.setGeometry(240,80,220,150)
+        font.setPointSize(9)
+        self.select_subs.setFont(font)
+        self.select_subs.addItems(['攻击','暴击','暴伤','防御','生命'])
+        self.select_subs.itemClicked.connect(self.printItemText)
+        self.cb_main_head.addItems(['暴击','暴伤','攻击','防御'])
+        self.cb_main_glass.addItems(['攻击','防御','生命'])
+        self.cb_main_cup.addItems(['属伤','物伤','攻击','生命'])
+        self.show_rec()
+        self.save_sub_list=[]
+        
         self.tabs.setCurrentIndex(0)
 
+    def printItemText(self):
+        items = self.select_subs.selectedItems()
+        lang = cn()
+        x = []
+        y = []
+        for i in range(len(items)):
+            x.append(str(self.select_subs.selectedItems()[i].text()))
+            y.append(lang.trans1[x[-1]])
+
+        self.label_subs.setText('已选: {}'.format(','.join(x)))
+        self.save_sub_list = y
         
     # #======================================
     def select_cara(self,noshow=False):
@@ -191,6 +240,7 @@ class MainWindow(QMainWindow):
             self.win_cara.exec_()
             if self.win_cara.clicked:
                 self.current_role = self.win_cara.cara
+                self.win_ratio.role = self.current_role
         
         if noshow or self.win_cara.clicked:
             self.pb_cara.setIcon(QtGui.QIcon("./data/character/icon/"+self.current_role+".png"))
@@ -202,7 +252,11 @@ class MainWindow(QMainWindow):
         if not noshow:
             self.win_wpn.clicked=False
             self.win_wpn.exec_()
-            self.current_wpn = self.win_wpn.cara
+            if self.win_wpn.clicked:
+                self.current_wpn = self.win_wpn.cara
+                wkind = self._data[self.current_role]['w']
+                assert self.current_wpn!=''
+                self.win_ratio.wpn = wkind+'_'+self.current_wpn
                 
         if noshow or self.win_wpn.clicked:
             self.pb_wpn.setIcon(QtGui.QIcon(self.win_wpn.path+self.current_wpn+".png"))
@@ -245,8 +299,13 @@ class MainWindow(QMainWindow):
         fail_info=[]
         try:
             self.save_sub()
-            self.save_mainlist()
-            
+            # self.save_mainlist()
+            blist=[self._read_cbox('head'),self._read_cbox('glass'),self._read_cbox('cup'),['sh'],['sa']]
+            mainlist = gen_mainlist(blist)
+            with open('./data/artifacts/main_list.json', 'w+', encoding='utf-8') as fp:
+                    json.dump(mainlist, fp,indent = 4,ensure_ascii=False)
+
+
             env = {'spec':True,'fire':self.rb_cond_fire.isChecked(),'watr':self.rb_cond_watr.isChecked(),'elec':self.rb_cond_elec.isChecked(),'ice':self.rb_cond_ice.isChecked(),'frozen':self.cb_cond_frozen.isChecked(),'lowhp':self.cb_cond_lowhp.isChecked()}
             logger.info(env)
             
@@ -272,14 +331,16 @@ class MainWindow(QMainWindow):
                 fail_info.append("武器信息错误")
                 raise ValueError
 
+
             if self.rb_pop.isChecked():
                 c.ifer = True
             if self.cb_switch_def.isChecked():
                 c.if_def_r = True       
 
+            '''人物/武器/圣遗物套装(非录入穷举) buff 加载部分'''
             c._load_buff(c.buffs,c._check1,env)
             
-            if not self.cb_mode2.isChecked():
+            if not self.cb_mode2.currentIndex()==2:
                 try:
                     ae1 = self._aeffect[self.cb_aeffect1.currentText()]
                     ae2 = self._aeffect[self.cb_aeffect2.currentText()]
@@ -299,11 +360,17 @@ class MainWindow(QMainWindow):
             c.enemy = enemy         
             
             rls = Articraft()
+            '''其他增益加载部分'''
             rm_sub={'ed':self.digit_ed.value(),'dphys':self.digit_fd.value(),'d':self.digit_alld.value(),'sa':self.digit_benett.value()}
             c.load_att(rm_sub)  
             
                       
-            if self.cb_mode2.isChecked():
+
+
+
+
+
+            if self.cb_mode2.currentIndex()==2:
                 try:
                     cal_data={}
                     trans_pos = ['head','glass','cup','flower','feather']
@@ -314,33 +381,58 @@ class MainWindow(QMainWindow):
                         assert len(tmp.record)>=1
                         for jjj in tmp.record:
                             cal_data[apos].append(get_info_by_id(int(jjj.split('_')[0])))
+                    cal_data['sub']=[{'cr':0,'name':'empty'}]
                 except:
                     fail_info.append("圣遗物选择错误")
                     raise ValueError
                 
                 save = run_thru_data(cal_data,self._aeffect,c,rls,self.pbar,self._ksort)
-            else:
+            if self.cb_mode2.currentIndex()==0:
                 rls.load_json("./data/artifacts/sub.json")
-                with open('./data/artifacts/main_list.json', 'r', encoding='UTF-8') as fp:
-                    cal_data = json.load(fp)
-                # save = run_thru("./data/artifacts/main_list.json",c,rls,self.pbar,self._ksort)
+                cal_data = mainlist
+                cal_data['sub']=[{'cr':0,'name':'emtpy'}]
                 save = run_thru_data(cal_data,self._aeffect,c,rls,self.pbar,self._ksort)
+            if self.cb_mode2.currentIndex()==1:
+                blist=[[self.trans1[self.cb_main_head.currentText()]],[self.trans1[self.cb_main_glass.currentText()]],[self.trans1[self.cb_main_cup.currentText()]],['sh'],['sa']]
+                run_list = gen_sublist(self.spb_nsub.value(),self.save_sub_list)
+                # print(self.save_sub_list)
+                prop_list = ['ar','ed','cr','cd','dphys','sa','sh','dr','em','hr','dheal','ef']
+                trans_ratio = [1.5,1.5,1,2,1.875,10,153.7,1.875,6.0128,1.5,1.1428,1.1543,1.6656]
+                assert len(self.save_sub_list)>0
+                for i in range(len(run_list)):
+                    run_list[i]['name'] = rename(run_list[i])
+                    for j in run_list[i]:
+                        if j!='name':
+                            run_list[i][j] = trans_ratio[prop_list.index(j)]*5.7*run_list[i][j]
+                    
+                cal_data = self.gen_mainlist(blist)
+                cal_data["sub"] = run_list
+                save = run_thru_data(cal_data,self._aeffect,c,rls,self.pbar,self._ksort)
+
+            
+
+
+            '''结果输出部分'''
+
                 
             test = OrderedDict(sorted(save.items(),reverse=True))
             N=0
             limit = 4
             for i in test:
-                if 'sub' in test[i][1]:
-                    test[i][1].pop('sub')
                 tmp2 = list(test[i][1].keys())
+                if 'sub_test' in tmp2:
+                    tmp2.remove('sub_test')
+                if 'sub' in tmp2:
+                    tmp2.remove('sub')
                 tmp2 = [_.split('_')[1] for _ in tmp2]
                 tmp0 = test[i][0]
-                logging.getLogger('1').info("结果 {}{}{}{}".format(character,constellation,c.equipment[0],tmp0))
+                logging.getLogger('1').info("结果：\n {}{}{}\n{}".format(character,constellation,c.equipment[0],pprint.pformat(tmp0,indent=4)))
+                logging.getLogger('1').info("圣遗物：\n{}".format(pprint.pformat(test[i][1],indent=4)))
 
                 if self.rb_display.isChecked():
-                    content = [i]+tmp2+[tmp0['shld'],tmp0['heal'],tmp0['maxhp'],tmp0['sum']]+[trans2(tmp0['perc_a']),trans2(tmp0['perc_e']),trans2(tmp0['perc_q'])]              
+                    content = [i]+tmp2+[tmp0['shld'],tmp0['heal'],tmp0['maxhp'],tmp0['sum']]+[ps2(tmp0['perc_a']),ps2(tmp0['perc_e']),ps2(tmp0['perc_q'])]              
                 else:
-                    content = [trans(i)]+tmp2+[trans(tmp0['shld']),trans(tmp0['heal']),trans(tmp0['maxhp']),trans(tmp0['sum'])]+[trans2(tmp0['perc_a']),trans2(tmp0['perc_e']),trans2(tmp0['perc_q'])]                 
+                    content = [ps1(i)]+tmp2+[ps1(tmp0['shld']),ps1(tmp0['heal']),ps1(tmp0['maxhp']),ps1(tmp0['sum'])]+[ps2(tmp0['perc_a']),ps2(tmp0['perc_e']),ps2(tmp0['perc_q'])]                 
                 for i in range(len(content)):
                     item =  QTableWidgetItem(str(content[i]))
 
@@ -427,14 +519,11 @@ class MainWindow(QMainWindow):
         self._set_cbox('glass',data['glass'])
         self._set_cbox('cup',data['cup'])          
                         
-    def save_mainlist(self):
+
+            
+    def gen_mainlist(self,blist):
 
         alist = ['head','glass','cup','flower','feather']
-        blist=[[],[],[],['sh'],['sa']]
-        blist[0]  = self._read_cbox('head')
-        blist[1]  = self._read_cbox('glass')
-        blist[2]  = self._read_cbox('cup')
-                                               
         basic_main_rate = 31.1#满爆率
 
         prop_list = ['ar','ed','cr','cd','dphys','sa','sh','dr','em','hr','dheal','ef']
@@ -451,16 +540,12 @@ class MainWindow(QMainWindow):
                 tmp['set'] = '无'
                 ans[i].append(tmp.copy())
 
-
-        with open('./data/artifacts/main_list.json', 'w+', encoding='utf-8') as fp:
-                json.dump(ans, fp,indent = 4,ensure_ascii=False)
-            
-
+        return(ans)
 
 
 
     def show_rec(self):
-        if self.cb_mode2.isChecked():
+        if self.cb_mode2.currentIndex()==2:
             self.tabs.setTabEnabled(2,False)
             self.tabs.setTabEnabled(3,True)
             self.tabs.setCurrentIndex(3)
@@ -468,17 +553,30 @@ class MainWindow(QMainWindow):
             self.tabs.setTabEnabled(2,True)
             self.tabs.setTabEnabled(3,False)
             self.tabs.setCurrentIndex(2)
+            if self.cb_mode2.currentIndex()==0:
+                self.grp_head.show()
+                self.grp_glass.show()
+                self.grp_cup.show()
+                self.grp_sub.show()
+                self.groupBox_11.hide()
+            if self.cb_mode2.currentIndex()==1:
+                self.grp_head.hide()
+                self.grp_glass.hide()
+                self.grp_cup.hide()
+                self.grp_sub.hide()
+                self.groupBox_11.show()
 
             
     def reset(self):
         self.cb_cnum.clear()
+        self.win_ratio.wpn = ''
         self.reset_table()
         self.load_info()
         # self.win_rec_a.update(self.current_role)
 
 
     def reset_table(self):
-        bbb ={'伤害':9,'护盾':6,'生命':8,'治疗':7}
+        bbb ={'伤害':10,'护盾':7,'生命':9,'治疗':8}
 
         for i in range(self.tbl_2.rowCount()):
             for j in range(4):
@@ -488,9 +586,12 @@ class MainWindow(QMainWindow):
         self.tbl_2.setRowHidden(bbb[text],True)
         self.pbar.setValue(0)
         self.win_save_act.update(self.current_role,self.cb_cnum.currentText())   
-        if not self.cb_mode2.isChecked():
+        if not self.cb_mode2.currentIndex()==2:
             self.tbl_2.setRowHidden(4,True)
             self.tbl_2.setRowHidden(5,True)
+        if self.cb_mode2.currentIndex()==0 or self.cb_mode2.currentIndex()==2:
+            self.tbl_2.setRowHidden(6,True)
+
         self.statusBar().showMessage("重置结果",1000)
          
         

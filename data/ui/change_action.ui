@@ -46,7 +46,7 @@ font: 9pt &quot;汉仪文黑-85W&quot;;
 </string>
    </property>
    <property name="currentIndex">
-    <number>0</number>
+    <number>3</number>
    </property>
    <widget class="QWidget" name="tab">
     <property name="styleSheet">
@@ -438,6 +438,104 @@ background-color: transparent;
      <column>
       <property name="text">
        <string>基础</string>
+      </property>
+     </column>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="tab_6">
+    <attribute name="title">
+     <string>倍率表</string>
+    </attribute>
+    <widget class="QTableWidget" name="tb_ratio">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>711</width>
+       <height>441</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: rgb(224, 234, 244);</string>
+     </property>
+     <column>
+      <property name="text">
+       <string>名字</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>lvl 1</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>lvl 2</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>lvl 3</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>lvl 4</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>lvl 5</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>lvl 6</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>lvl 7</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>lvl 8</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>lvl 9</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>lvl 10</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>lvl 11</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>lvl 12</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>lvl 13</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>lvl 14</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>lvl 15</string>
       </property>
      </column>
     </widget>

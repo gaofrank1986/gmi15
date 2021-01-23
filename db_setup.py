@@ -28,7 +28,13 @@ class Entry(Base):
     img = Column(LargeBinary)
     def __init__(self):
         self.main0='cd'
-    
+
+class CRatio(Base):
+    __tablename__='cover_ratio'
+    id = Column(Integer,primary_key = True)
+    name = Column(String,unique=True)
+    keys = Column(String)
+    values = Column(String)
 # Base.metadata.create_all(engine)
 def init_db():
     Base.metadata.create_all(bind=engine)

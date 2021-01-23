@@ -178,10 +178,46 @@ class Change_Action(QDialog):
             if 'cmts' in data[cstl]:
                 self.pte_cmts.setPlainText(data[cstl]['cmts'])
             
+            
+            while (self.tb_ratio.rowCount() > 0):
+                self.tb_ratio.removeRow(0)
+            N = 0
+            for i in data['ratios']:
+                item =  QTableWidgetItem(i)
+                item.setFlags(QtCore.Qt.ItemIsEnabled)
+                self.tb_ratio.insertRow(N)
+                self.tb_ratio.setItem(N,0,item)
+
+                K=1
+                for j in data['ratios'][i]:
+                    text = "{:6.1f}%".format(float(j))
+                    item = QTableWidgetItem(text)
+                    self.tb_ratio.setItem(N,K,item)  
+                    K+=1           
+
+                N+=1
+
+            header = self.tb_ratio.horizontalHeader()       
+            for i in range(16):
+                header.setSectionResizeMode(i, QtWidgets.QHeaderView.ResizeToContents)
+                
+                
+                
+                
+                
+                
+        
+            
             self.tabs.setCurrentIndex(0)
+            
+            
+            
+            
+            
+            
 
             self.exec_()
         except Exception as e:
-            self.sbar.showMessage("技能显示成功",1000)
+            self.sbar.showMessage("技能显示失败",1000)
             print("Error: ", e)
             traceback.print_exc()
