@@ -15,7 +15,7 @@ from PyQt5.QtCore import Qt
 from rec_art import Rec_Artifact, DB_Filter
 from chng_action import Change_Action
 from ocr import cn
-from db_setup import Entry,db_session,init_db,get_info_by_id
+from db_setup import Entry,db_session,init_db,get_info_by_id,CRatio
 from check_list import AppRemovalPage
 from sqlalchemy import and_,or_
 from wincara import caraWindow
@@ -71,7 +71,7 @@ class MainWindow(QMainWindow):
         self.win_cara = caraWindow(namelist,path="./data/character/icon/")
         
         self.pb_wpn = QToolButton(self.tab)
-        self.pb_wpn.setGeometry(65,300,90,100)
+        self.pb_wpn.setGeometry(65,280,90,100)
         self.pb_wpn.setText("武器")
         font.setPointSize(9)
         self.pb_wpn.setFont(font)
@@ -91,6 +91,7 @@ class MainWindow(QMainWindow):
         self.win_log = MyDialog(self,'1',logging.Formatter("%(message)s"))
         self.win_save_act = Change_Action(self._data,self.statusBar())
         self.win_rec_a = Rec_Artifact(self._aeffect,self.statusBar())
+        
         self.win_ratio = Win_Ratio(self.current_role,self.statusBar())
 
         
@@ -208,8 +209,8 @@ class MainWindow(QMainWindow):
         self.select_subs.setSelectionMode(
             QtWidgets.QAbstractItemView.ExtendedSelection
         )
-        self.select_subs.setGeometry(240,80,220,150)
-        font.setPointSize(9)
+        self.select_subs.setGeometry(30,70,220,150)
+        font.setPointSize(10)
         self.select_subs.setFont(font)
         self.select_subs.addItems(['攻击','暴击','暴伤','防御','生命'])
         self.select_subs.itemClicked.connect(self.printItemText)
@@ -280,7 +281,7 @@ class MainWindow(QMainWindow):
 
             for apos in pos:
                 ans = []
-                for i in db_session.query(Entry).filter(and_(Entry.pos==apos,or_(check,Entry.owner==self.aaa.filter))).all():
+                for i in db_session.query(Entry).filter(and_(Entry.pos==apos,or_(Entry.owner0==self.aaa.filter,Entry.owner1==self.aaa.filter,Entry.owner2==self.aaa.filter,Entry.owner3==self.aaa.filter,Entry.owner4==self.aaa.filter,check))).all():
                     ans.append(str(i.id)+'_'+i.name)
                 tmp = getattr(self,trans[pos.index(apos)])
                 tmp.add(ans)
@@ -315,9 +316,18 @@ class MainWindow(QMainWindow):
             try:
                 skill_level = int(self.cb_skill.currentText())
                 constellation = int(self.cb_cnum.currentText())
+                cnum ='c'+str(constellation)
                 character = self.current_role
                 c = Character(skill_level,constellation)
-                c.load_from_json("./data/character/"+character+".json",env)
+                ratio ={}
+                cro = db_session.query(CRatio).filter(CRatio.name == character+'_'+cnum).first()
+                if cro is not None:
+                    tmp1 = cro.keys.split("/")                   
+                    tmp2 = [float(_) for _ in cro.values.split("||")]
+                    for i in tmp1:
+                        ratio[i] = tmp2[tmp1.index(i)]
+                c.load_from_json("./data/character/"+character+".json",env,ratio)
+
             except:
                 fail_info.append("人物信息错误")
                 raise ValueError
@@ -325,8 +335,17 @@ class MainWindow(QMainWindow):
             try:
                 weapon = self.current_wpn
                 assert weapon!=''
+                ratio ={}
                 refine = int(self.cb_refine.currentText())
-                c.load_weapon_from_json("./data/weapon/"+c.weapon_class+".json",weapon,refine)
+                wro = db_session.query(CRatio).filter(CRatio.name == c.weapon_class+'_'+weapon).first()
+                if wro is not None:
+                    tmp1 = wro.keys.split("/")                   
+                    tmp2 = [float(_) for _ in wro.values.split("||")]
+                    for i in tmp1:
+                        ratio[i] = tmp2[tmp1.index(i)]
+                print(ratio)
+                c.load_weapon_from_json("./data/weapon/"+c.weapon_class+".json",weapon,ratio,refine)
+
             except:
                 fail_info.append("武器信息错误")
                 raise ValueError
@@ -403,22 +422,54 @@ class MainWindow(QMainWindow):
                     run_list[i]['name'] = rename(run_list[i])
                     for j in run_list[i]:
                         if j!='name':
-                            run_list[i][j] = trans_ratio[prop_list.index(j)]*5.7*run_list[i][j]
+                            run_list[i][j] = trans_ratio[prop_list.index(j)]*2.8*run_list[i][j]
                     
-                cal_data = self.gen_mainlist(blist)
+                cal_data = gen_mainlist(blist)
                 cal_data["sub"] = run_list
                 save = run_thru_data(cal_data,self._aeffect,c,rls,self.pbar,self._ksort)
-
-            
-
+            if self.cb_mode2.currentIndex()==3:
+                save = {}
+                run_list = gen_sublist(self.spb_nsub.value(),self.save_sub_list)
+                # print(self.save_sub_list)
+                prop_list = ['ar','ed','cr','cd','dphys','sa','sh','dr','em','hr','dheal','ef']
+                trans_ratio = [1.5,1.5,1,2,1.875,10,153.7,1.875,6.0128,1.5,1.1428,1.1543,1.6656]
+                assert len(self.save_sub_list)>0
+                for i in range(len(run_list)):
+                    run_list[i]['name'] = rename(run_list[i])
+                    for j in run_list[i]:
+                        if j!='name':
+                            run_list[i][j] = trans_ratio[prop_list.index(j)]*2.8*run_list[i][j]
+                cdata = {}
+                N=1
+                num_cycle = len(mainlist['head'])*len(mainlist['glass'])*len(mainlist['cup'])
+                for h1 in mainlist['head']:
+                    for g1 in mainlist['glass']:
+                        for c1 in mainlist['cup']:
+                            cdata['head'] = [h1]
+                            cdata['glass'] = [g1]
+                            cdata['cup'] = [c1]
+                            cdata['feather'] = mainlist['feather']
+                            cdata['flower'] = mainlist['flower']
+                            cdata["sub"] = run_list
+                            tmp_rsl = run_thru_data(cdata,self._aeffect,c,rls,self.pbar,self._ksort,num_cycle,N)
+                            tmp_rsl = OrderedDict(sorted(tmp_rsl.items(),reverse=True))
+                            for i in tmp_rsl:
+                                key = i
+                                while key in save:
+                                    key-=1
+                                save[key] = deepcopy(tmp_rsl[i])
+                                break
+                            N+=1
 
             '''结果输出部分'''
 
                 
             test = OrderedDict(sorted(save.items(),reverse=True))
             N=0
-            limit = 4
+            limit = self.spb_num_display.value()
             for i in test:
+                if N>3:
+                    self.tbl_2.setColumnCount(N+1)
                 tmp2 = list(test[i][1].keys())
                 if 'sub_test' in tmp2:
                     tmp2.remove('sub_test')
@@ -430,9 +481,9 @@ class MainWindow(QMainWindow):
                 logging.getLogger('1').info("圣遗物：\n{}".format(pprint.pformat(test[i][1],indent=4)))
 
                 if self.rb_display.isChecked():
-                    content = [i]+tmp2+[tmp0['shld'],tmp0['heal'],tmp0['maxhp'],tmp0['sum']]+[ps2(tmp0['perc_a']),ps2(tmp0['perc_e']),ps2(tmp0['perc_q'])]              
+                    content = [i]+tmp2+[tmp0['shld'],tmp0['heal'],tmp0['maxhp'],tmp0['sum']]+[ps2(tmp0['perc_a']),ps2(tmp0['perc_e']),ps2(tmp0['perc_q']),ps2(tmp0['ratio2'])]              
                 else:
-                    content = [ps1(i)]+tmp2+[ps1(tmp0['shld']),ps1(tmp0['heal']),ps1(tmp0['maxhp']),ps1(tmp0['sum'])]+[ps2(tmp0['perc_a']),ps2(tmp0['perc_e']),ps2(tmp0['perc_q'])]                 
+                    content = [ps1(i)]+tmp2+[ps1(tmp0['shld']),ps1(tmp0['heal']),ps1(tmp0['maxhp']),ps1(tmp0['sum'])]+[ps2(tmp0['perc_a']),ps2(tmp0['perc_e']),ps2(tmp0['perc_q']),ps2(tmp0['ratio2'])]                 
                 for i in range(len(content)):
                     item =  QTableWidgetItem(str(content[i]))
 
@@ -521,26 +572,7 @@ class MainWindow(QMainWindow):
                         
 
             
-    def gen_mainlist(self,blist):
 
-        alist = ['head','glass','cup','flower','feather']
-        basic_main_rate = 31.1#满爆率
-
-        prop_list = ['ar','ed','cr','cd','dphys','sa','sh','dr','em','hr','dheal','ef']
-        trans_ratio = [1.5,1.5,1,2,1.875,10,153.7,1.875,6.0128,1.5,1.1428,1.1543,1.6656]
-        ratio_main = {prop_list[i]:trans_ratio[i] for i in range(len(prop_list))}
-
-        ans = dict()
-        for i in alist:
-            ans[i] = []
-            for j in blist[alist.index(i)]:
-                tmp = dict()
-                tmp[j] = round(basic_main_rate*ratio_main[j],2)
-                tmp['name'] = self.trans2[j]
-                tmp['set'] = '无'
-                ans[i].append(tmp.copy())
-
-        return(ans)
 
 
 
@@ -559,13 +591,21 @@ class MainWindow(QMainWindow):
                 self.grp_cup.show()
                 self.grp_sub.show()
                 self.groupBox_11.hide()
+                self.groupBox.hide()
             if self.cb_mode2.currentIndex()==1:
                 self.grp_head.hide()
                 self.grp_glass.hide()
                 self.grp_cup.hide()
                 self.grp_sub.hide()
                 self.groupBox_11.show()
-
+                self.groupBox.show()
+            if self.cb_mode2.currentIndex()==3:
+                self.grp_head.show()
+                self.grp_glass.show()
+                self.grp_cup.show()
+                self.grp_sub.hide()
+                self.groupBox_11.show()
+                self.groupBox.hide()
             
     def reset(self):
         self.cb_cnum.clear()
@@ -577,6 +617,7 @@ class MainWindow(QMainWindow):
 
     def reset_table(self):
         bbb ={'伤害':10,'护盾':7,'生命':9,'治疗':8}
+        self.win_ratio.cnum = 'c'+str(self.cb_cnum.currentText())
 
         for i in range(self.tbl_2.rowCount()):
             for j in range(4):

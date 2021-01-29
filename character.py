@@ -59,8 +59,8 @@ class Character(Basic_Panel):
         self.jb_tb={'ks':"wind","cd":"ice","gz":"fire","gd":"watr"}
         
         
-    def load_from_json(self,path,env):
-
+    def load_from_json(self,path,env,ratio):
+        assert isinstance(ratio,dict)
         self.loaded = True
         self.env = env
         for i in range(0,self.constellation+1):
@@ -91,7 +91,7 @@ class Character(Basic_Panel):
             logging.getLogger('Buff').info('基础防御: {}'.format(data1['basic_defense']))
             logging.getLogger('Buff').info('基础攻击: {}'.format(data1['basic_attack']))
             for i in data1['break_thru']:
-                logging.getLogger('Buff').info('突破:{} {}%'.format(self.t2[i],data1['break_thru'][i]))
+                logging.getLogger('Buff').info('突破:\n   {} {}%'.format(self.t2[i],data1['break_thru'][i]))
             logging.getLogger('Buff').info('\n')
 
             self.enchant_ratio = data['c'+str(self.constellation)]['enchant_ratio']
@@ -107,6 +107,8 @@ class Character(Basic_Panel):
             if self._check2(i):
                 assert not (i in self.buffs)
                 self.buffs[i] = data['buffs'][i]
+                if i in ratio:
+                    self.buffs[i][2] = ratio[i]
 
         data['ratios']['w'] = [100]
         for i in data['ratios']:
@@ -119,7 +121,7 @@ class Character(Basic_Panel):
         if 'rebase' in data.keys():
             self.switch = data['rebase']
                 
-    def load_weapon_from_json(self,path,name,refine = 1):
+    def load_weapon_from_json(self,path,name,ratio,refine = 1):
         
         assert(self.loaded)
         with open(path, 'r', encoding='UTF-8') as fp:
@@ -139,12 +141,15 @@ class Character(Basic_Panel):
                     logging.getLogger('Buff').info('============')
                     logging.getLogger('Buff').info('基础攻击: {}'.format(data[wp]['basic_attack']))
                     for i in data[wp]['break_thru']:
-                        logging.getLogger('Buff').info('突破:{} {}%'.format(self.t2[i],data[wp]['break_thru'][i]))
+                        logging.getLogger('Buff').info('突破:\n     {} {}%'.format(self.t2[i],data[wp]['break_thru'][i]))
                     logging.getLogger('Buff').info('\n')                
 
                 for i in data[wp]['buffs']:
                     assert not (i in self.buffs)
                     self.buffs[i] = data[wp]['buffs'][i]
+                    if i in ratio:
+                        self.buffs[i][2] = ratio[i]
+                    
                 break
         assert(found)
         
@@ -294,19 +299,12 @@ class Character(Basic_Panel):
     def damage_rsl(self):
         if True:
             logger = logging.getLogger('Main')
-            logger.info("生命面板: {}".format(self.health))
-            logger.info("防御面板: {}".format(self.defense))
-            logger.info("攻击面板: {}".format(self.attack[:3]))
-            logger.info("暴击: {:.2f}  爆伤: {:.2f}".format(self.attack[3],self.attack[4]))
-            logger.info("属性伤害: {:.2f}  物理增伤: {:.2f}".format(self.dmg_eh[self.ed_pos]+self.dmg_eh[7],self.dmg_eh[0]))
-            logger.info("元素精通: {:.2f}  元素充能: {:.2f}".format(self.attack[5],self.attack[6]))
+
             logger.info("攻击轮数: {}".format(self.skill_round))        
             logger.info("formula = {}".format(self.formula))
-            logger.info("增益:  {}".format(self.skill_effect))
-            logger.info("特殊攻击提升:  {}".format(self.sp_buff))
+
             logger.info("技能第一乘区切换 {}".format(self.switch))
             logger.info("技能等级 {}".format(self.skill_level))
-            logger.info("增伤 {}".format(self.dmg_eh))
 
         result = dict()
         atk_dmg = dict()
@@ -317,11 +315,21 @@ class Character(Basic_Panel):
             atk_dmg[i] =0
 
             save_value= [_*self._total_atk()*self._crit() for _ in self._area3()]
-            save_value.append(self.attack[0]*(1+0.05*0.5))
+            save_value.append(1000*(1+0.05*0.5))
             save = {}
 
             logger.debug("buff加载前 area1 = {:.2f},area2 = {:.2f}".format(self._total_atk(),self._crit()))
+            logger.info("生命面板: {}".format(self.health))
+            logger.info("防御面板: {}".format(self.defense))
+            logger.info("攻击面板: {}".format(self.attack[:3]))
+            logger.info("暴击: {:.2f}  爆伤: {:.2f}".format(self.attack[3],self.attack[4]))
+            logger.info("属性伤害: {:.2f}  物理增伤: {:.2f}".format(self.dmg_eh[self.ed_pos]+self.dmg_eh[7],self.dmg_eh[0]))
+            logger.info("元素精通: {:.2f}  元素充能: {:.2f}".format(self.attack[5],self.attack[6]))
+            logger.info("增伤 {}".format(self.dmg_eh))
 
+            logger.info("增益:  {}".format(self.skill_effect[i]))
+            logger.info("特殊攻击提升:  {}".format(self.sp_buff))
+                        
             self.load_att(self.skill_effect[i])
             self.load_att(self.sp_buff)
                         
@@ -345,8 +353,18 @@ class Character(Basic_Panel):
                 delta = self.sp_buff['ef2ed']/100*self.attack[6]
                 area30+=delta/100
                 logger.debug("充能转增伤 增加量 = {:.2f}".format(delta)) 
+                
+            if True:
                                                      
-            logger.debug("buff加载后 area1 = {:.2f},area2 = {:.2f}".format(area1,area2))
+                logger.debug("buff加载后 area1 = {:.2f},area2 = {:.2f}".format(area1,area2))
+                logger.info("生命面板: {}".format(self.health))
+                logger.info("防御面板: {}".format(self.defense))
+                logger.info("攻击面板: {}".format(self.attack[:3]))
+                logger.info("暴击: {:.2f}  爆伤: {:.2f}".format(self.attack[3],self.attack[4]))
+                logger.info("属性伤害: {:.2f}  物理增伤: {:.2f}".format(self.dmg_eh[self.ed_pos]+self.dmg_eh[7],self.dmg_eh[0]))
+                logger.info("元素精通: {:.2f}  元素充能: {:.2f}".format(self.attack[5],self.attack[6]))
+                logger.info("增伤 {}".format(self.dmg_eh))
+
             
             if self.ifer:
                 elemrct = self.rct_tbl.get(self.elem_class,1)*(1+self._em3(self.attack[5])+self.dmg_eh[13])
@@ -410,27 +428,27 @@ class Character(Basic_Panel):
                             # ans2[2]+=base*area2*(area30+delta)*ratio*multi/save_value[0]
                             # ans2[3]+=base*area2*(area30+delta)*ratio*multi/save_value[2]
 
-                            logger.debug("base = {:.2f},area1 = {:.2f},area2 = {:.2f},area3 = {:.2f},伤害类型:{}".format(base,base/self.attack[0],area2,area30,atk_t))
+                            logger.debug("基础攻击{:.2f},修正后总攻击 = {:.2f},暴击区 = {:.2f},加伤区 = {:.2f},伤害类型:{}".format(self.attack[0],base,area2,area30,atk_t))
 
                         elif atk_t == 'phys':
                             ans[0]+=base*area2*(area30+delta)*ratio*multi*self.enchant_ratio*elemrct*ratio_dr*ratio_rr0
                             # ans2[2]+=base*area2*(area30+delta)*ratio*multi*self.enchant_ratio/save_value[0]
                             # ans2[3]+=base*area2*(area30+delta)*ratio*multi*self.enchant_ratio/save_value[2]
 
-                            logger.debug("base = {:.2f},area1 = {:.2f},area2 = {:.2f},area3 = {:.2f},伤害类型:{},附魔,占比 {}".format(base,base/self.attack[0],area2,area30,"属性元素",self.enchant_ratio))
+                            logger.debug("基础攻击{:.2f},修正后总攻击 = {:.2f},暴击区 = {:.2f},加伤区 = {:.2f},伤害类型:{},附魔,占比 {}".format(self.attack[0],base,area2,area30,"属性元素",self.enchant_ratio))
 
     
                             ans[1]+=base*area2*(area31+delta)*ratio*multi*(1-self.enchant_ratio)*ratio_dr*ratio_rr1
                             # ans2[2]+=base*area2*(area30+delta)*ratio*multi*(1-self.enchant_ratio)/save_value[1]
                             # ans2[3]+=base*area2*(area30+delta)*ratio*multi*(1-self.enchant_ratio)/save_value[2]
 
-                            logger.debug("base = {:.2f},area1 = {:.2f},area2 = {:.2f},area3 = {:.2f},伤害类型:{},不附魔,占比 {}".format(base,base/self.attack[0],area2,area31,"物理",1-self.enchant_ratio))
+                            logger.debug("基础攻击{:.2f},修正后总攻击 = {:.2f},暴击区 = {:.2f},加伤区 = {:.2f},伤害类型:{},不附魔,占比 {}".format(self.attack[0],base,area2,area31,"物理",1-self.enchant_ratio))
                         elif atk_t == 'env':
                             ans[2]+=base*area2*ratio*multi*ratio_dr*ratio_rr2
                             # ans2[2]+=base*area2*ratio*multi/save_value[0]
                             # ans2[3]+=base*area2*ratio*multi/save_value[2]
 
-                            logger.debug("base = {:.2f},area1 = {:.2f},area2 = {:.2f},area3 = {:.2f},伤害类型:{}".format(base,base/self.attack[0],area2,1,"环境元素")) 
+                            logger.debug("基础攻击{:.2f},修正后总攻击 = {:.2f},暴击区 = {:.2f},加伤区 = {:.2f},伤害类型:{}".format(self.attack[0],base,area2,1,"环境元素")) 
                         else:
                             pass
                     elif i in ['shld']:
@@ -464,7 +482,7 @@ class Character(Basic_Panel):
                         '''武器附伤'''
                         if 'damage' in self.skill_effect[i]:
                             ans[1]+=area1*self.skill_effect[i]['damage']/100*ratio_dr*ratio_rr1
-                            logger.debug("武器附加伤害: area1 = {:.2f},ratio = {:.2f} 假设为物理伤害，不受益2，3乘区加成".format(area1,self.skill_effect[i]['damage']/100)) 
+                            logger.debug("武器附加伤害: 总攻击 = {:.2f},ratio = {:.2f} 假设为物理伤害，不受益2，3乘区加成".format(area1,self.skill_effect[i]['damage']/100)) 
         
 
 
@@ -486,7 +504,7 @@ class Character(Basic_Panel):
             atk_dmg[i] = (ans[0]+ans[1]+ans[2])*self.skill_round[i]
             # print(i,ans2[1],self.skill_round[i])
             # result['ratio1'] = result.get('ratio1',0)+ans2[1]*self.skill_round[i]
-            # result['ratio2'] = result.get('ratio2',0)+ans2[0]*self.skill_round[i]
+            result['ratio2'] = result.get('ratio2',0)+ans2[0]*self.skill_round[i]
             # result['ratio3'] = result.get('ratio3',0)+ans2[2]*self.skill_round[i]
             # result['ratio4'] = result.get('ratio4',0)+ans2[3]*self.skill_round[i]
             

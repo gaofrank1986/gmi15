@@ -29,7 +29,7 @@ def extract_name3(a):
 
 
 
-def run_thru_data(cdata,affect,c,rls,pbar,ksort=1):
+def run_thru_data(cdata,affect,c,rls,pbar,ksort=1,count_cycle=1,current_cycle=1):
     logging.getLogger('1').info(cdata)
     logger = logging.getLogger('Main')
 
@@ -42,6 +42,7 @@ def run_thru_data(cdata,affect,c,rls,pbar,ksort=1):
 
     for i in cdata:
         total =total*len(cdata[i])
+    total = total*count_cycle
 
 
     logging.getLogger('1').info("alist{}".format(alist))
@@ -104,7 +105,9 @@ def run_thru_data(cdata,affect,c,rls,pbar,ksort=1):
                             logger.info(str5)
                             logger.info(str6)
                             
-                            pbar.setValue(float(acc/total)*100)
+                            pvalue = acc+total/count_cycle*(current_cycle-1)
+                            # print(pvalue,total,count_cycle,current_cycle)
+                            pbar.setValue(float(pvalue/total)*100)
                             acc+=1
                             diluc.put_on(rls)                                                
                             tmp2 = deepcopy(diluc)

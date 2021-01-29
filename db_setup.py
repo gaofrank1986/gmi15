@@ -23,7 +23,11 @@ class Entry(Base):
     sub40 = Column(String(10))
     sub41 = Column(Float,default=0.0)
     aset = Column(String(24))
-    owner = Column(String,default='')
+    owner0 = Column(String,default='')
+    owner1 = Column(String,default='')
+    owner2 = Column(String,default='')
+    owner3 = Column(String,default='')
+    owner4 = Column(String,default='')
     cmts = Column(String,default='')
     img = Column(LargeBinary)
     def __init__(self):

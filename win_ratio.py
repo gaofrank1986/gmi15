@@ -18,6 +18,7 @@ class Win_Ratio(QDialog):
         # self._data = data
         self.sbar=sbar
         self.role = role
+        self.cnum = 'c0'
         self.wpn = ''
         
 
@@ -25,7 +26,8 @@ class Win_Ratio(QDialog):
         header.setSectionResizeMode(0, QtWidgets.QHeaderView.ResizeToContents)
         header.setSectionResizeMode(2, QtWidgets.QHeaderView.ResizeToContents)
         header.setSectionResizeMode(1, QtWidgets.QHeaderView.ResizeToContents)
-        header.setSectionResizeMode(3, QtWidgets.QHeaderView.Stretch)
+        header.setSectionResizeMode(2, QtWidgets.QHeaderView.ResizeToContents)
+        header.setSectionResizeMode(4, QtWidgets.QHeaderView.Stretch)
         header = self.table_ratio.verticalHeader()       
         header.setVisible(False)
 
@@ -38,7 +40,7 @@ class Win_Ratio(QDialog):
             wvalues = []
             for i in range(self.table_ratio.rowCount()):
                 key = self.table_ratio.item(i,0).text()
-                value = self.table_ratio.item(i,2).text()
+                value = self.table_ratio.item(i,3).text()
                 # for i in value:
                 # print(key,value)
                 try:
@@ -56,7 +58,7 @@ class Win_Ratio(QDialog):
                     wkeys.append(key)
                     wvalues.append(value)
                 
-            cratio = db_session.query(CRatio).filter(CRatio.name==self.role).first()
+            cratio = db_session.query(CRatio).filter(CRatio.name==self.role+'_'+self.cnum).first()
             cratio.values = '||'.join(cvalues)        
             db_session.commit()
             if len(wkeys)!=0 and self.wpn!='':
@@ -76,7 +78,7 @@ class Win_Ratio(QDialog):
 
     def display(self):
         try:
-            logging.getLogger('1').info('{}{}'.format(self.role,self.wpn))
+            logging.getLogger('1').info('{}{}'.format(self.role,self.cnum,self.wpn))
             while (self.table_ratio.rowCount() > 0):
                 self.table_ratio.removeRow(0)
             
@@ -85,7 +87,7 @@ class Win_Ratio(QDialog):
                 data = json.load(fp)
             data = data['buffs']
             
-            self.show_value(data,self.role)
+            self.show_value(data,self.role+'_'+self.cnum)
             
             if not self.wpn == '':
                 loc = self.wpn.split('_')[0]        
@@ -107,6 +109,8 @@ class Win_Ratio(QDialog):
             saved = db_session.query(CRatio).filter(CRatio.name==fltr).first()
             keys = [_ for _ in data]
             desc = [data[_][3] for _ in data]
+            cond = ['{}'.format(data[_][0]) for _ in data]
+            print(cond)
             effct = ['{}'.format(data[_][1]) for _ in data]
             values = [str(data[_][2]) for _ in data]
             if saved is None:
@@ -136,8 +140,10 @@ class Win_Ratio(QDialog):
                 self.table_ratio.insertRow(base+i)
                 self.table_ratio.setItem(base+i,0,item)
                 item = QTableWidgetItem(values2[i])
-                self.table_ratio.setItem(base+i,2,item)
+                self.table_ratio.setItem(base+i,3,item)
+                item = QTableWidgetItem(cond[i])
+                self.table_ratio.setItem(base+i,1,item)
                 item = QTableWidgetItem(desc[i])
-                self.table_ratio.setItem(base+i,3,item) 
+                self.table_ratio.setItem(base+i,4,item) 
                 item = QTableWidgetItem(effct[i])
-                self.table_ratio.setItem(base+i,1,item) 
+                self.table_ratio.setItem(base+i,2,item) 

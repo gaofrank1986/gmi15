@@ -14,7 +14,7 @@ import logging
 from db_setup import Entry,db_session
 from sqlalchemy import or_
 from utility import extract_rlist
-
+from twinlist import TwinlistPage
 
 def createModel(options):
     model = QStandardItemModel(len(options), 1)
@@ -110,12 +110,16 @@ class Rec_Artifact(QDialog):
             if "=" not in i:
                 self.owners.append(i)
                 
+        self.twinlist = TwinlistPage(self)
+        # self.twinlist.setMinimumSize(750,300)
+        self.pb_select_owners.clicked.connect(self.show_twinlist)
+                
         # self.model = createModel(self.owners)
         # self.cb_owner.setModel(self.model)
         # self.model.itemChanged.connect(self.on_itemChanged)
 
-        
-        self.cb_owner.addItems(self.owners)
+        self.twinlist.list_selection.addAvailableItems(self.owners)
+        # self.cb_owner.addItems(self.owners)
 
         self.pathm='./data/'
         self.save_pos = 0
@@ -129,6 +133,24 @@ class Rec_Artifact(QDialog):
     #         if comboItem.data(Qt.CheckStateRole):
     #             items.append(comboItem.data())
     #     print(items)
+    def show_twinlist(self):
+        owners = self.label_owners.text()
+        owners = owners.split(',')
+        unselected = self.owners.copy()
+        selected = []
+
+        for i in owners:
+            if i in unselected:
+                unselected.remove(i)
+                selected.append(i)
+            else:
+                if i not in selected and i!='':
+                    selected.append(i)
+        print(unselected)
+        print(selected)
+        self.twinlist.display(unselected,selected)
+        if self.twinlist.if_OK:
+            self.label_owners.setText(','.join(self.twinlist.saved))
 
     def load_entry(self):
         aaa = self.cb_db.currentIndex()
@@ -146,13 +168,19 @@ class Rec_Artifact(QDialog):
         self.cb_pos.setCurrentIndex(tmp.index(r1.pos))    
         self.cb_main.setCurrentIndex(self.dlist.index(r1.main0))
         self.digit_main.setValue(r1.main1)
-        self.cb_owner.setCurrentIndex(self.owners.index(r1.owner))
+        # self.cb_owner.setCurrentIndex(self.owners.index(r1.owner))
         for i in range(1,5):
             self.findChild(QComboBox,"cb_sub_"+str(i)).setCurrentIndex(self.tlist.index(getattr(r1,'sub'+str(i)+'0')))
             self.findChild(QDoubleSpinBox,"digit_sub_"+str(i)).setValue(getattr(r1,'sub'+str(i)+'1'))
             self.cb_aeffect.setCurrentIndex(self.elist.index(r1.aset))
             self.le_cmt.setText(r1.cmts)
         self.label_id.setText("ID: {}".format(self.look_up[aaa]))
+        owners = [r1.owner0,r1.owner1,r1.owner2,r1.owner3,r1.owner4]
+        for i in range(len(owners)):
+            if owners[i] is None:
+                owners[i]=''
+        self.label_owners.setText(','.join(owners))
+        # print(owners)
    
     def delete_entry(self):
         aaa = self.cb_db.currentIndex()
@@ -192,7 +220,20 @@ class Rec_Artifact(QDialog):
             r1.main0 = pos2[self.cb_main.currentText()]
             saved_pos.append(pos2[self.cb_main.currentText()])
             r1.main1 = self.digit_main.value()
-            r1.owner = self.cb_owner.currentText()
+            # r1.owner = self.cb_owner.currentText()
+            owners = self.label_owners.text()
+            owners = owners.split(',')
+            if len(owners)<5:
+                owners = owners+['无']*(5-len(owners))
+            
+            r1.owner0 = owners[0]
+            r1.owner1 = owners[1]
+            r1.owner2 = owners[2]
+            r1.owner3 = owners[3]
+            r1.owner4 = owners[4]
+
+            
+            
             for i in range(1,5):
                 pos = pos1[self.findChild(QComboBox,"cb_sub_"+str(i)).currentText()]
                 assert(pos not in saved_pos)
@@ -233,7 +274,7 @@ class Rec_Artifact(QDialog):
                         tmp = True
                     else:
                         tmp = False
-                    for i in db_session.query(Entry).filter(or_(Entry.owner==self.aaa.filter,tmp)).all():
+                    for i in db_session.query(Entry).filter(or_(Entry.owner0==self.aaa.filter,Entry.owner1==self.aaa.filter,Entry.owner2==self.aaa.filter,Entry.owner3==self.aaa.filter,Entry.owner4==self.aaa.filter,tmp)).all():
                         self.cb_db.addItem(str(i.id)+'.'+i.name)
                         self.look_up[N] = i.id
                         N+=1
@@ -246,7 +287,7 @@ class Rec_Artifact(QDialog):
                     tmp = True
                 else:
                     tmp = False
-                for i in db_session.query(Entry).filter(or_(Entry.owner==self.last_filter,tmp)).all():
+                for i in db_session.query(Entry).filter(or_(Entry.owner0==self.aaa.filter,Entry.owner1==self.aaa.filter,Entry.owner2==self.aaa.filter,Entry.owner3==self.aaa.filter,Entry.owner4==self.aaa.filter,tmp)).all():
                     self.cb_db.addItem(str(i.id)+'.'+i.name)
                     self.look_up[N] = i.id
                     N+=1
@@ -276,7 +317,17 @@ class Rec_Artifact(QDialog):
                 r1.main0 = pos2[self.cb_main.currentText()]
                 saved_pos.append(pos2[self.cb_main.currentText()])
                 r1.main1 = self.digit_main.value()
-                r1.owner = self.cb_owner.currentText()
+                # r1.owner = self.cb_owner.currentText()
+                owners = self.label_owners.text()
+                owners = owners.split(',')
+                if len(owners)<5:
+                    owners = owners+['无']*(5-len(owners))
+                
+                r1.owner0 = owners[0]
+                r1.owner1 = owners[1]
+                r1.owner2 = owners[2]
+                r1.owner3 = owners[3]
+                r1.owner4 = owners[4]
                 # N=1
                 for i in range(1,5):
                     pos = pos1[self.findChild(QComboBox,"cb_sub_"+str(i)).currentText()]
@@ -290,6 +341,10 @@ class Rec_Artifact(QDialog):
 
                 if not (self.cached is None):
                     r1.img = self.cached
+                    
+                    
+                    
+            
                 db_session.add(r1)
                 db_session.commit()
                 self.lookupdb(quick=True)
@@ -315,7 +370,7 @@ class Rec_Artifact(QDialog):
     def openimgfile(self):
         try:
             self.clear()
-            trans = {'攻击力%':'ar','防御力%':'dr','生命值%':'hr','生命值':'sh','元素充能效率%':'ef','暴击率%':'cr','暴击伤害%':'cd','攻击力':'sa','元素精通':'em','防御力':'sd','风元素伤害加成%':'ed','火元素伤害加成%':'dfire','水元素伤害加成%':'dwatr','冰元素伤害加成%':'dice','雷元素伤害加成%':'delec','风元素伤害加成%':'dwind','岩元素伤害加成%':'drock','物理伤害加成%':'dphys'}
+            trans = {'攻击力%':'ar','防御力%':'dr','生命值%':'hr','生命值':'sh','元素充能效率%':'ef','暴击率%':'cr','暴击伤害%':'cd','攻击力':'sa','元素精通':'em','防御力':'sd','火元素伤害加成%':'dfire','水元素伤害加成%':'dwatr','冰元素伤害加成%':'dice','雷元素伤害加成%':'delec','风元素伤害加成%':'dwind','岩元素伤害加成%':'drock','物理伤害加成%':'dphys'}
             path = QFileDialog.getOpenFileName(self, 'Open a file', self.pathm,'圣遗物图像文件 (*.*)')
             if path != ('', ''):
                 self.pathm = path[0]
@@ -377,6 +432,7 @@ class Rec_Artifact(QDialog):
             self.label_pic.setText("图形")
             self.cached = None
             self.label_id.setText("")
+            self.label_owners.setText("无,无,无,无,无")
         except:
             self.sbar.showMessage("圣遗物界面clear错误")
             logging.getLogger('1').error(traceback.format_exc())

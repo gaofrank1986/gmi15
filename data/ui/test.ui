@@ -69,7 +69,7 @@
      <enum>QTabWidget::Rounded</enum>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>2</number>
     </property>
     <widget class="QWidget" name="tab">
      <attribute name="title">
@@ -188,6 +188,11 @@ background-color: rgb(224, 234, 244)</string>
         <string>爆发(%)</string>
        </property>
       </row>
+      <row>
+       <property name="text">
+        <string>倍率(%)</string>
+       </property>
+      </row>
       <column>
        <property name="text">
         <string>第一</string>
@@ -226,7 +231,7 @@ background-color: rgb(224, 234, 244)</string>
       <property name="geometry">
        <rect>
         <x>280</x>
-        <y>320</y>
+        <y>290</y>
         <width>87</width>
         <height>22</height>
        </rect>
@@ -332,7 +337,7 @@ background-color: rgb(224, 234, 244)</string>
       <property name="geometry">
        <rect>
         <x>220</x>
-        <y>320</y>
+        <y>290</y>
         <width>72</width>
         <height>21</height>
        </rect>
@@ -509,8 +514,8 @@ background-color: rgb(224, 234, 244)</string>
      <widget class="QCheckBox" name="cb_switch_def">
       <property name="geometry">
        <rect>
-        <x>940</x>
-        <y>420</y>
+        <x>660</x>
+        <y>20</y>
         <width>111</width>
         <height>19</height>
        </rect>
@@ -522,8 +527,8 @@ background-color: rgb(224, 234, 244)</string>
      <widget class="QCheckBox" name="rb_pop">
       <property name="geometry">
        <rect>
-        <x>760</x>
-        <y>410</y>
+        <x>520</x>
+        <y>20</y>
         <width>141</width>
         <height>19</height>
        </rect>
@@ -556,12 +561,17 @@ background-color: rgb(224, 234, 244)</string>
         <string>模式3</string>
        </property>
       </item>
+      <item>
+       <property name="text">
+        <string>模式4</string>
+       </property>
+      </item>
      </widget>
      <widget class="QPushButton" name="pb_ratio">
       <property name="geometry">
        <rect>
         <x>50</x>
-        <y>260</y>
+        <y>390</y>
         <width>121</width>
         <height>31</height>
        </rect>
@@ -572,6 +582,31 @@ background-color: rgb(224, 234, 244)</string>
       </property>
       <property name="text">
        <string>覆盖率修改</string>
+      </property>
+     </widget>
+     <widget class="QSpinBox" name="spb_num_display">
+      <property name="geometry">
+       <rect>
+        <x>985</x>
+        <y>410</y>
+        <width>51</width>
+        <height>22</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>汉仪文黑-85W</family>
+        <pointsize>9</pointsize>
+        <weight>50</weight>
+        <italic>false</italic>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="minimum">
+       <number>4</number>
+      </property>
+      <property name="maximum">
+       <number>20</number>
       </property>
      </widget>
      <zorder>graphicsView</zorder>
@@ -596,6 +631,7 @@ background-color: rgb(224, 234, 244)</string>
      <zorder>rb_pop</zorder>
      <zorder>cb_mode2</zorder>
      <zorder>pb_ratio</zorder>
+     <zorder>spb_num_display</zorder>
     </widget>
     <widget class="QWidget" name="tab_5">
      <attribute name="title">
@@ -901,6 +937,15 @@ background-color: rgb(224, 234, 244)</string>
          <height>19</height>
         </rect>
        </property>
+       <property name="font">
+        <font>
+         <family>汉仪文黑-85W</family>
+         <pointsize>10</pointsize>
+         <weight>50</weight>
+         <italic>false</italic>
+         <bold>false</bold>
+        </font>
+       </property>
        <property name="text">
         <string>暴击</string>
        </property>
@@ -913,6 +958,15 @@ background-color: rgb(224, 234, 244)</string>
          <width>91</width>
          <height>19</height>
         </rect>
+       </property>
+       <property name="font">
+        <font>
+         <family>汉仪文黑-85W</family>
+         <pointsize>10</pointsize>
+         <weight>50</weight>
+         <italic>false</italic>
+         <bold>false</bold>
+        </font>
        </property>
        <property name="text">
         <string>暴伤</string>
@@ -927,6 +981,15 @@ background-color: rgb(224, 234, 244)</string>
          <height>19</height>
         </rect>
        </property>
+       <property name="font">
+        <font>
+         <family>汉仪文黑-85W</family>
+         <pointsize>10</pointsize>
+         <weight>50</weight>
+         <italic>false</italic>
+         <bold>false</bold>
+        </font>
+       </property>
        <property name="text">
         <string>攻击</string>
        </property>
@@ -939,6 +1002,15 @@ background-color: rgb(224, 234, 244)</string>
          <width>91</width>
          <height>19</height>
         </rect>
+       </property>
+       <property name="font">
+        <font>
+         <family>汉仪文黑-85W</family>
+         <pointsize>10</pointsize>
+         <weight>50</weight>
+         <italic>false</italic>
+         <bold>false</bold>
+        </font>
        </property>
        <property name="text">
         <string>防御</string>
@@ -953,6 +1025,15 @@ background-color: rgb(224, 234, 244)</string>
          <height>19</height>
         </rect>
        </property>
+       <property name="font">
+        <font>
+         <family>汉仪文黑-85W</family>
+         <pointsize>10</pointsize>
+         <weight>50</weight>
+         <italic>false</italic>
+         <bold>false</bold>
+        </font>
+       </property>
        <property name="text">
         <string>精通</string>
        </property>
@@ -966,6 +1047,15 @@ background-color: rgb(224, 234, 244)</string>
          <height>19</height>
         </rect>
        </property>
+       <property name="font">
+        <font>
+         <family>汉仪文黑-85W</family>
+         <pointsize>10</pointsize>
+         <weight>50</weight>
+         <italic>false</italic>
+         <bold>false</bold>
+        </font>
+       </property>
        <property name="text">
         <string>生命</string>
        </property>
@@ -978,6 +1068,15 @@ background-color: rgb(224, 234, 244)</string>
          <width>91</width>
          <height>19</height>
         </rect>
+       </property>
+       <property name="font">
+        <font>
+         <family>汉仪文黑-85W</family>
+         <pointsize>10</pointsize>
+         <weight>50</weight>
+         <italic>false</italic>
+         <bold>false</bold>
+        </font>
        </property>
        <property name="text">
         <string>治疗</string>
@@ -1026,6 +1125,15 @@ background-color: rgb(224, 234, 244)</string>
          <height>19</height>
         </rect>
        </property>
+       <property name="font">
+        <font>
+         <family>汉仪文黑-85W</family>
+         <pointsize>10</pointsize>
+         <weight>50</weight>
+         <italic>false</italic>
+         <bold>false</bold>
+        </font>
+       </property>
        <property name="text">
         <string>攻击</string>
        </property>
@@ -1038,6 +1146,15 @@ background-color: rgb(224, 234, 244)</string>
          <width>91</width>
          <height>19</height>
         </rect>
+       </property>
+       <property name="font">
+        <font>
+         <family>汉仪文黑-85W</family>
+         <pointsize>10</pointsize>
+         <weight>50</weight>
+         <italic>false</italic>
+         <bold>false</bold>
+        </font>
        </property>
        <property name="text">
         <string>防御</string>
@@ -1052,6 +1169,15 @@ background-color: rgb(224, 234, 244)</string>
          <height>19</height>
         </rect>
        </property>
+       <property name="font">
+        <font>
+         <family>汉仪文黑-85W</family>
+         <pointsize>10</pointsize>
+         <weight>50</weight>
+         <italic>false</italic>
+         <bold>false</bold>
+        </font>
+       </property>
        <property name="text">
         <string>精通</string>
        </property>
@@ -1065,6 +1191,15 @@ background-color: rgb(224, 234, 244)</string>
          <height>19</height>
         </rect>
        </property>
+       <property name="font">
+        <font>
+         <family>汉仪文黑-85W</family>
+         <pointsize>10</pointsize>
+         <weight>50</weight>
+         <italic>false</italic>
+         <bold>false</bold>
+        </font>
+       </property>
        <property name="text">
         <string>生命</string>
        </property>
@@ -1077,6 +1212,15 @@ background-color: rgb(224, 234, 244)</string>
          <width>91</width>
          <height>19</height>
         </rect>
+       </property>
+       <property name="font">
+        <font>
+         <family>汉仪文黑-85W</family>
+         <pointsize>10</pointsize>
+         <weight>50</weight>
+         <italic>false</italic>
+         <bold>false</bold>
+        </font>
        </property>
        <property name="text">
         <string>充能</string>
@@ -1123,6 +1267,15 @@ background-color: rgb(224, 234, 244)</string>
          <height>19</height>
         </rect>
        </property>
+       <property name="font">
+        <font>
+         <family>汉仪文黑-85W</family>
+         <pointsize>10</pointsize>
+         <weight>50</weight>
+         <italic>false</italic>
+         <bold>false</bold>
+        </font>
+       </property>
        <property name="text">
         <string>属伤</string>
        </property>
@@ -1135,6 +1288,15 @@ background-color: rgb(224, 234, 244)</string>
          <width>91</width>
          <height>19</height>
         </rect>
+       </property>
+       <property name="font">
+        <font>
+         <family>汉仪文黑-85W</family>
+         <pointsize>10</pointsize>
+         <weight>50</weight>
+         <italic>false</italic>
+         <bold>false</bold>
+        </font>
        </property>
        <property name="text">
         <string>物伤</string>
@@ -1149,6 +1311,15 @@ background-color: rgb(224, 234, 244)</string>
          <height>19</height>
         </rect>
        </property>
+       <property name="font">
+        <font>
+         <family>汉仪文黑-85W</family>
+         <pointsize>10</pointsize>
+         <weight>50</weight>
+         <italic>false</italic>
+         <bold>false</bold>
+        </font>
+       </property>
        <property name="text">
         <string>攻击</string>
        </property>
@@ -1162,6 +1333,15 @@ background-color: rgb(224, 234, 244)</string>
          <height>19</height>
         </rect>
        </property>
+       <property name="font">
+        <font>
+         <family>汉仪文黑-85W</family>
+         <pointsize>10</pointsize>
+         <weight>50</weight>
+         <italic>false</italic>
+         <bold>false</bold>
+        </font>
+       </property>
        <property name="text">
         <string>精通</string>
        </property>
@@ -1174,6 +1354,15 @@ background-color: rgb(224, 234, 244)</string>
          <width>91</width>
          <height>19</height>
         </rect>
+       </property>
+       <property name="font">
+        <font>
+         <family>汉仪文黑-85W</family>
+         <pointsize>10</pointsize>
+         <weight>50</weight>
+         <italic>false</italic>
+         <bold>false</bold>
+        </font>
        </property>
        <property name="text">
         <string>生命</string>
@@ -1233,6 +1422,15 @@ background-color: rgb(224, 234, 244)</string>
          <height>21</height>
         </rect>
        </property>
+       <property name="font">
+        <font>
+         <family>汉仪文黑-85W</family>
+         <pointsize>10</pointsize>
+         <weight>50</weight>
+         <italic>false</italic>
+         <bold>false</bold>
+        </font>
+       </property>
        <property name="text">
         <string>暴击</string>
        </property>
@@ -1245,6 +1443,15 @@ background-color: rgb(224, 234, 244)</string>
          <width>70</width>
          <height>22</height>
         </rect>
+       </property>
+       <property name="font">
+        <font>
+         <family>汉仪文黑-85W</family>
+         <pointsize>10</pointsize>
+         <weight>50</weight>
+         <italic>false</italic>
+         <bold>false</bold>
+        </font>
        </property>
        <property name="decimals">
         <number>1</number>
@@ -1265,6 +1472,15 @@ background-color: rgb(224, 234, 244)</string>
          <height>21</height>
         </rect>
        </property>
+       <property name="font">
+        <font>
+         <family>汉仪文黑-85W</family>
+         <pointsize>10</pointsize>
+         <weight>50</weight>
+         <italic>false</italic>
+         <bold>false</bold>
+        </font>
+       </property>
        <property name="text">
         <string>防御（固定）</string>
        </property>
@@ -1277,6 +1493,15 @@ background-color: rgb(224, 234, 244)</string>
          <width>70</width>
          <height>22</height>
         </rect>
+       </property>
+       <property name="font">
+        <font>
+         <family>汉仪文黑-85W</family>
+         <pointsize>10</pointsize>
+         <weight>50</weight>
+         <italic>false</italic>
+         <bold>false</bold>
+        </font>
        </property>
        <property name="decimals">
         <number>1</number>
@@ -1297,6 +1522,15 @@ background-color: rgb(224, 234, 244)</string>
          <height>22</height>
         </rect>
        </property>
+       <property name="font">
+        <font>
+         <family>汉仪文黑-85W</family>
+         <pointsize>10</pointsize>
+         <weight>50</weight>
+         <italic>false</italic>
+         <bold>false</bold>
+        </font>
+       </property>
        <property name="decimals">
         <number>1</number>
        </property>
@@ -1315,6 +1549,15 @@ background-color: rgb(224, 234, 244)</string>
          <width>70</width>
          <height>22</height>
         </rect>
+       </property>
+       <property name="font">
+        <font>
+         <family>汉仪文黑-85W</family>
+         <pointsize>10</pointsize>
+         <weight>50</weight>
+         <italic>false</italic>
+         <bold>false</bold>
+        </font>
        </property>
        <property name="decimals">
         <number>1</number>
@@ -1335,6 +1578,15 @@ background-color: rgb(224, 234, 244)</string>
          <height>21</height>
         </rect>
        </property>
+       <property name="font">
+        <font>
+         <family>汉仪文黑-85W</family>
+         <pointsize>10</pointsize>
+         <weight>50</weight>
+         <italic>false</italic>
+         <bold>false</bold>
+        </font>
+       </property>
        <property name="text">
         <string>防御(%)</string>
        </property>
@@ -1347,6 +1599,15 @@ background-color: rgb(224, 234, 244)</string>
          <width>101</width>
          <height>21</height>
         </rect>
+       </property>
+       <property name="font">
+        <font>
+         <family>汉仪文黑-85W</family>
+         <pointsize>10</pointsize>
+         <weight>50</weight>
+         <italic>false</italic>
+         <bold>false</bold>
+        </font>
        </property>
        <property name="text">
         <string>攻击（固定）</string>
@@ -1361,6 +1622,15 @@ background-color: rgb(224, 234, 244)</string>
          <height>21</height>
         </rect>
        </property>
+       <property name="font">
+        <font>
+         <family>汉仪文黑-85W</family>
+         <pointsize>10</pointsize>
+         <weight>50</weight>
+         <italic>false</italic>
+         <bold>false</bold>
+        </font>
+       </property>
        <property name="text">
         <string>攻击(%)</string>
        </property>
@@ -1373,6 +1643,15 @@ background-color: rgb(224, 234, 244)</string>
          <width>61</width>
          <height>21</height>
         </rect>
+       </property>
+       <property name="font">
+        <font>
+         <family>汉仪文黑-85W</family>
+         <pointsize>10</pointsize>
+         <weight>50</weight>
+         <italic>false</italic>
+         <bold>false</bold>
+        </font>
        </property>
        <property name="text">
         <string>暴伤</string>
@@ -1387,6 +1666,15 @@ background-color: rgb(224, 234, 244)</string>
          <height>21</height>
         </rect>
        </property>
+       <property name="font">
+        <font>
+         <family>汉仪文黑-85W</family>
+         <pointsize>10</pointsize>
+         <weight>50</weight>
+         <italic>false</italic>
+         <bold>false</bold>
+        </font>
+       </property>
        <property name="text">
         <string>生命(%)</string>
        </property>
@@ -1400,6 +1688,15 @@ background-color: rgb(224, 234, 244)</string>
          <height>21</height>
         </rect>
        </property>
+       <property name="font">
+        <font>
+         <family>汉仪文黑-85W</family>
+         <pointsize>10</pointsize>
+         <weight>50</weight>
+         <italic>false</italic>
+         <bold>false</bold>
+        </font>
+       </property>
        <property name="text">
         <string>生命（固定）</string>
        </property>
@@ -1412,6 +1709,15 @@ background-color: rgb(224, 234, 244)</string>
          <width>70</width>
          <height>22</height>
         </rect>
+       </property>
+       <property name="font">
+        <font>
+         <family>汉仪文黑-85W</family>
+         <pointsize>10</pointsize>
+         <weight>50</weight>
+         <italic>false</italic>
+         <bold>false</bold>
+        </font>
        </property>
        <property name="decimals">
         <number>1</number>
@@ -1432,6 +1738,15 @@ background-color: rgb(224, 234, 244)</string>
          <height>22</height>
         </rect>
        </property>
+       <property name="font">
+        <font>
+         <family>汉仪文黑-85W</family>
+         <pointsize>10</pointsize>
+         <weight>50</weight>
+         <italic>false</italic>
+         <bold>false</bold>
+        </font>
+       </property>
        <property name="maximum">
         <number>5000</number>
        </property>
@@ -1444,6 +1759,15 @@ background-color: rgb(224, 234, 244)</string>
          <width>101</width>
          <height>22</height>
         </rect>
+       </property>
+       <property name="font">
+        <font>
+         <family>汉仪文黑-85W</family>
+         <pointsize>10</pointsize>
+         <weight>50</weight>
+         <italic>false</italic>
+         <bold>false</bold>
+        </font>
        </property>
        <property name="maximum">
         <number>5000</number>
@@ -1458,6 +1782,15 @@ background-color: rgb(224, 234, 244)</string>
          <height>22</height>
         </rect>
        </property>
+       <property name="font">
+        <font>
+         <family>汉仪文黑-85W</family>
+         <pointsize>10</pointsize>
+         <weight>50</weight>
+         <italic>false</italic>
+         <bold>false</bold>
+        </font>
+       </property>
        <property name="maximum">
         <number>5000</number>
        </property>
@@ -1471,6 +1804,15 @@ background-color: rgb(224, 234, 244)</string>
          <height>21</height>
         </rect>
        </property>
+       <property name="font">
+        <font>
+         <family>汉仪文黑-85W</family>
+         <pointsize>10</pointsize>
+         <weight>50</weight>
+         <italic>false</italic>
+         <bold>false</bold>
+        </font>
+       </property>
        <property name="text">
         <string>精通</string>
        </property>
@@ -1483,6 +1825,15 @@ background-color: rgb(224, 234, 244)</string>
          <width>101</width>
          <height>22</height>
         </rect>
+       </property>
+       <property name="font">
+        <font>
+         <family>汉仪文黑-85W</family>
+         <pointsize>10</pointsize>
+         <weight>50</weight>
+         <italic>false</italic>
+         <bold>false</bold>
+        </font>
        </property>
        <property name="maximum">
         <number>5000</number>
@@ -1498,7 +1849,10 @@ background-color: rgb(224, 234, 244)</string>
         </rect>
        </property>
        <property name="styleSheet">
-        <string notr="true">background-color: rgba(224, 234, 244,200)</string>
+        <string notr="true">background-color: rgba(224, 234, 244,200);
+QSpinBox{
+	font: 10pt &quot;汉仪文黑-85W&quot;;
+}</string>
        </property>
       </widget>
       <zorder>graphicsView_13</zorder>
@@ -1542,6 +1896,15 @@ background-color: rgb(224, 234, 244)</string>
          <height>22</height>
         </rect>
        </property>
+       <property name="font">
+        <font>
+         <family>汉仪文黑-85W</family>
+         <pointsize>10</pointsize>
+         <weight>50</weight>
+         <italic>false</italic>
+         <bold>false</bold>
+        </font>
+       </property>
       </widget>
       <widget class="QComboBox" name="cb_aeffect2">
        <property name="geometry">
@@ -1552,6 +1915,15 @@ background-color: rgb(224, 234, 244)</string>
          <height>22</height>
         </rect>
        </property>
+       <property name="font">
+        <font>
+         <family>汉仪文黑-85W</family>
+         <pointsize>10</pointsize>
+         <weight>50</weight>
+         <italic>false</italic>
+         <bold>false</bold>
+        </font>
+       </property>
       </widget>
       <widget class="QLabel" name="label_15">
        <property name="geometry">
@@ -1561,6 +1933,15 @@ background-color: rgb(224, 234, 244)</string>
          <width>61</width>
          <height>21</height>
         </rect>
+       </property>
+       <property name="font">
+        <font>
+         <family>汉仪文黑-85W</family>
+         <pointsize>10</pointsize>
+         <weight>50</weight>
+         <italic>false</italic>
+         <bold>false</bold>
+        </font>
        </property>
        <property name="text">
         <string>1：</string>
@@ -1574,6 +1955,15 @@ background-color: rgb(224, 234, 244)</string>
          <width>61</width>
          <height>21</height>
         </rect>
+       </property>
+       <property name="font">
+        <font>
+         <family>汉仪文黑-85W</family>
+         <pointsize>10</pointsize>
+         <weight>50</weight>
+         <italic>false</italic>
+         <bold>false</bold>
+        </font>
        </property>
        <property name="text">
         <string>2：</string>
@@ -1598,63 +1988,111 @@ background-color: rgb(224, 234, 244)</string>
       <zorder>label_15</zorder>
       <zorder>label_16</zorder>
      </widget>
-     <widget class="QGroupBox" name="groupBox_11">
+     <widget class="QGroupBox" name="groupBox">
       <property name="geometry">
        <rect>
         <x>30</x>
         <y>40</y>
-        <width>791</width>
+        <width>481</width>
         <height>391</height>
        </rect>
       </property>
       <property name="title">
-       <string/>
+       <string>主词条</string>
       </property>
-      <widget class="QComboBox" name="cb_main_head">
-       <property name="geometry">
-        <rect>
-         <x>90</x>
-         <y>90</y>
-         <width>87</width>
-         <height>22</height>
-        </rect>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">font: 9pt &quot;汉仪文黑-85W&quot;;</string>
-       </property>
-      </widget>
       <widget class="QComboBox" name="cb_main_glass">
        <property name="geometry">
         <rect>
-         <x>90</x>
-         <y>130</y>
+         <x>100</x>
+         <y>110</y>
          <width>87</width>
          <height>22</height>
         </rect>
        </property>
        <property name="styleSheet">
-        <string notr="true">font: 9pt &quot;汉仪文黑-85W&quot;;</string>
+        <string notr="true">font: 10pt &quot;汉仪文黑-85W&quot;;</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_26">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>150</y>
+         <width>72</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">font: 10pt &quot;汉仪文黑-85W&quot;;</string>
+       </property>
+       <property name="text">
+        <string>空之杯</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_25">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>110</y>
+         <width>72</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">font: 10pt &quot;汉仪文黑-85W&quot;;</string>
+       </property>
+       <property name="text">
+        <string>时之沙</string>
        </property>
       </widget>
       <widget class="QComboBox" name="cb_main_cup">
        <property name="geometry">
         <rect>
-         <x>90</x>
-         <y>170</y>
+         <x>100</x>
+         <y>150</y>
          <width>87</width>
          <height>22</height>
         </rect>
        </property>
        <property name="styleSheet">
-        <string notr="true">font: 9pt &quot;汉仪文黑-85W&quot;;</string>
+        <string notr="true">font: 10pt &quot;汉仪文黑-85W&quot;;</string>
        </property>
       </widget>
-      <widget class="QGraphicsView" name="graphicsView_17">
+      <widget class="QComboBox" name="cb_main_head">
+       <property name="geometry">
+        <rect>
+         <x>100</x>
+         <y>70</y>
+         <width>87</width>
+         <height>22</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">font: 10pt &quot;汉仪文黑-85W&quot;;</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>70</y>
+         <width>72</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">font: 10pt &quot;汉仪文黑-85W&quot;;</string>
+       </property>
+       <property name="text">
+        <string>理之冠</string>
+       </property>
+      </widget>
+      <widget class="QGraphicsView" name="graphicsView_18">
        <property name="geometry">
         <rect>
          <x>0</x>
          <y>25</y>
-         <width>791</width>
+         <width>481</width>
          <height>365</height>
         </rect>
        </property>
@@ -1662,104 +2100,66 @@ background-color: rgb(224, 234, 244)</string>
         <string notr="true">background-color: rgba(224, 234, 244,150)</string>
        </property>
       </widget>
-      <widget class="QLabel" name="label">
+      <zorder>graphicsView_18</zorder>
+      <zorder>cb_main_glass</zorder>
+      <zorder>label_26</zorder>
+      <zorder>label_25</zorder>
+      <zorder>cb_main_cup</zorder>
+      <zorder>cb_main_head</zorder>
+      <zorder>label</zorder>
+     </widget>
+     <widget class="QGroupBox" name="groupBox_11">
+      <property name="geometry">
+       <rect>
+        <x>540</x>
+        <y>40</y>
+        <width>281</width>
+        <height>391</height>
+       </rect>
+      </property>
+      <property name="title">
+       <string>副词条</string>
+      </property>
+      <widget class="QGraphicsView" name="graphicsView_17">
        <property name="geometry">
         <rect>
-         <x>10</x>
-         <y>90</y>
-         <width>72</width>
-         <height>21</height>
+         <x>0</x>
+         <y>25</y>
+         <width>281</width>
+         <height>365</height>
         </rect>
        </property>
        <property name="styleSheet">
-        <string notr="true">font: 9pt &quot;汉仪文黑-85W&quot;;</string>
-       </property>
-       <property name="text">
-        <string>理之冠</string>
-       </property>
-      </widget>
-      <widget class="QLabel" name="label_25">
-       <property name="geometry">
-        <rect>
-         <x>10</x>
-         <y>130</y>
-         <width>72</width>
-         <height>21</height>
-        </rect>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">font: 9pt &quot;汉仪文黑-85W&quot;;</string>
-       </property>
-       <property name="text">
-        <string>时之沙</string>
-       </property>
-      </widget>
-      <widget class="QLabel" name="label_26">
-       <property name="geometry">
-        <rect>
-         <x>10</x>
-         <y>170</y>
-         <width>72</width>
-         <height>21</height>
-        </rect>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">font: 9pt &quot;汉仪文黑-85W&quot;;</string>
-       </property>
-       <property name="text">
-        <string>空之杯</string>
+        <string notr="true">background-color: rgba(224, 234, 244,150)</string>
        </property>
       </widget>
       <widget class="QLabel" name="label_27">
        <property name="geometry">
         <rect>
-         <x>240</x>
+         <x>20</x>
          <y>40</y>
          <width>181</width>
          <height>31</height>
         </rect>
        </property>
-       <property name="text">
-        <string>副词条(复选 最多3个)：</string>
-       </property>
-      </widget>
-      <widget class="QLabel" name="label_28">
-       <property name="geometry">
-        <rect>
-         <x>10</x>
-         <y>40</y>
-         <width>121</width>
-         <height>31</height>
-        </rect>
-       </property>
        <property name="styleSheet">
-        <string notr="true">font: 11pt &quot;汉仪文黑-85W&quot;;</string>
+        <string notr="true">font: 9pt &quot;汉仪文黑-85W&quot;;</string>
        </property>
        <property name="text">
-        <string>主词条：</string>
-       </property>
-      </widget>
-      <widget class="QListView" name="listView">
-       <property name="geometry">
-        <rect>
-         <x>240</x>
-         <y>90</y>
-         <width>211</width>
-         <height>101</height>
-        </rect>
+        <string>复选 最多3个</string>
        </property>
       </widget>
       <widget class="QLabel" name="label_subs">
        <property name="geometry">
         <rect>
-         <x>530</x>
-         <y>80</y>
+         <x>20</x>
+         <y>280</y>
          <width>221</width>
          <height>21</height>
         </rect>
        </property>
        <property name="styleSheet">
-        <string notr="true">font: 9pt &quot;汉仪文黑-85W&quot;;</string>
+        <string notr="true">font: 10pt &quot;汉仪文黑-85W&quot;;</string>
        </property>
        <property name="text">
         <string>已选：</string>
@@ -1768,45 +2168,32 @@ background-color: rgb(224, 234, 244)</string>
       <widget class="QSpinBox" name="spb_nsub">
        <property name="geometry">
         <rect>
-         <x>530</x>
-         <y>150</y>
+         <x>20</x>
+         <y>350</y>
          <width>61</width>
          <height>22</height>
         </rect>
        </property>
        <property name="styleSheet">
-        <string notr="true">font: 9pt &quot;汉仪文黑-85W&quot;;</string>
+        <string notr="true">font: 10pt &quot;汉仪文黑-85W&quot;;</string>
        </property>
       </widget>
       <widget class="QLabel" name="label_subs_2">
        <property name="geometry">
         <rect>
-         <x>530</x>
-         <y>120</y>
+         <x>20</x>
+         <y>320</y>
          <width>221</width>
          <height>21</height>
         </rect>
        </property>
        <property name="styleSheet">
-        <string notr="true">font: 9pt &quot;汉仪文黑-85W&quot;;</string>
+        <string notr="true">font: 10pt &quot;汉仪文黑-85W&quot;;</string>
        </property>
        <property name="text">
         <string>副词条总数量</string>
        </property>
       </widget>
-      <zorder>graphicsView_17</zorder>
-      <zorder>cb_main_head</zorder>
-      <zorder>cb_main_glass</zorder>
-      <zorder>cb_main_cup</zorder>
-      <zorder>label</zorder>
-      <zorder>label_25</zorder>
-      <zorder>label_26</zorder>
-      <zorder>label_27</zorder>
-      <zorder>label_28</zorder>
-      <zorder>listView</zorder>
-      <zorder>label_subs</zorder>
-      <zorder>spb_nsub</zorder>
-      <zorder>label_subs_2</zorder>
      </widget>
      <zorder>graphicsView_2</zorder>
      <zorder>grp_head</zorder>
@@ -1814,6 +2201,7 @@ background-color: rgb(224, 234, 244)</string>
      <zorder>grp_cup</zorder>
      <zorder>grp_sub</zorder>
      <zorder>groupBox_6</zorder>
+     <zorder>groupBox</zorder>
      <zorder>groupBox_11</zorder>
     </widget>
     <widget class="QWidget" name="tab_6">
@@ -1883,6 +2271,18 @@ background-color: rgb(224, 234, 244)</string>
         <width>291</width>
         <height>391</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>汉仪文黑-85W</family>
+        <pointsize>10</pointsize>
+        <weight>50</weight>
+        <italic>false</italic>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">font: 10pt &quot;汉仪文黑-85W&quot;;</string>
       </property>
       <property name="title">
        <string>其他加成</string>
@@ -2060,6 +2460,9 @@ background-color: rgb(224, 234, 244)</string>
         <height>401</height>
        </rect>
       </property>
+      <property name="styleSheet">
+       <string notr="true">font: 10pt &quot;汉仪文黑-85W&quot;;</string>
+      </property>
       <property name="title">
        <string>组队加成</string>
       </property>
@@ -2073,7 +2476,8 @@ background-color: rgb(224, 234, 244)</string>
         </rect>
        </property>
        <property name="styleSheet">
-        <string notr="true">background-color: rgba(224, 234, 244,150)</string>
+        <string notr="true">background-color: rgba(224, 234, 244,150);
+font: 10pt &quot;汉仪文黑-85W&quot;;</string>
        </property>
       </widget>
      </widget>
@@ -2114,8 +2518,8 @@ background-color: rgb(224, 234, 244)</string>
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>98</width>
-         <height>28</height>
+         <width>1091</width>
+         <height>333</height>
         </rect>
        </property>
        <attribute name="label">
