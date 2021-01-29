@@ -25,15 +25,15 @@ def c1():
 def c2():
     env = {'spec':True,'fire':True,'watr':True,'elec':True,'ice':True,'frozen':True,'lowhp':True}
     c2  = Character(6,6)
-    c2.load_from_json("./data/test/diluc.json",env)
+    c2.load_from_json("./data/test/diluc.json",env,{})
     return(c2)
 
 @pytest.fixture
 def c3():
     env = {'spec':True,'fire':True,'watr':True,'elec':True,'ice':True,'frozen':True,'lowhp':True}
     c3  = Character(6,6)
-    c3.load_from_json("./data/test/diluc.json",env)
-    c3.load_weapon_from_json("./data/test/claymore.json","lm",1)
+    c3.load_from_json("./data/test/diluc.json",env,{})
+    c3.load_weapon_from_json("./data/test/claymore.json","lm",{},1)
     return(c3)
 
 @pytest.fixture

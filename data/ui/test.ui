@@ -69,7 +69,7 @@
      <enum>QTabWidget::Rounded</enum>
     </property>
     <property name="currentIndex">
-     <number>2</number>
+     <number>4</number>
     </property>
     <widget class="QWidget" name="tab">
      <attribute name="title">
@@ -2480,6 +2480,71 @@ QSpinBox{
 font: 10pt &quot;汉仪文黑-85W&quot;;</string>
        </property>
       </widget>
+      <widget class="QCheckBox" name="checkBox">
+       <property name="geometry">
+        <rect>
+         <x>40</x>
+         <y>60</y>
+         <width>91</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>双岩</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="checkBox_2">
+       <property name="geometry">
+        <rect>
+         <x>40</x>
+         <y>90</y>
+         <width>91</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>双火</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="checkBox_3">
+       <property name="geometry">
+        <rect>
+         <x>40</x>
+         <y>130</y>
+         <width>91</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>双风</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="checkBox_4">
+       <property name="geometry">
+        <rect>
+         <x>40</x>
+         <y>170</y>
+         <width>91</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>双水</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="checkBox_5">
+       <property name="geometry">
+        <rect>
+         <x>40</x>
+         <y>200</y>
+         <width>91</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>双冰</string>
+       </property>
+      </widget>
      </widget>
      <zorder>graphicsView_3</zorder>
      <zorder>groupBox_5</zorder>
@@ -2511,78 +2576,15 @@ font: 10pt &quot;汉仪文黑-85W&quot;;</string>
        <string notr="true">font: 10pt &quot;汉仪文黑-85W&quot;;</string>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
-      <widget class="QWidget" name="page_3">
-       <property name="geometry">
-        <rect>
-         <x>0</x>
-         <y>0</y>
-         <width>1091</width>
-         <height>333</height>
-        </rect>
-       </property>
-       <attribute name="label">
-        <string>版本更新日志</string>
-       </attribute>
-       <widget class="QPlainTextEdit" name="plainTextEdit_3">
-        <property name="geometry">
-         <rect>
-          <x>0</x>
-          <y>0</y>
-          <width>1080</width>
-          <height>331</height>
-         </rect>
-        </property>
-        <property name="minimumSize">
-         <size>
-          <width>1080</width>
-          <height>0</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>1080</width>
-          <height>16777215</height>
-         </size>
-        </property>
-        <property name="font">
-         <font>
-          <family>宋体</family>
-          <pointsize>9</pointsize>
-          <weight>50</weight>
-          <italic>false</italic>
-          <bold>false</bold>
-         </font>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">font: 9pt &quot;宋体&quot;;
-background-color: rgb(224, 234, 244);</string>
-        </property>
-        <property name="readOnly">
-         <bool>true</bool>
-        </property>
-        <property name="plainText">
-         <string>==v.1.70===
-1. 修正甘雨数据文件 元素属性错误
-2.增加最大暴击限制为100%
-3.增加元素反应计算
-4.增加防御抗性纳入计算
-5.增加 黑岩弓，锻造弓，绿弓，神射手之誓
-6.开放甘雨1-6命自定义，增加人物1命减抗增益定义
-7.修正windows下，原神字体不能加载问题
-8.取消技能参数按键， 在校对信息中 增加 人物、武器基础面板信息
-9.增加剧变反应技能定义 过载:gz 超导:cd 感电:gd</string>
-        </property>
-       </widget>
-      </widget>
       <widget class="QWidget" name="page">
        <property name="geometry">
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>98</width>
-         <height>28</height>
+         <width>100</width>
+         <height>30</height>
         </rect>
        </property>
        <attribute name="label">
@@ -2594,7 +2596,7 @@ background-color: rgb(224, 234, 244);</string>
           <x>0</x>
           <y>0</y>
           <width>1080</width>
-          <height>321</height>
+          <height>361</height>
          </rect>
         </property>
         <property name="minimumSize">
@@ -2655,8 +2657,8 @@ background-color: rgb(224, 234, 244)</string>
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>98</width>
-         <height>28</height>
+         <width>1091</width>
+         <height>369</height>
         </rect>
        </property>
        <attribute name="label">
@@ -2668,7 +2670,7 @@ background-color: rgb(224, 234, 244)</string>
           <x>0</x>
           <y>0</y>
           <width>1080</width>
-          <height>321</height>
+          <height>361</height>
          </rect>
         </property>
         <property name="minimumSize">
@@ -2702,11 +2704,6 @@ background-color: rgb(224, 234, 244);</string>
         <property name="plainText">
          <string>使用说明
 ======================
-伤害计算
------------
-目前伤害只考虑伤害公式的前三个乘区以及技能倍率和技能次数的影响
-元素反应以及敌人的各项属性均不计入（温蒂的扩散反应纳入计算）
-
 
 重要影响参数（必看，假设决定结果）
 -----------
@@ -2714,10 +2711,6 @@ background-color: rgb(224, 234, 244);</string>
 2. 普攻/元素战技/元素爆发/重击的 具体组成
 3.人物/武器特效的定义及覆盖系数（因程序没有时间轴，特效效果用覆盖系数进行简化，相当于倍率）
 
-
-录入模式
-------------
-圣遗物信息从录入文件读取，圣遗物主词条，其他增益中套装效果及副词条不再计入，其他加成仍然生效
 
 增益参数
 ----------
@@ -2727,16 +2720,6 @@ background-color: rgb(224, 234, 244);</string>
 ----------
 可追踪具体每个技能分项的计算参数和人物信息，便于检查跟踪，计算时自动重置
 
-======================
-
-圣遗物主词条
-------------
-计算时候会自动存档
-
-======================
-其他增益
-------------
-计算时候会自动存档
 </string>
         </property>
        </widget>
