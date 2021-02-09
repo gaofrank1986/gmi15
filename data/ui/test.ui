@@ -69,7 +69,7 @@
      <enum>QTabWidget::Rounded</enum>
     </property>
     <property name="currentIndex">
-     <number>4</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="tab">
      <attribute name="title">
@@ -398,6 +398,15 @@ background-color: rgb(224, 234, 244)</string>
         <height>31</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <family>汉仪文黑-85W</family>
+        <pointsize>10</pointsize>
+        <weight>50</weight>
+        <italic>false</italic>
+        <bold>false</bold>
+       </font>
+      </property>
       <property name="text">
        <string>校对信息</string>
       </property>
@@ -490,6 +499,15 @@ background-color: rgb(224, 234, 244)</string>
         <verstretch>0</verstretch>
        </sizepolicy>
       </property>
+      <property name="font">
+       <font>
+        <family>汉仪文黑-85W</family>
+        <pointsize>10</pointsize>
+        <weight>50</weight>
+        <italic>false</italic>
+        <bold>false</bold>
+       </font>
+      </property>
       <property name="value">
        <number>24</number>
       </property>
@@ -520,6 +538,15 @@ background-color: rgb(224, 234, 244)</string>
         <height>19</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <family>汉仪文黑-85W</family>
+        <pointsize>10</pointsize>
+        <weight>50</weight>
+        <italic>false</italic>
+        <bold>false</bold>
+       </font>
+      </property>
       <property name="text">
        <string>防御抗性</string>
       </property>
@@ -533,6 +560,15 @@ background-color: rgb(224, 234, 244)</string>
         <height>19</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <family>汉仪文黑-85W</family>
+        <pointsize>10</pointsize>
+        <weight>50</weight>
+        <italic>false</italic>
+        <bold>false</bold>
+       </font>
+      </property>
       <property name="text">
        <string>元素反应</string>
       </property>
@@ -545,6 +581,15 @@ background-color: rgb(224, 234, 244)</string>
         <width>87</width>
         <height>22</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>汉仪文黑-85W</family>
+        <pointsize>10</pointsize>
+        <weight>50</weight>
+        <italic>false</italic>
+        <bold>false</bold>
+       </font>
       </property>
       <item>
        <property name="text">
@@ -609,6 +654,28 @@ background-color: rgb(224, 234, 244)</string>
        <number>20</number>
       </property>
      </widget>
+     <widget class="QLabel" name="label_28">
+      <property name="geometry">
+       <rect>
+        <x>930</x>
+        <y>406</y>
+        <width>71</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>汉仪文黑-85W</family>
+        <pointsize>9</pointsize>
+        <weight>50</weight>
+        <italic>false</italic>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>显示列:</string>
+      </property>
+     </widget>
      <zorder>graphicsView</zorder>
      <zorder>tbl_2</zorder>
      <zorder>btn_run</zorder>
@@ -632,6 +699,7 @@ background-color: rgb(224, 234, 244)</string>
      <zorder>cb_mode2</zorder>
      <zorder>pb_ratio</zorder>
      <zorder>spb_num_display</zorder>
+     <zorder>label_28</zorder>
     </widget>
     <widget class="QWidget" name="tab_5">
      <attribute name="title">
@@ -2480,7 +2548,7 @@ QSpinBox{
 font: 10pt &quot;汉仪文黑-85W&quot;;</string>
        </property>
       </widget>
-      <widget class="QCheckBox" name="checkBox">
+      <widget class="QCheckBox" name="cb_tm_rock">
        <property name="geometry">
         <rect>
          <x>40</x>
@@ -2493,11 +2561,11 @@ font: 10pt &quot;汉仪文黑-85W&quot;;</string>
         <string>双岩</string>
        </property>
       </widget>
-      <widget class="QCheckBox" name="checkBox_2">
+      <widget class="QCheckBox" name="cb_tm_fire">
        <property name="geometry">
         <rect>
          <x>40</x>
-         <y>90</y>
+         <y>100</y>
          <width>91</width>
          <height>21</height>
         </rect>
@@ -2506,24 +2574,11 @@ font: 10pt &quot;汉仪文黑-85W&quot;;</string>
         <string>双火</string>
        </property>
       </widget>
-      <widget class="QCheckBox" name="checkBox_3">
+      <widget class="QCheckBox" name="cb_tm_watr">
        <property name="geometry">
         <rect>
          <x>40</x>
-         <y>130</y>
-         <width>91</width>
-         <height>21</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>双风</string>
-       </property>
-      </widget>
-      <widget class="QCheckBox" name="checkBox_4">
-       <property name="geometry">
-        <rect>
-         <x>40</x>
-         <y>170</y>
+         <y>140</y>
          <width>91</width>
          <height>21</height>
         </rect>
@@ -2532,11 +2587,11 @@ font: 10pt &quot;汉仪文黑-85W&quot;;</string>
         <string>双水</string>
        </property>
       </widget>
-      <widget class="QCheckBox" name="checkBox_5">
+      <widget class="QCheckBox" name="cb_tm_ice">
        <property name="geometry">
         <rect>
          <x>40</x>
-         <y>200</y>
+         <y>180</y>
          <width>91</width>
          <height>21</height>
         </rect>

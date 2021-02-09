@@ -337,6 +337,14 @@ class Character(Basic_Panel):
             area2 = self._crit()
             (area30,area31) = self._area3()
 
+            if i =='a' and 'addon_a' in self.skill_effect[i]:
+                area4 = 1+self.skill_effect[i]['addon_a']/100
+                logger.debug('addon_a:{}'.format(area4))
+            else:
+                area4 = 1
+
+
+
             if 'd2a' in self.sp_buff.keys():
                 delta = self.sp_buff['d2a']/100*self._total_def()
                 area1+= delta
@@ -398,6 +406,11 @@ class Character(Basic_Panel):
                     multi  = float(entry[1])
                     atk_t = self._data['atk_type'][entry[0]]
                     ratio=self._data['ratios'][entry[0]][level]/100
+                    if "skill_num" in self._data and entry[0] in self._data["skill_num"]:
+                        skill_num=int(self._data["skill_num"][entry[0]])
+                    else:
+                        skill_num=1
+                        
                     if 'ratio' in self.skill_effect[i]:
                         ratio = ratio*(1+self.skill_effect[i]['ratio']/100)
                         logger.debug("祭礼剑系列 技能{} 倍率增加{}%,增加量为期望概率值".format(i,self.skill_effect[i]['ratio']))
@@ -418,39 +431,44 @@ class Character(Basic_Panel):
                     if i =='a' and 'ah' not in entry[0] and 'ap' not in entry[0] and 'daa' in self.skill_effect[i]:
                         delta = self.skill_effect[i]['daa']/100
                         logger.debug('daa:{}'.format(delta))
-                        
+                    
+
+                    
                     if i in ['a','e','q']:        
                         assert(atk_t in ['elem','phys','env'])
                         ans2[0]+=ratio*multi*base/self._total_atk()
                         ans2[1]+=ratio*multi
                         if atk_t == 'elem':                            
-                            ans[0]+=base*area2*(area30+delta)*ratio*multi*elemrct*ratio_dr*ratio_rr0
-                            # ans2[2]+=base*area2*(area30+delta)*ratio*multi/save_value[0]
-                            # ans2[3]+=base*area2*(area30+delta)*ratio*multi/save_value[2]
+                            ans[0]+=base*area2*(area30+delta)*area4*ratio*multi*elemrct*ratio_dr*ratio_rr0
 
                             logger.debug("基础攻击{:.2f},修正后总攻击 = {:.2f},暴击区 = {:.2f},加伤区 = {:.2f},伤害类型:{}".format(self.attack[0],base,area2,area30,atk_t))
 
                         elif atk_t == 'phys':
-                            ans[0]+=base*area2*(area30+delta)*ratio*multi*self.enchant_ratio*elemrct*ratio_dr*ratio_rr0
-                            # ans2[2]+=base*area2*(area30+delta)*ratio*multi*self.enchant_ratio/save_value[0]
-                            # ans2[3]+=base*area2*(area30+delta)*ratio*multi*self.enchant_ratio/save_value[2]
+                            ans[0]+=base*area2*(area30+delta)*area4*ratio*multi*self.enchant_ratio*elemrct*ratio_dr*ratio_rr0
+
 
                             logger.debug("基础攻击{:.2f},修正后总攻击 = {:.2f},暴击区 = {:.2f},加伤区 = {:.2f},伤害类型:{},附魔,占比 {}".format(self.attack[0],base,area2,area30,"属性元素",self.enchant_ratio))
 
     
-                            ans[1]+=base*area2*(area31+delta)*ratio*multi*(1-self.enchant_ratio)*ratio_dr*ratio_rr1
-                            # ans2[2]+=base*area2*(area30+delta)*ratio*multi*(1-self.enchant_ratio)/save_value[1]
-                            # ans2[3]+=base*area2*(area30+delta)*ratio*multi*(1-self.enchant_ratio)/save_value[2]
+                            ans[1]+=base*area2*(area31+delta)*area4*ratio*multi*(1-self.enchant_ratio)*ratio_dr*ratio_rr1
+
 
                             logger.debug("基础攻击{:.2f},修正后总攻击 = {:.2f},暴击区 = {:.2f},加伤区 = {:.2f},伤害类型:{},不附魔,占比 {}".format(self.attack[0],base,area2,area31,"物理",1-self.enchant_ratio))
                         elif atk_t == 'env':
                             ans[2]+=base*area2*ratio*multi*ratio_dr*ratio_rr2
-                            # ans2[2]+=base*area2*ratio*multi/save_value[0]
-                            # ans2[3]+=base*area2*ratio*multi/save_value[2]
+
 
                             logger.debug("基础攻击{:.2f},修正后总攻击 = {:.2f},暴击区 = {:.2f},加伤区 = {:.2f},伤害类型:{}".format(self.attack[0],base,area2,1,"环境元素")) 
                         else:
                             pass
+                        
+                        if i =='a' and 'addon_a2' in self.skill_effect[i] and entry[0] in ['a1','a2','a3','a4','a5','a6','ah','ah1','ah2']:
+                            tmpp = self.skill_effect[i]['addon_a2']/100*base*area2*(area31+delta)*multi*skill_num
+                            ans[2]+=tmpp
+                            logger.debug('addon_a2:{} {}'.format(tmpp,skill_num))
+                    
+                            
+                        
                     elif i in ['shld']:
                         assert(atk_t in ['shld','base'])
                         logger.debug("护盾强效{}%".format(self.dmg_eh[10]))
@@ -481,8 +499,9 @@ class Character(Basic_Panel):
                     if entry[0] == 'w':
                         '''武器附伤'''
                         if 'damage' in self.skill_effect[i]:
-                            ans[1]+=area1*self.skill_effect[i]['damage']/100*ratio_dr*ratio_rr1
-                            logger.debug("武器附加伤害: 总攻击 = {:.2f},ratio = {:.2f} 假设为物理伤害，不受益2，3乘区加成".format(area1,self.skill_effect[i]['damage']/100)) 
+                            tmpee = area1*self.skill_effect[i]['damage']/100*ratio_dr*ratio_rr1*area31*area2
+                            ans[1]+=tmpee
+                            logger.debug("武器附加伤害: 总攻击 = {:.2f},ratio = {:.2f} 假设为物理伤害{:.2f}".format(area1,self.skill_effect[i]['damage']/100,tmpee)) 
         
 
 

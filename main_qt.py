@@ -310,6 +310,10 @@ class MainWindow(QMainWindow):
             env = {'spec':True,'fire':self.rb_cond_fire.isChecked(),'watr':self.rb_cond_watr.isChecked(),'elec':self.rb_cond_elec.isChecked(),'ice':self.rb_cond_ice.isChecked(),'frozen':self.cb_cond_frozen.isChecked(),'lowhp':self.cb_cond_lowhp.isChecked()}
             logger.info(env)
             
+            team_cond = {"rock":self.cb_tm_rock.isChecked(),"fire":self.cb_tm_fire.isChecked(),"watr":self.cb_tm_watr.isChecked(),"ice":self.cb_tm_ice.isChecked()}
+            team_buff ={"rock":[["all"],{"dshld":15,"d":15,"derss":20},1,"岩队加成"],"fire":[["all"],{"ar":25},1,"火队加成"],"watr":[["all"],{"dheal":30},1,"水队加成"],"ice":[["all"],{"cr":15},1,"冰队加成"]}
+            print(team_cond)
+            
             enemy = {"lvl":self.sb_enemy_lvl.value(),"erss":self.sb_enemy_erss.value(),"frss":self.sb_enemy_frss.value()}
      
             
@@ -355,6 +359,10 @@ class MainWindow(QMainWindow):
                 c.ifer = True
             if self.cb_switch_def.isChecked():
                 c.if_def_r = True       
+            
+            for i in team_cond:
+                if team_cond[i]:
+                    c.buffs['tm_'+i] = team_buff[i]
 
             '''人物/武器/圣遗物套装(非录入穷举) buff 加载部分'''
             c._load_buff(c.buffs,c._check1,env)
@@ -653,7 +661,8 @@ class MainWindow(QMainWindow):
         self.pb_wpn.setText("武器")
         self.current_wpn=""
         self.pb_wpn.setIconSize(QtCore.QSize(0, 0))
-        self.cb_cnum.addItems(self._data[self.current_role]['c'])
+        # self.cb_cnum.addItems(self._data[self.current_role]['c'])
+        self.cb_cnum.addItems(["0","1","2","3","4","5","6"])
         self.statusBar().showMessage("信息重新加载",1000)
 
 

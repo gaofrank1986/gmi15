@@ -6,6 +6,7 @@ from utility import extract_name3
 from PyQt5 import QtCore, QtGui, QtWidgets
 import logging
 from db_setup import CRatio,db_session
+import re
 class Win_Ratio(QDialog):
     def __init__(self,role,sbar):
         super(Win_Ratio,self).__init__()
@@ -111,30 +112,53 @@ class Win_Ratio(QDialog):
             desc = [data[_][3] for _ in data]
             cond = ['{}'.format(data[_][0]) for _ in data]
             print(cond)
+            print(keys)
             effct = ['{}'.format(data[_][1]) for _ in data]
             values = [str(data[_][2]) for _ in data]
-            if saved is None:
-                # print("no key")
-                cratio = CRatio()
+            valid = False
+            if saved is not None:
+                cratio = saved
+                try:
+                    keys2 = cratio.keys.split('/')
+                    values2 = cratio.values.split('||')
+                    print(keys2)
+                    print(values2)
+                    print(len(keys2),len(values2))
+                    print(len(keys2),len(keys))
+                    assert(len(keys2)==len(values2))
+                    assert(len(keys2)==len(keys))
+                    for i in values2:
+                        print(i,re.match(r'^-?\d+(?:\.\d+)$', i),i.isalnum())
+                        if (re.match(r'^-?\d+(?:\.\d+)$', i) is None) and not(i.isalnum()):
+                            raise ValueError 
+                    valid = True
+                except:
+                    pass
+            
+            if not valid:
+                if saved is None:
+                    cratio = CRatio()
+                else:
+                    cratio = saved
                 cratio.name = fltr
                 cratio.keys = '/'.join(keys)
                 cratio.values = '||'.join(values)
-                # print(cratio.keys)
-                # print(cratio.values)
-                db_session.add(cratio)
+                if saved is None:
+                    db_session.add(cratio)
                 db_session.commit()
-            else:
-                cratio = saved
+
+                
                 
             keys2 = cratio.keys.split('/')
             values2 = cratio.values.split('||')
-            # print(keys2)
-            # print(values2)
+
 
             base = self.table_ratio.rowCount()
             # print("base",base)
 
             for i in range(len(keys2)):
+                if keys2[i]=='':
+                    continue
                 item =  QTableWidgetItem(keys2[i])
                 item.setFlags(QtCore.Qt.ItemIsEnabled)
                 self.table_ratio.insertRow(base+i)

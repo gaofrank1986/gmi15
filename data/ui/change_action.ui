@@ -46,7 +46,7 @@ font: 9pt &quot;汉仪文黑-85W&quot;;
 </string>
    </property>
    <property name="currentIndex">
-    <number>3</number>
+    <number>1</number>
    </property>
    <widget class="QWidget" name="tab">
     <property name="styleSheet">
@@ -400,6 +400,11 @@ background-color: transparent;
      <column>
       <property name="text">
        <string>基础</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>段数</string>
       </property>
      </column>
     </widget>

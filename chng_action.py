@@ -157,12 +157,21 @@ class Change_Action(QDialog):
                 item = QTableWidgetItem(s)
                 self.tb_skill.setItem(N,3,item)                
 
+                if "skill_num" in data and i in data["skill_num"]:
+                    s=data["skill_num"][i]
+                else:
+                    s = "1"
+                item = QTableWidgetItem(s)
+                self.tb_skill.setItem(N,4,item)                
+
+
                 N+=1
 
             header = self.tb_skill.horizontalHeader()       
             header.setSectionResizeMode(0, QtWidgets.QHeaderView.ResizeToContents)
             header.setSectionResizeMode(2, QtWidgets.QHeaderView.ResizeToContents)
             header.setSectionResizeMode(3, QtWidgets.QHeaderView.ResizeToContents)
+            header.setSectionResizeMode(4, QtWidgets.QHeaderView.ResizeToContents)
             header.setSectionResizeMode(1, QtWidgets.QHeaderView.Stretch)
 
             
