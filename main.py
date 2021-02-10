@@ -1,32 +1,24 @@
-import json
-from copy import deepcopy
-import logging
-import os
-import sys
+import os,sys,traceback,pprint,json,logging
 from collections import OrderedDict
-
-
-from basic import Articraft
-from character import Character
-from utility import MyDialog,parse_formula,ps2,run_thru_data,ps1,gen_sublist,rename,gen_mainlist
-import traceback
-
+from copy import deepcopy
+from sqlalchemy import and_,or_
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.uic import loadUi
 from PyQt5.QtCore import Qt,QItemSelectionModel
-from PyQt5.QtWidgets import QApplication,QMainWindow,QTableWidgetItem,QCheckBox,QLabel,QFrame,QPushButton,QTableWidget,QToolButton,QListWidget
+from PyQt5.QtWidgets import QApplication,QMainWindow,QTableWidgetItem,QCheckBox,QLabel,QFrame,QTableWidget,QToolButton,QListWidget
 
-from ocr import cn
-from db_setup import Entry,db_session,init_db,get_info_by_id,CRatio,RWData
-from sqlalchemy import and_,or_
-import pprint
+from src.mods.ocr import cn
+from src.mods.db_setup import Entry,db_session,init_db,get_info_by_id,CRatio,RWData
+from src.mods.basic import Articraft
+from src.mods.character import Character
+from src.mods.utility import MyDialog,parse_formula,ps2,run_thru_data,ps1,gen_sublist,rename,gen_mainlist
 
-from win_ratio import Win_Ratio
-from win_select import caraWindow
-from win_skill import Change_Action
-from win_rec_art import Rec_Artifact, DB_Filter
-from widget_check_list import AppRemovalPage
+from src.dialog.win_ratio import Win_Ratio
+from src.dialog.win_select import caraWindow
+from src.dialog.win_skill import Win_Skill
+from src.dialog.win_rec_art import Rec_Artifact, DB_Filter
+from src.widget.check_list import AppRemovalPage
 
 class MyListWidget(QListWidget):
     def __init__(self, parent=None, max_selected = 3):
@@ -50,7 +42,7 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super(MainWindow,self).__init__()
         QtGui.QFontDatabase.addApplicationFont("./data/ui/zh-cn.ttf")
-        loadUi("./data/ui/test.ui",self)
+        loadUi("./data/ui/main.ui",self)
         font = QtGui.QFont()
 
         self.setFixedWidth(1070)
@@ -95,7 +87,7 @@ class MainWindow(QMainWindow):
         self.dlg = MyDialog(self,'Main',logging.Formatter("%(asctime)s — %(message)s",datefmt='%H:%M'))
         self.win_buff = MyDialog(self,'Buff',logging.Formatter("%(message)s"))
         self.win_log = MyDialog(self,'1',logging.Formatter("%(message)s"))
-        self.win_save_act = Change_Action(self._data,self.statusBar())
+        self.win_save_act = Win_Skill(self._data,self.statusBar())
         self.win_rec_a = Rec_Artifact(self._aeffect,self.statusBar())
         
         self.win_ratio = Win_Ratio(self.current_role,self.statusBar())
@@ -155,7 +147,7 @@ class MainWindow(QMainWindow):
         # self.lbl1.setStyleSheet('border: 0; color:  blue;')
         # self.lbl2 = QLabel("Data : ")
         # self.lbl2.setStyleSheet('border: 0; color:  red;')
-        ed = QPushButton('Log')
+        # ed = QPushButton('Log')
 
         self.statusBar().reformat()
         self.statusBar().setStyleSheet('border: 0; background-color: #FFF8DC;')
