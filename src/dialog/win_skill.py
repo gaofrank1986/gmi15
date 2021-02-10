@@ -139,7 +139,9 @@ class Win_Skill(QDialog):
                 item =  QTableWidgetItem(i)
                 item.setFlags(QtCore.Qt.ItemIsEnabled)
                 self.tb_skill.insertRow(N)
+
                 self.tb_skill.setItem(N,0,item)
+                
                 text = extract_name3(data['atk_type'][i])
                 item = QTableWidgetItem(text)
                 self.tb_skill.setItem(N,2,item)
@@ -169,7 +171,17 @@ class Win_Skill(QDialog):
                 else:
                     s = "0"
                 item = QTableWidgetItem(s)
-                self.tb_skill.setItem(N,5,item)    
+                self.tb_skill.setItem(N,5,item)  
+                
+                #=======================  
+                self.tb_buff_def.insertRow(N)
+
+                item =  QTableWidgetItem(i)
+                self.tb_buff_def.setItem(N,0,item)
+                
+                for k in range(1,10):
+                    item = QTableWidgetItem("0")
+                    self.tb_buff_def.setItem(N,k,item)
 
                 N+=1
 
@@ -182,8 +194,13 @@ class Win_Skill(QDialog):
             header.setSectionResizeMode(1, QtWidgets.QHeaderView.Stretch)
             header = self.tb_skill.verticalHeader()       
             header.setVisible(False)
-            
 
+            header = self.tb_buff_def.horizontalHeader()       
+            for N in range(0,10):
+                header.setSectionResizeMode(N, QtWidgets.QHeaderView.ResizeToContents)
+                # header.setSectionResizeMode(1, QtWidgets.QHeaderView.Stretch)
+            header = self.tb_buff_def.verticalHeader()       
+            header.setVisible(False)
 
             for i in ['a','e','q','shld','heal']:           
 
