@@ -39,6 +39,16 @@ class CRatio(Base):
     name = Column(String,unique=True)
     keys = Column(String)
     values = Column(String)
+    
+class RWData(Base):
+    __tablename__='rw_data'
+    id = Column(Integer,primary_key = True)
+    name = Column(String,unique=True)
+    basic_health = Column(String)
+    basic_attack = Column(String)
+    basic_defense = Column(String)
+    break_thru = Column(String)
+    break_thru_v = Column(String)
 # Base.metadata.create_all(engine)
 def init_db():
     Base.metadata.create_all(bind=engine)

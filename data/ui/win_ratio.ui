@@ -6,98 +6,173 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>755</width>
-    <height>406</height>
+    <width>766</width>
+    <height>420</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
-  <widget class="QDialogButtonBox" name="buttonBox">
+  <widget class="QTabWidget" name="tabs">
    <property name="geometry">
     <rect>
-     <x>390</x>
-     <y>350</y>
-     <width>341</width>
-     <height>32</height>
+     <x>10</x>
+     <y>10</y>
+     <width>741</width>
+     <height>361</height>
     </rect>
    </property>
-   <property name="orientation">
-    <enum>Qt::Horizontal</enum>
+   <property name="currentIndex">
+    <number>0</number>
    </property>
-   <property name="standardButtons">
-    <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+   <widget class="QWidget" name="tab_2">
+    <attribute name="title">
+     <string>人物/武器 基础数据</string>
+    </attribute>
+    <widget class="QTableWidget" name="table_value">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>10</y>
+       <width>511</width>
+       <height>311</height>
+      </rect>
+     </property>
+     <column>
+      <property name="text">
+       <string>名字</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>类型</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>数值</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>注释</string>
+      </property>
+     </column>
+    </widget>
+    <widget class="QPushButton" name="pb_reset">
+     <property name="geometry">
+      <rect>
+       <x>580</x>
+       <y>280</y>
+       <width>111</width>
+       <height>28</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>重置（90级）</string>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="tab">
+    <attribute name="title">
+     <string>人物/武器 特效</string>
+    </attribute>
+    <widget class="QTableWidget" name="table_ratio">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>10</y>
+       <width>711</width>
+       <height>311</height>
+      </rect>
+     </property>
+     <column>
+      <property name="text">
+       <string>名字</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>条件</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>效果</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>覆盖率</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>描述</string>
+      </property>
+     </column>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="tab_3">
+    <attribute name="title">
+     <string>说明</string>
+    </attribute>
+    <widget class="QPlainTextEdit" name="plainTextEdit">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>10</y>
+       <width>671</width>
+       <height>301</height>
+      </rect>
+     </property>
+     <property name="plainText">
+      <string>主界面武器未选择只显示人物，武器选择完成则显示人物和武器
+
+
+人物/武器 基础数据
+======================
+数值列可修改
+
+
+
+人物/武器 特效
+======================
+覆盖率列可修改
+
+覆盖率对同一人物不同命座存储位置不同（就是每个命座可以有不同的覆盖率，不会相互覆盖）
+</string>
+     </property>
+    </widget>
+   </widget>
+  </widget>
+  <widget class="QPushButton" name="pb_save">
+   <property name="geometry">
+    <rect>
+     <x>440</x>
+     <y>382</y>
+     <width>111</width>
+     <height>28</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>储存</string>
    </property>
   </widget>
-  <widget class="QTableWidget" name="table_ratio">
+  <widget class="QPushButton" name="pb_close">
    <property name="geometry">
     <rect>
-     <x>20</x>
-     <y>20</y>
-     <width>711</width>
-     <height>311</height>
+     <x>560</x>
+     <y>380</y>
+     <width>111</width>
+     <height>28</height>
     </rect>
    </property>
-   <column>
-    <property name="text">
-     <string>名字</string>
-    </property>
-   </column>
-   <column>
-    <property name="text">
-     <string>条件</string>
-    </property>
-   </column>
-   <column>
-    <property name="text">
-     <string>效果</string>
-    </property>
-   </column>
-   <column>
-    <property name="text">
-     <string>覆盖率</string>
-    </property>
-   </column>
-   <column>
-    <property name="text">
-     <string>描述</string>
-    </property>
-   </column>
+   <property name="text">
+    <string>关闭</string>
+   </property>
   </widget>
  </widget>
  <resources/>
- <connections>
-  <connection>
-   <sender>buttonBox</sender>
-   <signal>accepted()</signal>
-   <receiver>Dialog</receiver>
-   <slot>accept()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>248</x>
-     <y>254</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>157</x>
-     <y>274</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>buttonBox</sender>
-   <signal>rejected()</signal>
-   <receiver>Dialog</receiver>
-   <slot>reject()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>316</x>
-     <y>260</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>286</x>
-     <y>274</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
+ <connections/>
 </ui>

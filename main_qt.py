@@ -13,15 +13,15 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.uic import loadUi
 from PyQt5.QtCore import Qt
 from rec_art import Rec_Artifact, DB_Filter
-from chng_action import Change_Action
 from ocr import cn
-from db_setup import Entry,db_session,init_db,get_info_by_id,CRatio
+from db_setup import Entry,db_session,init_db,get_info_by_id,CRatio,RWData
 from check_list import AppRemovalPage
 from sqlalchemy import and_,or_
-from wincara import caraWindow
 from PyQt5.QtCore import QItemSelectionModel
 import pprint
 from win_ratio import Win_Ratio
+from win_select import caraWindow
+from win_skill import Change_Action
 
 class MyListWidget(QListWidget):
     def __init__(self, parent=None, max_selected = 3):
@@ -48,7 +48,8 @@ class MainWindow(QMainWindow):
         loadUi("./data/ui/test.ui",self)
         font = QtGui.QFont()
 
-
+        self.setFixedWidth(1070)
+        
         self._data = {}
         self._wlookup= {}
         self._aeffect = {}
@@ -165,12 +166,14 @@ class MainWindow(QMainWindow):
         self.statusBar().addPermanentWidget(VLine())    # <---
         self.statusBar().addPermanentWidget(self.cb_mode2)       
         self.statusBar().addPermanentWidget(VLine())  
-        self.statusBar().addPermanentWidget(self.pb_buff)
-        self.statusBar().addPermanentWidget(VLine())    # <---
-        self.statusBar().addPermanentWidget(ed)
+        # self.statusBar().addPermanentWidget(self.pb_buff)
+        # self.statusBar().addPermanentWidget(VLine())    # <---
+        self.statusBar().addPermanentWidget(self.cb_check)
         self.statusBar().addPermanentWidget(VLine())    # <---
         
-        ed.clicked.connect(self.win_log.exec_)
+        # ed.clicked.connect(self.win_log.exec_)
+        self.pb_log.clicked.connect(self.win_log.exec_)
+        self.cb_check.stateChanged.connect(self.resize_main)
 
 
         
@@ -221,6 +224,12 @@ class MainWindow(QMainWindow):
         self.save_sub_list=[]
         
         self.tabs.setCurrentIndex(0)
+
+    def resize_main(self):
+        if self.cb_check.isChecked():
+            self.setFixedWidth(1200)
+        else:
+            self.setFixedWidth(1070)
 
     def printItemText(self):
         items = self.select_subs.selectedItems()
@@ -330,7 +339,8 @@ class MainWindow(QMainWindow):
                     tmp2 = [float(_) for _ in cro.values.split("||")]
                     for i in tmp1:
                         ratio[i] = tmp2[tmp1.index(i)]
-                c.load_from_json("./data/character/"+character+".json",env,ratio)
+                cdata = db_session.query(RWData).filter(RWData.name == character).first()
+                c.load_from_json("./data/character/"+character+".json",env,ratio,cdata = cdata )
 
             except:
                 fail_info.append("人物信息错误")
@@ -348,7 +358,8 @@ class MainWindow(QMainWindow):
                     for i in tmp1:
                         ratio[i] = tmp2[tmp1.index(i)]
                 print(ratio)
-                c.load_weapon_from_json("./data/weapon/"+c.weapon_class+".json",weapon,ratio,refine)
+                wdata = db_session.query(RWData).filter(RWData.name == c.weapon_class+'_'+weapon).first()
+                c.load_weapon_from_json("./data/weapon/"+c.weapon_class+".json",weapon,ratio,refine,wdata)
 
             except:
                 fail_info.append("武器信息错误")

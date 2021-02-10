@@ -59,7 +59,7 @@ class Character(Basic_Panel):
         self.jb_tb={'ks':"wind","cd":"ice","gz":"fire","gd":"watr"}
         
         
-    def load_from_json(self,path,env,ratio):
+    def load_from_json(self,path,env,ratio,cdata = None):
         assert isinstance(ratio,dict)
         self.loaded = True
         self.env = env
@@ -79,19 +79,34 @@ class Character(Basic_Panel):
 
         assert str(self.level) in data.keys()
         data1 = data[str(self.level)]
-        self.health[0] = data1['basic_health']
-        self.defense[0] = data1['basic_defense']
-        self.attack[0] = data1['basic_attack']
-        self.load_att(data1['break_thru'])
+        if cdata is None:
+            self.health[0] = data1['basic_health']
+            self.defense[0] = data1['basic_defense']
+            self.attack[0] = data1['basic_attack']
+            self.load_att(data1['break_thru'])
+        else:
+            self.health[0] = float(cdata.basic_health)
+            self.defense[0] = float(cdata.basic_defense)
+            self.attack[0] = float(cdata.basic_attack)
+            self.load_att({cdata.break_thru:float(cdata.break_thru_v)})            
         if True:
-            logging.getLogger('Buff').info('{}(90级)'.format(data['name']))
-            logging.getLogger('Buff').info('============')
-            logging.getLogger('Buff').info('人物属性: {}'.format(self.t1[data['elem_class']]))
-            logging.getLogger('Buff').info('基础生命: {}'.format(data1['basic_health']))
-            logging.getLogger('Buff').info('基础防御: {}'.format(data1['basic_defense']))
-            logging.getLogger('Buff').info('基础攻击: {}'.format(data1['basic_attack']))
-            for i in data1['break_thru']:
-                logging.getLogger('Buff').info('突破:\n   {} {}%'.format(self.t2[i],data1['break_thru'][i]))
+            if cdata is None:
+                logging.getLogger('Buff').info('{}(90级)'.format(data['name']))
+                logging.getLogger('Buff').info('============')
+                logging.getLogger('Buff').info('人物属性: {}'.format(self.t1[data['elem_class']]))
+                logging.getLogger('Buff').info('基础生命: {}'.format(data1['basic_health']))
+                logging.getLogger('Buff').info('基础防御: {}'.format(data1['basic_defense']))
+                logging.getLogger('Buff').info('基础攻击: {}'.format(data1['basic_attack']))
+                for i in data1['break_thru']:
+                    logging.getLogger('Buff').info('突破:\n   {} {}%'.format(self.t2[i],data1['break_thru'][i]))
+            else:
+                logging.getLogger('Buff').info('{}(数据库)'.format(data['name']))
+                logging.getLogger('Buff').info('============')
+                logging.getLogger('Buff').info('人物属性: {}'.format(self.t1[data['elem_class']]))
+                logging.getLogger('Buff').info('基础生命: {}'.format(cdata.basic_health))
+                logging.getLogger('Buff').info('基础防御: {}'.format(cdata.basic_defense))
+                logging.getLogger('Buff').info('基础攻击: {}'.format(cdata.basic_attack))
+                logging.getLogger('Buff').info('突破:\n     {} {}%'.format(self.t2[cdata.break_thru],cdata.break_thru_v))
             logging.getLogger('Buff').info('\n')
 
             self.enchant_ratio = data['c'+str(self.constellation)]['enchant_ratio']
@@ -121,7 +136,7 @@ class Character(Basic_Panel):
         if 'rebase' in data.keys():
             self.switch = data['rebase']
                 
-    def load_weapon_from_json(self,path,name,ratio,refine = 1):
+    def load_weapon_from_json(self,path,name,ratio,refine = 1,wdata = None):
         
         assert(self.loaded)
         with open(path, 'r', encoding='UTF-8') as fp:
@@ -134,14 +149,25 @@ class Character(Basic_Panel):
                 self._validate_wdata(data[wp])
                 
                 self.equipment.append((data[wp]['name'],refine))
-                self.attack[0] += data[wp]['basic_attack']                                
-                self.load_att(data[wp]['break_thru'])
+                if wdata is None:
+                    self.attack[0] += data[wp]['basic_attack']                                
+                    self.load_att(data[wp]['break_thru'])
+                else:
+                    self.attack[0] += float(wdata.basic_attack)
+                    self.load_att({wdata.break_thru:float(wdata.break_thru_v)})                        
                 if True:
-                    logging.getLogger('Buff').info('{}(90级) 精炼:{}'.format(data[wp]['name'],refine))
-                    logging.getLogger('Buff').info('============')
-                    logging.getLogger('Buff').info('基础攻击: {}'.format(data[wp]['basic_attack']))
-                    for i in data[wp]['break_thru']:
-                        logging.getLogger('Buff').info('突破:\n     {} {}%'.format(self.t2[i],data[wp]['break_thru'][i]))
+
+                    if wdata is None:
+                        logging.getLogger('Buff').info('{}(90级) 精炼:{}'.format(data[wp]['name'],refine))
+                        logging.getLogger('Buff').info('============')
+                        logging.getLogger('Buff').info('基础攻击: {}'.format(data[wp]['basic_attack']))
+                        for i in data[wp]['break_thru']:
+                            logging.getLogger('Buff').info('突破:\n     {} {}%'.format(self.t2[i],data[wp]['break_thru'][i]))
+                    else:
+                        logging.getLogger('Buff').info('{}(数据库) 精炼:{}'.format(data[wp]['name'],refine))
+                        logging.getLogger('Buff').info('============')
+                        logging.getLogger('Buff').info('基础攻击: {}'.format(wdata.basic_attack))
+                        logging.getLogger('Buff').info('突破:\n     {} {}%'.format(self.t2[wdata.break_thru],wdata.break_thru_v))
                     logging.getLogger('Buff').info('\n')                
 
                 for i in data[wp]['buffs']:

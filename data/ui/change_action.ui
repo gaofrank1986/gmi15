@@ -407,6 +407,11 @@ background-color: transparent;
        <string>段数</string>
       </property>
      </column>
+     <column>
+      <property name="text">
+       <string>耗时(s)</string>
+      </property>
+     </column>
     </widget>
    </widget>
    <widget class="QWidget" name="tab_5">
