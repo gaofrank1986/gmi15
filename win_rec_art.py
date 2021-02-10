@@ -14,7 +14,7 @@ import logging
 from db_setup import Entry,db_session
 from sqlalchemy import or_
 from utility import extract_rlist
-from twinlist import TwinlistPage
+from widget_twinlist import TwinlistPage
 
 def createModel(options):
     model = QStandardItemModel(len(options), 1)

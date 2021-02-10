@@ -2,26 +2,31 @@ import json
 from copy import deepcopy
 import logging
 import os
+import sys
 from collections import OrderedDict
+
+
 from basic import Articraft
 from character import Character
 from utility import MyDialog,parse_formula,ps2,run_thru_data,ps1,gen_sublist,rename,gen_mainlist
 import traceback
-from PyQt5.QtWidgets import QApplication,QMainWindow,QTableWidgetItem,QCheckBox,QLabel,QFrame,QPushButton,QTableWidget,QToolButton,QListWidget
-import sys
+
+
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.uic import loadUi
-from PyQt5.QtCore import Qt
-from rec_art import Rec_Artifact, DB_Filter
+from PyQt5.QtCore import Qt,QItemSelectionModel
+from PyQt5.QtWidgets import QApplication,QMainWindow,QTableWidgetItem,QCheckBox,QLabel,QFrame,QPushButton,QTableWidget,QToolButton,QListWidget
+
 from ocr import cn
 from db_setup import Entry,db_session,init_db,get_info_by_id,CRatio,RWData
-from check_list import AppRemovalPage
 from sqlalchemy import and_,or_
-from PyQt5.QtCore import QItemSelectionModel
 import pprint
+
 from win_ratio import Win_Ratio
 from win_select import caraWindow
 from win_skill import Change_Action
+from win_rec_art import Rec_Artifact, DB_Filter
+from widget_check_list import AppRemovalPage
 
 class MyListWidget(QListWidget):
     def __init__(self, parent=None, max_selected = 3):
