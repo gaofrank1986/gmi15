@@ -305,8 +305,8 @@
         "action_def": {
             "a": "a1+a2+a3+a4+a5+8*a7",
             "e": "e2+7*e2+8*e4",
-            "q": "q1+q2",
-            "shld": "e3+e3_base",
+            "q": "q2",
+            "shld": "e3_base",
             "heal": ""
         },
         "enchant_ratio": 0.0,

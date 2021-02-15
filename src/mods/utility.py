@@ -3,8 +3,8 @@ from copy import deepcopy
 from PyQt5 import QtWidgets,QtGui
 from os import listdir
 from PyQt5 import QtCore
-import logging 
-
+import logging
+from datetime import datetime
 from .ocr import cn
 
 
@@ -25,17 +25,18 @@ def extract_name3(a):
         ans = '特殊增益'
     if a == 'base':
         ans = '技能基数'
-    return(ans)   
+    return(ans)
 
 
 
 
-def run_thru_data(cdata,affect,c,rls,pbar,ksort=1,count_cycle=1,current_cycle=1):
-    logging.getLogger('1').info(cdata)
+def run_thru_data(cdata,affect,c,rls,pbar,ksort=1,count_cycle=1,current_cycle=1,log=False):
     logger = logging.getLogger('Main')
 
+
+
     alist = extract_rlist(affect)
-    
+
     save = dict()
     diluc = deepcopy(c)
     total = 1
@@ -44,12 +45,22 @@ def run_thru_data(cdata,affect,c,rls,pbar,ksort=1,count_cycle=1,current_cycle=1)
     for i in cdata:
         total =total*len(cdata[i])
     total = total*count_cycle
+    # print(total)
+    start = datetime.now()
 
 
-    logging.getLogger('1').info("alist{}".format(alist))
+    if log:
+        logging.getLogger('1').info(cdata)
+        logging.getLogger('1').info("alist{}".format(alist))
+    else:
+        logging.getLogger('Buff').setLevel(logging.CRITICAL)
+        logging.getLogger('Main').setLevel(logging.CRITICAL)
+
+
+    logging.getLogger('1').info("穷举次数{}".format(total))
     for hdata in cdata['head']:
         e_dict = { _:0 for _ in alist}
-        
+
         hd_name = 'hd_'+hdata['name']
         rls.add(hdata,hd_name)
 
@@ -62,9 +73,9 @@ def run_thru_data(cdata,affect,c,rls,pbar,ksort=1,count_cycle=1,current_cycle=1)
             rls.add(gdata,gl_name)
             assert(gdata['set'] in e_dict)
             e_dict2 = deepcopy(e_dict)
-            e_dict2[gdata['set']] += 1 
+            e_dict2[gdata['set']] += 1
             str2 = "时之沙: {}".format(gdata)
-            
+
             for cpdata in cdata['cup'] :
                 cp_name = 'cp_'+cpdata['name']
                 rls.add(cpdata,cp_name)
@@ -72,8 +83,8 @@ def run_thru_data(cdata,affect,c,rls,pbar,ksort=1,count_cycle=1,current_cycle=1)
                 # print(cpdata['set'])
                 assert(cpdata['set'] in e_dict)
                 e_dict3 = deepcopy(e_dict2)
-                e_dict3[cpdata['set']] += 1 
-                str3 = "空之杯: {}".format(cpdata)                      
+                e_dict3[cpdata['set']] += 1
+                str3 = "空之杯: {}".format(cpdata)
                 for fldata in cdata['flower']:
                     fl_name = 'fl_'+fldata['name']
                     rls.add(fldata,fl_name)
@@ -81,7 +92,7 @@ def run_thru_data(cdata,affect,c,rls,pbar,ksort=1,count_cycle=1,current_cycle=1)
                     e_dict4 = deepcopy(e_dict3)
                     e_dict4[fldata['set']] += 1
                     str4 = "生之花: {}".format(fldata)
-                    
+
                     for ftdata in cdata['feather']:
                         ft_name = 'ft_'+ftdata['name']
                         rls.add(ftdata,ft_name)
@@ -94,23 +105,25 @@ def run_thru_data(cdata,affect,c,rls,pbar,ksort=1,count_cycle=1,current_cycle=1)
                             sub_name = 'sub_'+subdata['name']
                             rls.add(subdata,sub_name)
                             str6 = "副词条: {}".format(subdata)
-                        
-                            logger.info("##############################################")
-                            logger.info("#############     穷举第{}次     #################".format(acc))
-                            logger.info("##############################################")
-                            logger.info("##############################################")
-                            logger.info(str1)
-                            logger.info(str2)
-                            logger.info(str3)
-                            logger.info(str4)
-                            logger.info(str5)
-                            logger.info(str6)
-                            
+
+                            if log:
+                                logger.info("##############################################")
+                                logger.info("#############     穷举第{}次     #################".format(acc))
+                                logger.info("##############################################")
+                                logger.info("##############################################")
+                                logger.info(str1)
+                                logger.info(str2)
+                                logger.info(str3)
+                                logger.info(str4)
+                                logger.info(str5)
+                                logger.info(str6)
+
                             pvalue = acc+total/count_cycle*(current_cycle-1)
                             # print(pvalue,total,count_cycle,current_cycle)
+                            # print(pvalue)
                             pbar.setValue(float(pvalue/total)*100)
                             acc+=1
-                            diluc.put_on(rls)                                                
+                            diluc.put_on(rls)
                             tmp2 = deepcopy(diluc)
                             logger.info(e_dict5)
                             logging.getLogger('Buff').info("===========录入圣遗物穷举{}===========".format(acc-1))
@@ -121,7 +134,7 @@ def run_thru_data(cdata,affect,c,rls,pbar,ksort=1,count_cycle=1,current_cycle=1)
                                     if e_dict5[i] >=4 and not i+'4' in affect and i+'2' in affect:
                                         tmp2._load_buff(affect[i+'2']['buffs'],tmp2._check1,tmp2.env)
                                     if e_dict5[i] >=2 and e_dict5[i] <4 and i+'2' in affect:
-                                        tmp2._load_buff(affect[i+'2']['buffs'],tmp2._check1,tmp2.env)                                    
+                                        tmp2._load_buff(affect[i+'2']['buffs'],tmp2._check1,tmp2.env)
                             ans = deepcopy(tmp2.damage_rsl())
                             if ksort == 1:
                                 tmp = ans['sum']
@@ -137,12 +150,15 @@ def run_thru_data(cdata,affect,c,rls,pbar,ksort=1,count_cycle=1,current_cycle=1)
 
                             diluc.take_off(rls)
                             rls.rm2(sub_name)
-                        rls.rm2(ft_name)        
-                    rls.rm2(fl_name)                                 
-                rls.rm2(cp_name)        
-            rls.rm2(gl_name)        
+                        rls.rm2(ft_name)
+                    rls.rm2(fl_name)
+                rls.rm2(cp_name)
+            rls.rm2(gl_name)
         rls.rm2(hd_name)
-        
+
+    logging.getLogger('1').info('Time: {}'.format(datetime.now() - start))
+
+
     return(save)
 
 def gen_sublist(n,alist):
@@ -160,8 +176,8 @@ def gen_sublist(n,alist):
                     tmp2[k] = acase[k]
                 ans.append(tmp2)
         return ans
-            
-    
+
+
 
 class QTextEditLogger(logging.Handler):
     def __init__(self, parent):
@@ -195,10 +211,10 @@ class MyDialog(QtWidgets.QDialog, QtWidgets.QPlainTextEdit):
         # Add the new logging box widget to the layout
         layout.addWidget(logTextBox.widget)
         self.setLayout(layout)
-        
+
         self.save = logTextBox.widget
         self.resize(1300, 500)
-        
+
 
 
 
@@ -206,7 +222,7 @@ class MyDialog(QtWidgets.QDialog, QtWidgets.QPlainTextEdit):
         self.save.setPlainText("")
 
 
-        
+
 
 def parse_formula(s):
     a = s.split("+")
@@ -220,7 +236,7 @@ def parse_formula(s):
             ans.append((tmp[1],tmp[0]))
         else:
           raise ValueError("invalid formula: {}".format(s))
-    return(ans) 
+    return(ans)
 
 def ps1(i):
     assert(isinstance(i,int) or isinstance(i,float))

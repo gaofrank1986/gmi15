@@ -3,7 +3,7 @@
 import requests
 import base64
 import logging
-
+import pickle
 import re
 
 from fuzzywuzzy import fuzz, process
@@ -53,7 +53,7 @@ class cn():
 		self.art_level = '圣遗物等级'
 
 		self.ignore = ['in']
-  
+
 		self.plist = ['暴击','暴伤','攻击','攻击力','属伤','物伤','防御','防御力','生命','生命值','治疗','精通','充能']
 		self.dlist = ['cr','cd','ar','sa','ed','dphys','dr','sd','hr','sh','dheal','em','ef']
 
@@ -66,7 +66,7 @@ def parse(text):
 	level = None
 	prev = None
 	del_prev = True
- 
+
 	lang = cn()
 
 	elements = [lang.anemo, lang.elec, lang.pyro, lang.hydro, lang.cryo, lang.geo, lang.dend]
@@ -153,10 +153,15 @@ def ocr(path):
         img = base64.b64encode(f.read())
 
         params = {"image":img}
-        access_token = '[24.a759b6f5779a442a934c4121dfa05f2e.2592000.1613054170.282335-23532324]'
+        with open("./data/token","rb") as fb:
+            access_token = pickle.load(fb)
+        # print(access_token)
+        # access_token = '[24.32f63985f9e8d3aa2c17e35b0e960682.2592000.1615765648.282335-23532324]'
         request_url = request_url + "?access_token=" + access_token
         headers = {'content-type': 'application/x-www-form-urlencoded'}
         response = requests.post(request_url, data=params, headers=headers)
+        # print("here",response.json())
+
         if response:
             # return (response.json())
             ans = response.json()['words_result']
@@ -167,6 +172,6 @@ def ocr(path):
             raise ValueError("cannot get json")
     except:
         raise ValueError("图片识别故障")
-        
-        
-    
+
+
+

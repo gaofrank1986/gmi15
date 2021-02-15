@@ -1,15 +1,13 @@
 from PyQt5.QtWidgets import QDialog,QLineEdit,QLabel,QSpinBox,QTableWidgetItem
 from PyQt5.uic import loadUi
-import traceback
-import json
+import traceback,sys,json,logging
 from ..mods.utility import extract_name3
 from PyQt5 import QtCore, QtGui, QtWidgets
-import logging
 
 class Win_Skill(QDialog):
     def __init__(self,data,sbar):
         super(Win_Skill,self).__init__()
-        loadUi("./data/ui/win_skill.ui",self)       
+        loadUi("./data/ui/win_skill.ui",self)
         # self.le_a.editingFinished.connect(lambda: self.checkline('a'))
         # self.le_e.editingFinished.connect(lambda: self.checkline('e'))
         # self.le_q.editingFinished.connect(lambda: self.checkline('q'))
@@ -21,10 +19,10 @@ class Win_Skill(QDialog):
         self.le_shld.textEdited.connect(lambda: self.checkline('shld'))
         self.le_heal.textEdited.connect(lambda: self.checkline('heal'))
         self.pb_save.clicked.connect(self.save)
-        
+
         self._data = data
         self.sbar=sbar
-        
+
         N=0
         jb_ds={'ks':'扩散伤害','cd':'超导伤害','gd':'感电伤害','gz':'过载伤害'}
         for i in ['ks','gd','cd','gz']:
@@ -36,22 +34,25 @@ class Win_Skill(QDialog):
             self.tb_jb.setItem(N,2,item)
             item = QTableWidgetItem(jb_ds[i])
             self.tb_jb.setItem(N,1,item)
-            
-            s = "攻击"         
+
+            s = "攻击"
             item = QTableWidgetItem(s)
-            self.tb_jb.setItem(N,3,item)        
+            self.tb_jb.setItem(N,3,item)
             N+=1
-          
-            
-        header = self.tb_jb.horizontalHeader()       
+
+
+        header = self.tb_jb.horizontalHeader()
         header.setSectionResizeMode(0, QtWidgets.QHeaderView.ResizeToContents)
         header.setSectionResizeMode(2, QtWidgets.QHeaderView.ResizeToContents)
         header.setSectionResizeMode(3, QtWidgets.QHeaderView.ResizeToContents)
         header.setSectionResizeMode(1, QtWidgets.QHeaderView.Stretch)
-        # self._cname = cname
-        # self._clevel = 'c'+str(int(self.cb_cnum.currentText()))  
 
-            
+        if(sys.platform=='darwin'):
+            self.setStyleSheet('font: 81 13pt "HYWenHei";')
+        # self._cname = cname
+        # self._clevel = 'c'+str(int(self.cb_cnum.currentText()))
+
+
     def checkline(self,s):
         assert(s in['a','e','q','heal','shld'])
         fm = self.findChild(QLineEdit,"le_"+s).text()
@@ -76,22 +77,25 @@ class Win_Skill(QDialog):
                 status.setText('错误')
         else:
             status.setText('正确')
-            
+
     def save(self):
         try:
             character = self.cname
-            cstl = 'c'+str(int(self.clevel))        
+            cstl = 'c'+str(int(self.clevel))
             rnd = dict()
+            lvl = dict()
             self._cdata[cstl] = {}
             self._cdata[cstl]['action_def'] = {}
             for i in ['a','e','q','shld','heal']:
                 assert self.findChild(QLabel,"lb_status_"+i).text() == '正确'
                 self._cdata[cstl]['action_def'][i] = self.findChild(QLineEdit,"le_"+i).text()
-                
+
             for i in ['a','e','q']:
                     rnd[i]= self.findChild(QSpinBox,"sb_rnd_"+i).value()
+                    lvl[i]= self.findChild(QSpinBox,"sb_lvl_"+i).value()
             self._cdata[cstl]['enchant_ratio'] = self.dsb_enchant.value()
             self._cdata[cstl]['round'] = rnd
+            self._cdata[cstl]['lvl'] = lvl
             self._cdata[cstl]['cmts']= self.pte_cmts.toPlainText()
 
             tmp =['c0','c1','c2','c3','c4','c5','c6']
@@ -102,8 +106,9 @@ class Win_Skill(QDialog):
                 self._cdata[i]['enchant_ratio'] = self._cdata[i].get('enchant_ratio',0)
                 self._cdata[i]['action_def']= self._cdata[i].get('action_def',tmp2)
                 self._cdata[i]['round']= self._cdata[i].get('round',{'a':0,'e':0,'q':0})
+                self._cdata[i]['lvl']= self._cdata[i].get('lvl',{'a':0,'e':0,'q':0})
 
-            for i in ['round','enchant_ratio','action_def']:
+            for i in ['round','lvl','enchant_ratio','action_def']:
                 if i in self._cdata:
                     self._cdata.pop(i)
 
@@ -115,7 +120,7 @@ class Win_Skill(QDialog):
             logging.getLogger('1').info("Error: {}".format(e))
             logging.getLogger('1').info(traceback.format_exc())
             traceback.print_exc()
-            
+
     def update(self,cname,clevel):
         self.cname = cname
         self.clevel = clevel
@@ -124,7 +129,7 @@ class Win_Skill(QDialog):
         try:
             # print(self._data)
             character = self.cname
-            cstl = 'c'+str(int(self.clevel))  
+            cstl = 'c'+str(int(self.clevel))
 
             with open('./data/character/'+character+'.json', 'r', encoding='UTF-8') as fp:
                 data = json.load(fp)
@@ -141,13 +146,13 @@ class Win_Skill(QDialog):
                 self.tb_skill.insertRow(N)
 
                 self.tb_skill.setItem(N,0,item)
-                
+
                 text = extract_name3(data['atk_type'][i])
                 item = QTableWidgetItem(text)
                 self.tb_skill.setItem(N,2,item)
                 item = QTableWidgetItem(data['ratio_cmt'][i])
                 self.tb_skill.setItem(N,1,item)
-                
+
                 s = "atk"
                 if "rebase" in data and i in data["rebase"]:
                     s=data["rebase"][i]
@@ -155,64 +160,57 @@ class Win_Skill(QDialog):
                     s='none'
                 name_trans={'atk':'攻击','def':'防御','life':'生命','none':'无'}
                 s = name_trans[s]
-                    
+
                 item = QTableWidgetItem(s)
-                self.tb_skill.setItem(N,3,item)                
+                self.tb_skill.setItem(N,3,item)
 
                 if "skill_num" in data and i in data["skill_num"]:
                     s=data["skill_num"][i]
                 else:
                     s = "1"
                 item = QTableWidgetItem(s)
-                self.tb_skill.setItem(N,4,item)     
-                           
+                self.tb_skill.setItem(N,4,item)
+
                 if "skill_time" in data and i in data["skill_time"]:
                     s=data["skill_time"][i]
                 else:
                     s = "0"
                 item = QTableWidgetItem(s)
-                self.tb_skill.setItem(N,5,item)  
-                
-                #=======================  
-                self.tb_buff_def.insertRow(N)
+                self.tb_skill.setItem(N,5,item)
 
-                item =  QTableWidgetItem(i)
-                self.tb_buff_def.setItem(N,0,item)
-                
-                for k in range(1,10):
-                    item = QTableWidgetItem("0")
-                    self.tb_buff_def.setItem(N,k,item)
+
 
                 N+=1
 
-            header = self.tb_skill.horizontalHeader()       
+            header = self.tb_skill.horizontalHeader()
             header.setSectionResizeMode(0, QtWidgets.QHeaderView.ResizeToContents)
             header.setSectionResizeMode(2, QtWidgets.QHeaderView.ResizeToContents)
             header.setSectionResizeMode(3, QtWidgets.QHeaderView.ResizeToContents)
             header.setSectionResizeMode(4, QtWidgets.QHeaderView.ResizeToContents)
             header.setSectionResizeMode(5, QtWidgets.QHeaderView.ResizeToContents)
             header.setSectionResizeMode(1, QtWidgets.QHeaderView.Stretch)
-            header = self.tb_skill.verticalHeader()       
+            header = self.tb_skill.verticalHeader()
             header.setVisible(False)
 
-            header = self.tb_buff_def.horizontalHeader()       
-            for N in range(0,10):
-                header.setSectionResizeMode(N, QtWidgets.QHeaderView.ResizeToContents)
-                # header.setSectionResizeMode(1, QtWidgets.QHeaderView.Stretch)
-            header = self.tb_buff_def.verticalHeader()       
-            header.setVisible(False)
 
-            for i in ['a','e','q','shld','heal']:           
+
+            for i in ['a','e','q','shld','heal']:
 
                 self.findChild(QLineEdit,"le_"+i).setText((data[cstl]['action_def'][i]))
-                self.checkline(i)                                                                     
-            for i in ['a','e','q']:           
-                self.findChild(QSpinBox,"sb_rnd_"+i).setValue(data[cstl]['round'][i])                                                            
+                self.checkline(i)
+            for i in ['a','e','q']:
+                self.findChild(QSpinBox,"sb_rnd_"+i).setValue(data[cstl]['round'][i])
+            for i in ['a','e','q']:
+                tmp = data[cstl].get('lvl',None)
+                if tmp is None:
+                    self.findChild(QSpinBox,"sb_lvl_"+i).setValue(0)
+                else:
+                    self.findChild(QSpinBox,"sb_lvl_"+i).setValue(data[cstl]['lvl'][i])
             self.dsb_enchant.setValue(data[cstl]['enchant_ratio'])
             if 'cmts' in data[cstl]:
                 self.pte_cmts.setPlainText(data[cstl]['cmts'])
-            
-            
+
+
             while (self.tb_ratio.rowCount() > 0):
                 self.tb_ratio.removeRow(0)
             N = 0
@@ -226,29 +224,29 @@ class Win_Skill(QDialog):
                 for j in data['ratios'][i]:
                     text = "{:6.1f}%".format(float(j))
                     item = QTableWidgetItem(text)
-                    self.tb_ratio.setItem(N,K,item)  
-                    K+=1           
+                    self.tb_ratio.setItem(N,K,item)
+                    K+=1
 
                 N+=1
 
-            header = self.tb_ratio.horizontalHeader()       
+            header = self.tb_ratio.horizontalHeader()
             for i in range(16):
                 header.setSectionResizeMode(i, QtWidgets.QHeaderView.ResizeToContents)
-                
-                
-                
-                
-                
-                
-        
-            
+
+
+
+
+
+
+
+
             self.tabs.setCurrentIndex(0)
-            
-            
-            
-            
-            
-            
+
+
+
+
+
+
 
             self.exec_()
         except Exception as e:

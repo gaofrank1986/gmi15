@@ -42,11 +42,11 @@
    <property name="styleSheet">
     <string notr="true">
 
-font: 9pt &quot;汉仪文黑-85W&quot;;
+font: 9pt ;
 </string>
    </property>
    <property name="currentIndex">
-    <number>4</number>
+    <number>0</number>
    </property>
    <widget class="QWidget" name="tab">
     <property name="styleSheet">
@@ -187,7 +187,7 @@ background-color: transparent;
      <widget class="QSpinBox" name="sb_rnd_q">
       <property name="geometry">
        <rect>
-        <x>560</x>
+        <x>530</x>
         <y>190</y>
         <width>46</width>
         <height>31</height>
@@ -197,7 +197,7 @@ background-color: transparent;
      <widget class="QSpinBox" name="sb_rnd_a">
       <property name="geometry">
        <rect>
-        <x>560</x>
+        <x>530</x>
         <y>70</y>
         <width>46</width>
         <height>31</height>
@@ -207,7 +207,7 @@ background-color: transparent;
      <widget class="QSpinBox" name="sb_rnd_e">
       <property name="geometry">
        <rect>
-        <x>560</x>
+        <x>530</x>
         <y>130</y>
         <width>46</width>
         <height>31</height>
@@ -256,7 +256,7 @@ background-color: transparent;
      <widget class="QLabel" name="label_4">
       <property name="geometry">
        <rect>
-        <x>550</x>
+        <x>520</x>
         <y>40</y>
         <width>72</width>
         <height>15</height>
@@ -336,6 +336,49 @@ background-color: transparent;
       </property>
       <property name="text">
        <string>正确</string>
+      </property>
+     </widget>
+     <widget class="QSpinBox" name="sb_lvl_a">
+      <property name="geometry">
+       <rect>
+        <x>600</x>
+        <y>70</y>
+        <width>46</width>
+        <height>31</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QSpinBox" name="sb_lvl_e">
+      <property name="geometry">
+       <rect>
+        <x>600</x>
+        <y>130</y>
+        <width>46</width>
+        <height>31</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QSpinBox" name="sb_lvl_q">
+      <property name="geometry">
+       <rect>
+        <x>600</x>
+        <y>190</y>
+        <width>46</width>
+        <height>31</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_8">
+      <property name="geometry">
+       <rect>
+        <x>600</x>
+        <y>40</y>
+        <width>72</width>
+        <height>15</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>等级</string>
       </property>
      </widget>
     </widget>
@@ -546,74 +589,6 @@ background-color: transparent;
      <column>
       <property name="text">
        <string>lvl 15</string>
-      </property>
-     </column>
-    </widget>
-   </widget>
-   <widget class="QWidget" name="tab_7">
-    <attribute name="title">
-     <string>特效定义</string>
-    </attribute>
-    <widget class="QTableWidget" name="tb_buff_def">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>0</y>
-       <width>711</width>
-       <height>441</height>
-      </rect>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">background-color: rgb(224, 234, 244);</string>
-     </property>
-     <column>
-      <property name="text">
-       <string>名字</string>
-      </property>
-     </column>
-     <column>
-      <property name="text">
-       <string>激活条件</string>
-      </property>
-     </column>
-     <column>
-      <property name="text">
-       <string>结算条件</string>
-      </property>
-     </column>
-     <column>
-      <property name="text">
-       <string>结算延迟</string>
-      </property>
-     </column>
-     <column>
-      <property name="text">
-       <string>类型</string>
-      </property>
-     </column>
-     <column>
-      <property name="text">
-       <string>延续</string>
-      </property>
-     </column>
-     <column>
-      <property name="text">
-       <string>冷却</string>
-      </property>
-     </column>
-     <column>
-      <property name="text">
-       <string>初始层数</string>
-      </property>
-     </column>
-     <column>
-      <property name="text">
-       <string>最大层数</string>
-      </property>
-     </column>
-     <column>
-      <property name="text">
-       <string>附伤次数</string>
       </property>
      </column>
     </widget>

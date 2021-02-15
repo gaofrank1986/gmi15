@@ -75,7 +75,7 @@
    </widget>
    <widget class="QWidget" name="tab">
     <attribute name="title">
-     <string>人物/武器 特效</string>
+     <string>人物/武器 特效覆盖率</string>
     </attribute>
     <widget class="QTableWidget" name="table_ratio">
      <property name="geometry">
@@ -109,6 +109,71 @@
      <column>
       <property name="text">
        <string>描述</string>
+      </property>
+     </column>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="tab_4">
+    <attribute name="title">
+     <string>特效触发定义(beta)</string>
+    </attribute>
+    <widget class="QTableWidget" name="tb_buff_def">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>711</width>
+       <height>311</height>
+      </rect>
+     </property>
+     <column>
+      <property name="text">
+       <string>名字</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>激活条件</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>结算条件</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>结算延迟</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>持续时间</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>冷却时间</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>初始层数</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>最大层数</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>附伤类型</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>附伤次数</string>
       </property>
      </column>
     </widget>

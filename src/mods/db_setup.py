@@ -39,7 +39,7 @@ class CRatio(Base):
     name = Column(String,unique=True)
     keys = Column(String)
     values = Column(String)
-    
+
 class RWData(Base):
     __tablename__='rw_data'
     id = Column(Integer,primary_key = True)
@@ -49,18 +49,25 @@ class RWData(Base):
     basic_defense = Column(String)
     break_thru = Column(String)
     break_thru_v = Column(String)
+
+class Buff_Def(Base):
+    __tablename__='buff_definition'
+    id = Column(Integer,primary_key = True)
+    key = Column(String,unique=True)
+    value = Column(String)
+    cmts = Column(String)
 # Base.metadata.create_all(engine)
 def init_db():
     Base.metadata.create_all(bind=engine)
-    
+
 def get_info_by_id(i):
     r = db_session.query(Entry).filter(Entry.id==i).first()
     data={}
     data[r.main0] = r.main1
     data[r.sub10] = r.sub11
     data[r.sub20] = r.sub21
-    data[r.sub30] = r.sub31  
+    data[r.sub30] = r.sub31
     data[r.sub40] = r.sub41
     data['set'] = r.aset
-    data['name'] = r.name
+    data['name'] = r.name+'/'+str(i)
     return data

@@ -2,6 +2,30 @@
 import json
 
 
+'''环境，目前只有时间,考虑用毫秒计数的整数类型代替实数类型'''
+class Env():
+    def __init__(self):
+        self.timer = 0
+    def set_endtime(self,simtime):
+        self.simtime = int(simtime*100)
+    def set(self,t):
+        self.timer = int(t*100)
+    def end(self):
+        return (self.timer>self.simtime)
+    def now(self):
+        return(round(self.timer/100,2))
+    def add(self,dif):
+        return(round(self.timer/100,2)+dif)
+    def tick(self,dif):
+        self.timer+=int(dif*100)
+    def on_time(self,v):
+        return(int(v*100)<=self.timer)
+
+    def not_yet(self,v):
+        return(int(v*100)>self.timer)
+
+    def over_time(self,v):
+        return(int(v*100)<self.timer)
 
 
 class Basic_Panel():
@@ -57,12 +81,12 @@ class Basic_Panel():
             tmp[self.de_name[i]] = self.dmg_eh[i]
         return(tmp)
 
-        
+
     def put_on(self,a):
         assert(issubclass(a.__class__,Basic_Panel))
         self.load_att(a.get_properties())
 
-            
+
     def take_off(self,a):
         assert(issubclass(a.__class__,Basic_Panel))
         self.load_att(a.get_properties(),t = "minus")
