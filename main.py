@@ -14,7 +14,7 @@ from src.mods.ocr import cn
 from src.mods.db_setup import Entry,db_session,init_db,get_info_by_id,CRatio,RWData
 from src.mods.basic import Articraft
 from src.mods.character import Character
-from src.mods.utility import MyDialog,parse_formula,ps2,run_thru_data,ps1,gen_sublist,rename,gen_mainlist
+from src.mods.utility import MyDialog,MyDialog2,parse_formula,ps2,run_thru_data,ps1,gen_sublist,rename,gen_mainlist,Caculator
 
 from src.dialog.win_ratio import Win_Ratio
 from src.dialog.win_select import caraWindow
@@ -43,11 +43,13 @@ class VLine(QFrame):
         self.setFrameShape(self.VLine|self.Sunken)
 
 class MainWindow(QMainWindow):
+    progress = QtCore.pyqtSignal(float)
     def __init__(self):
         super(MainWindow,self).__init__()
         QtGui.QFontDatabase.addApplicationFont("./data/ui/zh-cn.ttf")
         loadUi("./data/ui/main.ui",self)
         font = QtGui.QFont()
+        self.progress.connect(self.reportProgress)
 
         self.setFixedWidth(1070)
 
@@ -90,7 +92,8 @@ class MainWindow(QMainWindow):
         self.cb_aeffect2.addItems(list(self._aeffect.keys()))
 
 
-        self.dlg = MyDialog(self,'Main',logging.Formatter("%(asctime)s — %(message)s",datefmt='%H:%M'))
+        # self.dlg = MyDialog(self,'Main',logging.Formatter("%(asctime)s — %(message)s",datefmt='%H:%M'))
+        self.dlg = MyDialog2(self)
         self.win_buff = MyDialog(self,'Buff',logging.Formatter("%(message)s"))
         self.win_log = MyDialog(self,'1',logging.Formatter("%(message)s"))
         self.win_save_act = Win_Skill(self._data,self.statusBar())
@@ -101,7 +104,7 @@ class MainWindow(QMainWindow):
 
         self.pb_change.clicked.connect(self.win_save_act.display)
         self.pb_artifact.clicked.connect(self.win_rec_a.display)
-        self.btn_load_wp.clicked.connect(self.dlg.exec_)
+        self.btn_load_wp.clicked.connect(self.dlg.display)
         self.pb_buff.clicked.connect(self.win_buff.exec_)
         self.pb_cara.clicked.connect(self.select_cara)
         self.pb_wpn.clicked.connect(self.select_wpn)
@@ -351,14 +354,25 @@ class MainWindow(QMainWindow):
 
 
     def run(self):
-        logger = logging.getLogger('Main')
+        logger = logging.getLogger('1')
         self.dlg.clear()
         self.win_buff.clear()
         self.reset_table()
-        logger.info("=================日志开始================")
-        logger.info("精确显示伤害后可复制到其他文本编辑器进行查询")
-        logger.info("========================================")
+        self.btn_run.setEnabled(False)
+        # logger.info("=================日志开始================")
+        # logger.info("精确显示伤害后可复制到其他文本编辑器进行查询")
+        # logger.info("========================================")
         logging.getLogger('1').info("=================log开始================")
+
+
+        for hdlr in logging.getLogger('2').handlers[:]:  # remove all old handlers
+            logging.getLogger('2').removeHandler(hdlr)
+        if os.path.exists("./data/logs/2.log"):
+            os.remove("./data/logs/2.log")
+        if self.cb_log_detail.isChecked():
+            handler = logging.FileHandler("./data/logs/2.log", 'w+')
+            logging.getLogger('2').addHandler(handler)
+            logging.getLogger('2').setLevel(logging.DEBUG)
 
         fail_info=[]
         try:
@@ -478,12 +492,15 @@ class MainWindow(QMainWindow):
                     fail_info.append("圣遗物选择错误")
                     raise ValueError
 
-                save = run_thru_data(cal_data,self._aeffect,c,rls,self.pbar,self._ksort,log = self.cb_log_detail.isChecked())
+                self.worker = Caculator(cal_data,self._aeffect,c,rls,self._ksort,self.cb_log_detail.isChecked())
+                self.athread()
             if self.cb_mode2.currentIndex()==0:
                 rls.load_json("./data/artifacts/sub.json")
                 cal_data = mainlist
                 cal_data['sub']=[{'cr':0,'name':'emtpy'}]
-                save = run_thru_data(cal_data,self._aeffect,c,rls,self.pbar,self._ksort,log = self.cb_log_detail.isChecked())
+                self.worker = Caculator(cal_data,self._aeffect,c,rls,self._ksort,self.cb_log_detail.isChecked())
+                self.athread()
+
             if self.cb_mode2.currentIndex()==1:
                 blist=[[self.trans1[self.cb_main_head.currentText()]],[self.trans1[self.cb_main_glass.currentText()]],[self.trans1[self.cb_main_cup.currentText()]],['sh'],['sa']]
                 run_list = gen_sublist(self.spb_nsub.value(),self.save_sub_list)
@@ -499,7 +516,9 @@ class MainWindow(QMainWindow):
 
                 cal_data = gen_mainlist(blist)
                 cal_data["sub"] = run_list
-                save = run_thru_data(cal_data,self._aeffect,c,rls,self.pbar,self._ksort,log = self.cb_log_detail.isChecked())
+                self.worker = Caculator(cal_data,self._aeffect,c,rls,self._ksort,self.cb_log_detail.isChecked())
+                self.athread()
+
             if self.cb_mode2.currentIndex()==3:
                 save = {}
                 run_list = gen_sublist(self.spb_nsub.value(),self.save_sub_list)
@@ -524,8 +543,13 @@ class MainWindow(QMainWindow):
                             cdata['feather'] = mainlist['feather']
                             cdata['flower'] = mainlist['flower']
                             cdata["sub"] = run_list
-                            tmp_rsl = run_thru_data(cdata,self._aeffect,c,rls,self.pbar,self._ksort,num_cycle,N,log = self.cb_log_detail.isChecked())
+                            tmp_rsl = run_thru_data(cdata,self._aeffect,c,rls,self._ksort)
+
+                            self.progress.emit(float(N/num_cycle*100))
+                            QApplication.processEvents()
+
                             tmp_rsl = OrderedDict(sorted(tmp_rsl.items(),reverse=True))
+
                             for i in tmp_rsl:
                                 key = i
                                 while key in save:
@@ -533,57 +557,79 @@ class MainWindow(QMainWindow):
                                 save[key] = deepcopy(tmp_rsl[i])
                                 break
                             N+=1
+                self.report_ans(save)
+                self.btn_run.setEnabled(True)
 
-            '''结果输出部分'''
-
-
-            test = OrderedDict(sorted(save.items(),reverse=True))
-            N=0
-            limit = self.spb_num_display.value()
-            for i in test:
-                if N>3:
-                    self.tbl_2.setColumnCount(N+1)
-                tmp2 = list(test[i][1].keys())
-                if 'sub_test' in tmp2:
-                    tmp2.remove('sub_test')
-                if 'sub' in tmp2:
-                    tmp2.remove('sub')
-                tmp2 = [_.split('_')[1] for _ in tmp2]
-                tmp0 = test[i][0]
-                if self.cb_log_detail.isChecked():
-                    logging.getLogger('1').info("结果：\n {}{}{}\n{}".format(character,constellation,c.equipment[0],pprint.pformat(tmp0,indent=4)))
-                    logging.getLogger('1').info("圣遗物：\n{}".format(pprint.pformat(test[i][1],indent=4)))
-
-                if self.rb_display.isChecked():
-                    content = [i]+tmp2+[tmp0['shld'],tmp0['heal'],tmp0['maxhp'],tmp0['sum']]+[ps2(tmp0['perc_a']),ps2(tmp0['perc_e']),ps2(tmp0['perc_q']),ps2(tmp0['ratio2'])]
-                else:
-                    content = [ps1(i)]+tmp2+[ps1(tmp0['shld']),ps1(tmp0['heal']),ps1(tmp0['maxhp']),ps1(tmp0['sum'])]+[ps2(tmp0['perc_a']),ps2(tmp0['perc_e']),ps2(tmp0['perc_q']),ps2(tmp0['ratio2'])]
-                for i in range(len(content)):
-                    if '/' in str(content[i]):
-                        ttt = content[i].split('/')
-                        self.lookup[(i,N)] =int(ttt[1])
-                        item =  QTableWidgetItem(ttt[0])
-                    else:
-                        item =  QTableWidgetItem(str(content[i]))
-                    item.setFlags(QtCore.Qt.ItemIsEnabled)
-                    item.setTextAlignment(Qt.AlignRight|Qt.AlignVCenter)
-                    self.tbl_2.setItem(i, N,item)
-
-                N+=1
-
-                if N==limit:
-                    break
-
-            self.statusBar().showMessage("计算成功",2000)
-            self.tabs.setCurrentIndex(0)
-            print(self.lookup)
 
         except Exception as e:
             fail_info.append("计算失败")
             self.statusBar().showMessage("/".join(fail_info),3000)
             logging.getLogger('1').error("Error:{} ".format(e))
             logging.getLogger('1').error(traceback.format_exc())
+            self.btn_run.setEnabled(True)
 
+
+    def athread(self):
+        self.thread = QtCore.QThread()
+        # Step 3: Create a worker object
+        # Step 4: Move worker to the thread
+        self.worker.moveToThread(self.thread)
+        # Step 5: Connect signals and slots
+        self.thread.started.connect(self.worker.run)
+        # self.thread.started.connect(self.worker.test)
+
+        self.worker.finished.connect(self.thread.quit)
+        self.worker.finished.connect(self.worker.deleteLater)
+        self.thread.finished.connect(self.thread.deleteLater)
+        self.worker.progress.connect(self.reportProgress)
+        self.worker.result.connect(self.report_ans)
+        self.worker.log1.connect(lambda s:logging.getLogger('1').info(s))
+        # Step 6: Start the thread
+        self.thread.start()
+
+    def reportProgress(self,v):
+        self.pbar.setValue(v)
+
+    def report_ans(self,save):
+        test = OrderedDict(sorted(save.items(),reverse=True))
+        N=0
+        limit = self.spb_num_display.value()
+        for i in test:
+            if N>3:
+                self.tbl_2.setColumnCount(N+1)
+            tmp2 = list(test[i][1].keys())
+            if 'sub_test' in tmp2:
+                tmp2.remove('sub_test')
+            if 'sub' in tmp2:
+                tmp2.remove('sub')
+            tmp2 = [_.split('_')[1] for _ in tmp2]
+            tmp0 = test[i][0]
+            if self.cb_log_detail.isChecked():
+                logging.getLogger('1').info("结果：\n {}{}{}\n{}".format(character,constellation,c.equipment[0],pprint.pformat(tmp0,indent=4)))
+                logging.getLogger('1').info("圣遗物：\n{}".format(pprint.pformat(test[i][1],indent=4)))
+
+            if self.rb_display.isChecked():
+                content = [i]+tmp2+[tmp0['shld'],tmp0['heal'],tmp0['maxhp'],tmp0['sum']]+[ps2(tmp0['perc_a']),ps2(tmp0['perc_e']),ps2(tmp0['perc_q']),ps2(tmp0['ratio2'])]
+            else:
+                content = [ps1(i)]+tmp2+[ps1(tmp0['shld']),ps1(tmp0['heal']),ps1(tmp0['maxhp']),ps1(tmp0['sum'])]+[ps2(tmp0['perc_a']),ps2(tmp0['perc_e']),ps2(tmp0['perc_q']),ps2(tmp0['ratio2'])]
+            for i in range(len(content)):
+                if '/' in str(content[i]):
+                    ttt = content[i].split('/')
+                    self.lookup[(i,N)] =int(ttt[1])
+                    item =  QTableWidgetItem(ttt[0])
+                else:
+                    item =  QTableWidgetItem(str(content[i]))
+                item.setFlags(QtCore.Qt.ItemIsEnabled)
+                item.setTextAlignment(Qt.AlignRight|Qt.AlignVCenter)
+                self.tbl_2.setItem(i, N,item)
+
+            N+=1
+
+            if N==limit:
+                break
+        self.statusBar().showMessage("计算成功",2000)
+        self.tabs.setCurrentIndex(0)
+        self.btn_run.setEnabled(True)
 
 
     def read_sub(self):
