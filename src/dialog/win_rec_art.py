@@ -153,38 +153,44 @@ class Rec_Artifact(QDialog):
         if self.twinlist.if_OK:
             self.label_owners.setText(','.join(self.twinlist.saved))
 
-    def load_entry(self,aaa = None):
-        if aaa is None:
-            aaa = self.cb_db.currentIndex()
-            assert aaa in self.look_up
-            r1 = db_session.query(Entry).filter(Entry.id == self.look_up[aaa]).first()
-        else:
-            r1 = db_session.query(Entry).filter(Entry.id == aaa).first()
-        pix = QPixmap()
-        pix.loadFromData(r1.img)
-        self.cached = r1.img
-        pixmap = pix.scaled(370,591, Qt.KeepAspectRatio, Qt.SmoothTransformation)
+    def load_entry(self,aaa):
+        try:
+            print(aaa,'aaa')
+            if aaa is None:
+                aaa = self.cb_db.currentIndex()
+                assert aaa in self.look_up
+                r1 = db_session.query(Entry).filter(Entry.id == self.look_up[aaa]).first()
+            else:
+                r1 = db_session.query(Entry).filter(Entry.id == aaa).first()
+            pix = QPixmap()
+            pix.loadFromData(r1.img)
+            self.cached = r1.img
+            pixmap = pix.scaled(370,591, Qt.KeepAspectRatio, Qt.SmoothTransformation)
 
-        self.label_pic.setPixmap(pixmap)
-        self.label_pic.resize(pixmap.width(),pixmap.height())
+            self.label_pic.setPixmap(pixmap)
+            self.label_pic.resize(pixmap.width(),pixmap.height())
 
-        tmp = list(self.pos.keys())
-        self.cb_pos.setCurrentIndex(tmp.index(r1.pos))
-        self.cb_main.setCurrentIndex(self.dlist.index(r1.main0))
-        self.digit_main.setValue(r1.main1)
-        # self.cb_owner.setCurrentIndex(self.owners.index(r1.owner))
-        for i in range(1,5):
-            self.findChild(QComboBox,"cb_sub_"+str(i)).setCurrentIndex(self.tlist.index(getattr(r1,'sub'+str(i)+'0')))
-            self.findChild(QDoubleSpinBox,"digit_sub_"+str(i)).setValue(getattr(r1,'sub'+str(i)+'1'))
-            self.cb_aeffect.setCurrentIndex(self.elist.index(r1.aset))
-            self.le_cmt.setText(r1.cmts)
-        if aaa is None:
-            self.label_id.setText("ID: {}".format(self.look_up[aaa]))
-        owners = [r1.owner0,r1.owner1,r1.owner2,r1.owner3,r1.owner4]
-        for i in range(len(owners)):
-            if owners[i] is None:
-                owners[i]=''
-        self.label_owners.setText(','.join(owners))
+            tmp = list(self.pos.keys())
+            self.cb_pos.setCurrentIndex(tmp.index(r1.pos))
+            self.cb_main.setCurrentIndex(self.dlist.index(r1.main0))
+            self.digit_main.setValue(r1.main1)
+            # self.cb_owner.setCurrentIndex(self.owners.index(r1.owner))
+            for i in range(1,5):
+                self.findChild(QComboBox,"cb_sub_"+str(i)).setCurrentIndex(self.tlist.index(getattr(r1,'sub'+str(i)+'0')))
+                self.findChild(QDoubleSpinBox,"digit_sub_"+str(i)).setValue(getattr(r1,'sub'+str(i)+'1'))
+                self.cb_aeffect.setCurrentIndex(self.elist.index(r1.aset))
+                self.le_cmt.setText(r1.cmts)
+            if aaa is None:
+                self.label_id.setText("ID: {}".format(self.look_up[aaa]))
+            owners = [r1.owner0,r1.owner1,r1.owner2,r1.owner3,r1.owner4]
+            for i in range(len(owners)):
+                if owners[i] is None:
+                    owners[i]=''
+            self.label_owners.setText(','.join(owners))
+        except:
+            logging.getLogger('1').info(traceback.format_exc())
+            print(self.cb_db.currentIndex())
+            print(self.look_up)
         # print(owners)
 
     def delete_entry(self):
@@ -296,9 +302,9 @@ class Rec_Artifact(QDialog):
                     self.cb_db.addItem(str(i.id)+'.'+i.name)
                     self.look_up[N] = i.id
                     N+=1
-            self.cb_db.currentIndexChanged.connect(self.load_entry)
+            self.cb_db.currentIndexChanged.connect(lambda: self.load_entry(None))
             self.sbar.showMessage("圣遗物数据库加载成功",1000)
-            self.load_entry()
+            self.load_entry(None)
         except:
             self.sbar.showMessage("圣遗物数据库加载失败",2000)
             logging.getLogger('1').error(traceback.format_exc())
